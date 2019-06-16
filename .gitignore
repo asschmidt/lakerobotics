@@ -1,4 +1,12 @@
-# Ignore Eclipse workspace
+# Ignore Eclipse workspace and Eclipse project
 workspace
+eclipse
+
+# Ignore the output folder
 lrapplications/out
 lrplatform/out
+
+# Ignore Python objects and cache files
+**/__pycache__
+**/*.pyc
+**/*.pyo
