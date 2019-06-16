@@ -1,0 +1,117 @@
+<NetworkData>
+	<!-- Network Definitions -->
+	<Networks>
+		<!-- Main CAN Network -->
+		<Network ID="MainCAN" Name="Main CAN" Type="CAN" Bandwidth="500kbps"></Network>
+	</Networks>
+	
+	<!-- Node Definitions -->
+	<Nodes>
+		<!-- Power Manager ECU -->
+		<Node ID="Node_Pwr" Name="Power Manager Unit">
+			<Interfaces>
+				<Interface ID="Node_Pwr_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+					<RxMessages>
+					</RxMessages>
+					
+					<TxMessages>
+						<TxMessage RefID="Power_Supply_Motor"></TxMessage>
+						<TxMessage RefID="Power_Supply_Electronic"></TxMessage>
+					</TxMessages>
+				</Interface>
+			</Interfaces>
+		</Node>				
+		
+		<Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axix">
+			<Interfaces>
+				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+					<RxMessages>
+					</RxMessages>
+					
+					<TxMessages>		
+						<TxMessage RefID="Engine_Speed_Front"></TxMessage>				
+					</TxMessages>
+				</Interface>
+			</Interfaces>
+		</Node>
+		
+		<Node ID="Node_ECU_Mid" Name="Engine Control Unit for Middle Axix">
+			<Interfaces>
+				<Interface ID="Node_ECU_Mid_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+					<RxMessages>
+					</RxMessages>
+					
+					<TxMessages>		
+						<TxMessage RefID="Engine_Speed_Mid"></TxMessage>						
+					</TxMessages>
+				</Interface>
+			</Interfaces>
+		</Node>
+		
+		<Node ID="Node_ECU_Rear" Name="Engine Control Unit for Rear Axix">
+			<Interfaces>
+				<Interface ID="Node_ECU_Rear_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+					<RxMessages>
+					</RxMessages>
+					
+					<TxMessages>
+						<TxMessage RefID="Engine_Speed_Rear"></TxMessage>								
+					</TxMessages>
+				</Interface>
+			</Interfaces>
+		</Node>
+	</Nodes>
+	
+	<!-- Signal Definitions -->
+	<Signals>
+		<Signal ID="Power_Supply_Motor_Voltage" Name="Voltage of Motor Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mV"></Signal>
+		<Signal ID="Power_Supply_Motor_Current" Name="Current of Motor Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mA"></Signal>
+		<Signal ID="Power_Supply_Electronic_Voltage" Name="Voltage of Electronic Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mV"></Signal>
+		<Signal ID="Power_Supply_Electronic_Current" Name="Current of Electronic Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mA"></Signal>				
+		
+		<Signal ID="Engine_Speed_F_L" Name="Engine Speed Front Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_F_R" Name="Engine Speed Front Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_M_L" Name="Engine Speed Mid Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_M_R" Name="Engine Speed Mid Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_R_L" Name="Engine Speed Rear Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_R_R" Name="Engine Speed Rear Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+	</Signals>
+	
+	<!-- Message Definitions -->
+	<Messages>
+		<Message ID="Power_Supply_Motor" Name="Power Supply Values Motor" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Power_Supply_Motor_Voltage" Position="1"></Signal>
+				<Signal RefID="Power_Supply_Motor_Current" Position="2"></Signal>
+			</Signals>
+		</Message>
+		
+		<Message ID="Power_Supply_Electronic" Name="Power Supply Values Electronic" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Power_Supply_Electronic_Voltage" Position="1"></Signal>
+				<Signal RefID="Power_Supply_Electronic_Current" Position="2"></Signal>
+			</Signals>
+		</Message>			
+		
+		<Message ID="Engine_Speed_Front" Name="Engine Speed Front Axis" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Engine_Speed_F_L" Position="1"></Signal>
+				<Signal RefID="Engine_Speed_F_R" Position="2"></Signal>
+			</Signals>
+		</Message>
+		
+		<Message ID="Engine_Speed_Mid" Name="Engine Speed Middle Axis" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Engine_Speed_M_L" Position="1"></Signal>
+				<Signal RefID="Engine_Speed_M_R" Position="2"></Signal>
+			</Signals>
+		</Message>
+		
+		<Message ID="Engine_Speed_Rear" Name="Engine Speed Rear Axis" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Engine_Speed_R_L" Position="1"></Signal>
+				<Signal RefID="Engine_Speed_R_R" Position="2"></Signal>
+			</Signals>
+		</Message>
+	</Messages>
+</NetworkData>

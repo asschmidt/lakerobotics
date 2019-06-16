@@ -1,0 +1,4 @@
+# Ignore Eclipse workspace
+workspace
+lrapplications/out
+lrplatform/out
