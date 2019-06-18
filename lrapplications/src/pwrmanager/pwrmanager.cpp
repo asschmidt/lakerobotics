@@ -4,6 +4,8 @@
  *  Created on: 22.07.2018
  *      Author: Andreas
  */
+#include <stdint.h>
+
 #include "common.h"
 #include "hwconfig.h"
 #include "canconfig.h"
@@ -36,7 +38,7 @@ void powerManagerInitialize(PWR_STATE_MACHINE* pPwrManager)
  * @param newMode
  * @return
  */
-int powerManagerSwitchMode(PWR_STATE_MACHINE* pPwrManager, int newMode)
+int16_t powerManagerSwitchMode(PWR_STATE_MACHINE* pPwrManager, int16_t newMode)
 {
 	pPwrManager->pwrManagerLastMode = pPwrManager->pwrManagerMode;
 	pPwrManager->pwrManagerMode = newMode;
@@ -204,7 +206,7 @@ void powerManagerHandleShutdown(PWR_STATE_MACHINE* pPwrManager)
  * @param pwrManager
  * @return
  */
-int powerManagerRunStateMachine(PWR_STATE_MACHINE* pPwrManager)
+int16_t powerManagerRunStateMachine(PWR_STATE_MACHINE* pPwrManager)
 {
 	switch(pPwrManager->pwrManagerMode)
 	{

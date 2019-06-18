@@ -4,6 +4,8 @@
  *  Created on: 17.12.2018
  *      Author: Andreas
  */
+#include <stdint.h>
+
 #include "common.h"
 #include "hwconfig.h"
 #include "canconfig.h"
@@ -121,16 +123,16 @@ void loop()
 void taskCANHandler()
 {
 #ifdef USE_DATA_HANDLER
-	unsigned long startTime = startRuntimeMeasurement();
+	uint32_t startTime = startRuntimeMeasurement();
 #endif
 
 	MEASUREMENT_VALUES* pValues = measurementGetValues();
-	int currentElectronics = (int)(pValues->currentElectronics * 1000);
-	int voltageElectronics = (int)(pValues->voltageElectronics * 1000);
-	int currentMotor = (int)(pValues->currentMotor * 1000);
-	int voltageMotor = (int)(pValues->voltageMotor * 1000);
+	int16_t currentElectronics = (int16_t)(pValues->currentElectronics * 1000);
+	int16_t voltageElectronics = (int16_t)(pValues->voltageElectronics * 1000);
+	int16_t currentMotor = (int16_t)(pValues->currentMotor * 1000);
+	int16_t voltageMotor = (int16_t)(pValues->voltageMotor * 1000);
 
-	int sendError = 0;
+	int16_t sendError = 0;
 	sendError = canHandlerTransmitMeasurementValues(MAKE_BROADCAST_CAN_ID(PWRMANAGER_NODE_ID, PWRMANAGER_TX_ELECTRONIC_VALUES_ID), currentElectronics, voltageElectronics);
 	if (sendError != 0)
 	{
@@ -151,7 +153,7 @@ void taskCANHandler()
 	canHandlerProcessReceiveMessages();
 
 #ifdef USE_DATA_HANDLER
-	unsigned long stopTime = stopRuntimeMeasurement();
+	uint32_t stopTime = stopRuntimeMeasurement();
 	dataGetCollector()->updateData(DATA_ITEM_CAN_TASK, getRuntime(startTime, stopTime));
 #endif
 }
@@ -162,14 +164,14 @@ void taskCANHandler()
 void taskPowerManager()
 {
 #ifdef USE_DATA_HANDLER
-	unsigned long startTime = startRuntimeMeasurement();
+	uint32_t startTime = startRuntimeMeasurement();
 #endif
 
 	// Run the PowerManager state machine
 	powerManagerRunStateMachine(&g_pwrManager);
 
 #ifdef USE_DATA_HANDLER
-	unsigned long stopTime = stopRuntimeMeasurement();
+	uint32_t stopTime = stopRuntimeMeasurement();
 	dataGetCollector()->updateData(DATA_ITEM_PWRMGR_TASK, getRuntime(startTime, stopTime));
 #endif
 }
@@ -189,7 +191,7 @@ void taskDisplay()
 void taskMeasurement()
 {
 #ifdef USE_DATA_HANDLER
-	unsigned long startTime = startRuntimeMeasurement();
+	uint32_t startTime = startRuntimeMeasurement();
 #endif
 
 	measurementPerformMeasurement();
@@ -203,7 +205,7 @@ void taskMeasurement()
 #endif
 
 #ifdef USE_DATA_HANDLER
-	unsigned long stopTime = stopRuntimeMeasurement();
+	uint32_t stopTime = stopRuntimeMeasurement();
 	dataGetCollector()->updateData(DATA_ITEM_MEASUREMENT_TASK, getRuntime(startTime, stopTime));
 #endif
 }
@@ -215,7 +217,7 @@ void taskRemoteController()
 {
 	// Process the remote commands
 	remoteCtrlProcessCommands();
-	int currentCommand = remoteCtrlGetNextCommand();
+	int16_t currentCommand = remoteCtrlGetNextCommand();
 
 	if (currentCommand != REMOTE_CTRL_CMD_UNKNOWN)
 	{

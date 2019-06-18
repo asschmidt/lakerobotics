@@ -16,10 +16,10 @@
 
 static MCP2515 g_canController(CAN_CONTROLLER_CS_PIN);
 
-static volatile int g_validFrame0;
+static volatile int16_t g_validFrame0;
 static volatile struct can_frame g_canRxBuffer0;
 
-static volatile int g_validFrame1;
+static volatile int16_t g_validFrame1;
 static volatile struct can_frame g_canRxBuffer1;
 
 static void canHandlerInterrupt();
@@ -89,7 +89,7 @@ void canHandlerInterrupt()
  * @param value2
  * @return
  */
-int canHandlerTransmitMeasurementValues(canid_t canID, int value1, int value2)
+int canHandlerTransmitMeasurementValues(canid_t canID, int16_t value1, int16_t value2)
 {
 	struct can_frame transmitFrame;
 

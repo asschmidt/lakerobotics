@@ -17,9 +17,9 @@ extern void displayShowPowerControlStartMessage();
 extern void displayShowMeasurementValues(float voltMotor, float voltElectronic, float currentMotor, float currentElectronic);
 
 extern int indicatorInitialize();
-extern void indicatorBuzz(unsigned long duration);
-extern void indicatorLEDBlink(unsigned long duration);
-extern void indicatorHazzardBlink(unsigned long duration);
-extern void indicatorSpeedBlink(unsigned long duration);
+extern void indicatorBuzz(uint32_t duration);
+extern void indicatorLEDBlink(uint32_t duration);
+extern void indicatorHazzardBlink(uint32_t duration);
+extern void indicatorSpeedBlink(uint32_t duration);
 
 #endif /* SRC_APP_PWRMANAGER_DISPLAY_UI_H_ */

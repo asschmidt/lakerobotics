@@ -49,7 +49,7 @@ void powerCtrlDeactivateMotor()
  *
  * @param channel
  */
-void powerCtrlActivateElectronics(int channel)
+void powerCtrlActivateElectronics(int16_t channel)
 {
 	digitalWrite(channel, LOW);
 }
@@ -58,7 +58,7 @@ void powerCtrlActivateElectronics(int channel)
  *
  * @param channel
  */
-void powerCtrlDeactivateElectronics(int channel)
+void powerCtrlDeactivateElectronics(int16_t channel)
 {
 	digitalWrite(channel, HIGH);
 }

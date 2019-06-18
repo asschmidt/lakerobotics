@@ -25,25 +25,25 @@
 
 typedef struct _POWER_OUTPUT_STATES
 {
-	unsigned int stateMotorPower 		: 1;
-	unsigned int stateElectronic1Power 	: 1;
-	unsigned int stateElectronic2Power 	: 1;
-	unsigned int stateElectronic3Power 	: 1;
+	uint16_t stateMotorPower 		: 1;
+	uint16_t stateElectronic1Power 	: 1;
+	uint16_t stateElectronic2Power 	: 1;
+	uint16_t stateElectronic3Power 	: 1;
 } POWER_OUPUT_STATES;
 
 typedef struct _PWRM_STATE_MACHINE
 {
-	int pwrManagerMode;
-	int pwrManagerLastMode;
+    int16_t pwrManagerMode;
+    int16_t pwrManagerLastMode;
 
-	int pwrManagerRemoteCommand;
+    int16_t pwrManagerRemoteCommand;
 
 	POWER_OUPUT_STATES pwrManagerOutputStates;
 } PWR_STATE_MACHINE;
 
 
 void powerManagerInitialize(PWR_STATE_MACHINE* pPwrManager);
-int powerManagerSwitchMode(PWR_STATE_MACHINE* pPwrManager, int newMode);
-int powerManagerRunStateMachine(PWR_STATE_MACHINE* pPwrManager);
+int16_t powerManagerSwitchMode(PWR_STATE_MACHINE* pPwrManager, int16_t newMode);
+int16_t powerManagerRunStateMachine(PWR_STATE_MACHINE* pPwrManager);
 
 #endif /* SRC_APP_PWRMANAGER_PWRMANAGER_H_ */

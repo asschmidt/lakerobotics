@@ -91,8 +91,8 @@ typedef struct _MEASUREMENT_VALUES
 	float currentMotor;			// Current of the motor supply in [A]
 } MEASUREMENT_VALUES;
 
-extern int measurementInitialize(void);
-extern int measurementPerformMeasurement(void);
+extern int16_t measurementInitialize(void);
+extern int16_t measurementPerformMeasurement(void);
 extern MEASUREMENT_VALUES* measurementGetValues(void);
 
 #endif /* SRC_APP_PWRMANAGER_MEASUREMENT_H_ */

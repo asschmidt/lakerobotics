@@ -12,7 +12,7 @@ extern void powerCtrlInitialize();
 extern void powerCtrlActivateMotor();
 extern void powerCtrlDeactivateMotor();
 
-extern void powerCtrlActivateElectronics(int channel);
-extern void powerCtrlDeactivateElectronics(int channel);
+extern void powerCtrlActivateElectronics(int16_t channel);
+extern void powerCtrlDeactivateElectronics(int16_t channel);
 
 #endif /* SRC_APP_PWRMANAGER_PWRCONTROL_H_ */

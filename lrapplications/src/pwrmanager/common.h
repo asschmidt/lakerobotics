@@ -35,6 +35,6 @@
 #define POWER_MANAGER_LOOP_CYCLE		100		// ms for the Run-Loop Cycle of the Power Manager
 #define POWER_MANAGER_CAN_CYCLE			250		// ms for the CAN cycle to transmit CAN messages
 #define POWER_MANAGER_DISPLAY_CYCLE		1000	// ms for the Display cycle to update the display
-#define POWER_MANAGER_MEASUREMENT_CYCLE	100
+#define POWER_MANAGER_MEASUREMENT_CYCLE	100     // ms for the Measurement Cycle
 
 #endif /* SRC_APP_PWRMANAGER_COMMON_H_ */

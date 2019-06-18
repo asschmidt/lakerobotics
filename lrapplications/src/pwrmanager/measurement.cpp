@@ -20,8 +20,8 @@ static void setADCGain(MEASUREMENT_PARAMETER* pParams, adsGain_t gain);
 static void setADCGainToZero(MEASUREMENT_PARAMETER* pParams);
 static void calibrateADCSupplyVoltage(MEASUREMENT_PARAMETER* pParams);
 
-static float performVoltageMeasurement(int voltageType);
-static float performCurrentMeasurement(int currentType);
+static float performVoltageMeasurement(int16_t voltageType);
+static float performCurrentMeasurement(int16_t currentType);
 
 /**
  *
@@ -84,7 +84,7 @@ void setADCGainToZero(MEASUREMENT_PARAMETER* pParams)
  */
 void calibrateADCSupplyVoltage(MEASUREMENT_PARAMETER* pParams)
 {
-	int vddRawValue = analogRead(ADC_VDD_MEASUREMENT_PIN);
+    int16_t vddRawValue = analogRead(ADC_VDD_MEASUREMENT_PIN);
 	float vddVoltage = vddRawValue * 0.0049;
 
 	pParams->adcVDD = vddVoltage;
@@ -99,7 +99,7 @@ void calibrateADCSupplyVoltage(MEASUREMENT_PARAMETER* pParams)
  *
  * @return
  */
-int measurementInitialize(void)
+int16_t measurementInitialize(void)
 {
 	g_ADC.begin();
 
@@ -125,7 +125,7 @@ int measurementInitialize(void)
  * @param voltageType
  * @return
  */
-float performVoltageMeasurement(int voltageType)
+float performVoltageMeasurement(int16_t voltageType)
 {
 	int16_t adcValue = 0;
 	float rawVoltageValue = 0.0;
@@ -173,7 +173,7 @@ float performVoltageMeasurement(int voltageType)
  * @param currentType
  * @return
  */
-float performCurrentMeasurement(int currentType)
+float performCurrentMeasurement(int16_t currentType)
 {
 	int16_t adcValue = 0;
 
@@ -215,7 +215,7 @@ float performCurrentMeasurement(int currentType)
  *
  * @return
  */
-int measurementPerformMeasurement(void)
+int16_t measurementPerformMeasurement(void)
 {
 	// Accquire the measurement values for voltage and current
 	g_measurementValues.voltageElectronics = performVoltageMeasurement(VOLTAGE_ELECTRONIC);

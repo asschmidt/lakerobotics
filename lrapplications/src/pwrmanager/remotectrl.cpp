@@ -18,13 +18,13 @@
 
 static IRrecv g_irReceiver(IR_RECEIVER_PIN, IR_RECEIVER_BLINK_PIN);
 static decode_results g_irResults;
-static CircularBuffer<int, 4> g_irCmdBuffer;
+static CircularBuffer<int16_t, 4> g_irCmdBuffer;
 
 static CmdCallback_P<3> cmdCallback;
 static CmdBuffer<32> cmdBuffer;
 static CmdParser cmdParser;
 
-static int remoteCtrlDecodeCommands(decode_results* pResults);
+static int16_t remoteCtrlDecodeCommands(decode_results* pResults);
 static void remoteCtrlProcessActivate(CmdParser* cmdParser);
 
 /**
@@ -48,7 +48,7 @@ void remoteCtrlClearCommands()
  *
  * @return
  */
-int remoteCtrlProcessCommands()
+int16_t remoteCtrlProcessCommands()
 {
 	// read data
 	if (cmdBuffer.readFromSerial(&Serial, 1))
@@ -86,7 +86,7 @@ int remoteCtrlProcessCommands()
  *
  * @return
  */
-int remoteCtrlGetNextCommand()
+int16_t remoteCtrlGetNextCommand()
 {
 	if (!g_irCmdBuffer.isEmpty())
 	{
@@ -103,7 +103,7 @@ int remoteCtrlGetNextCommand()
  * @param pResults
  * @return
  */
-int remoteCtrlDecodeCommands(decode_results* pResults)
+int16_t remoteCtrlDecodeCommands(decode_results* pResults)
 {
 	switch (pResults->value)
 	{

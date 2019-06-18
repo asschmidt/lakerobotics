@@ -4,6 +4,8 @@
  *  Created on: 22.07.2018
  *      Author: Andreas
  */
+#include <stdint.h>
+
 #include "common.h"
 #include "hwconfig.h"
 #include "display_ui.h"
@@ -129,15 +131,15 @@ int indicatorInitialize()
  *
  * @param duration
  */
-void indicatorBuzz(unsigned long duration)
+void indicatorBuzz(uint32_t duration)
 {
-	unsigned long usedDuration = duration;
+	uint32_t usedDuration = duration;
 	if (usedDuration > MAX_BUZZER_DURATION)
 	{
 		usedDuration = MAX_BUZZER_DURATION;
 	}
 
-	for (unsigned long i=0; i<(usedDuration / 2); i++)
+	for (uint32_t i=0; i<(usedDuration / 2); i++)
 	{
 		digitalWrite(BUZZER_PIN, HIGH);
 		delay(1);
@@ -150,15 +152,15 @@ void indicatorBuzz(unsigned long duration)
  *
  * @param duration
  */
-void indicatorLEDBlink(unsigned long duration)
+void indicatorLEDBlink(uint32_t duration)
 {
-	unsigned long usedDuration = duration;
+	uint32_t usedDuration = duration;
 	if (usedDuration > MAX_LED_DURATION)
 	{
 		usedDuration = MAX_LED_DURATION;
 	}
 
-	for (unsigned long i=0; i<(usedDuration / 500); i++)
+	for (uint32_t i=0; i<(usedDuration / 500); i++)
 	{
 		digitalWrite(LED_PIN, HIGH);
 		delay(250);
@@ -171,15 +173,15 @@ void indicatorLEDBlink(unsigned long duration)
  *
  * @param duration
  */
-void indicatorSpeedBlink(unsigned long duration)
+void indicatorSpeedBlink(uint32_t duration)
 {
-	unsigned long usedDuration = duration;
+	uint32_t usedDuration = duration;
 	if (usedDuration > MAX_LED_DURATION)
 	{
 		usedDuration = MAX_LED_DURATION;
 	}
 
-	for (unsigned long i=0; i<(usedDuration / 200); i++)
+	for (uint32_t i=0; i<(usedDuration / 200); i++)
 	{
 		digitalWrite(LED_PIN, HIGH);
 		delay(100);
@@ -192,15 +194,15 @@ void indicatorSpeedBlink(unsigned long duration)
  *
  * @param duration
  */
-void indicatorHazzardBlink(unsigned long duration)
+void indicatorHazzardBlink(uint32_t duration)
 {
-	unsigned long usedDuration = duration;
+	uint32_t usedDuration = duration;
 	if (usedDuration > MAX_LED_DURATION)
 	{
 		usedDuration = MAX_LED_DURATION;
 	}
 
-	for (unsigned long i=0; i<(usedDuration / 350); i++)
+	for (uint32_t i=0; i<(usedDuration / 350); i++)
 	{
 		for (int j=0; j<5; j++)
 		{
