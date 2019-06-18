@@ -54,7 +54,7 @@ set(LR_LINKER_DEFAULT_FLAGS "${LR_COMPILER_MCU_FLAGS} -flto -Wl,--gc-sections -W
 # one for the Linker MAP file
 if(DEFINED APPLICATION_OUTPUTNAME)
     # Define the MAP options for the Linker
-    set(LR_LINKER_MAP_FLAGS "-Wl,-Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${APPLICATION_OUTPUTNAME}.map")
+    set(LR_LINKER_MAP_FLAGS "-Wl,-Map=${APPLICATION_OUTPUTNAME}.map")
 endif(DEFINED APPLICATION_OUTPUTNAME)
 
 # Set default flags for Release build.
