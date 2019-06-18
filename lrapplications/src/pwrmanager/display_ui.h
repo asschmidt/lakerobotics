@@ -22,4 +22,8 @@ extern void indicatorLEDBlink(uint32_t duration);
 extern void indicatorHazzardBlink(uint32_t duration);
 extern void indicatorSpeedBlink(uint32_t duration);
 
+extern void showMainStatus(int16_t status);
+extern void showElectronicStatus(int16_t status);
+extern void showMotorStatus(int16_t status);
+
 #endif /* SRC_APP_PWRMANAGER_DISPLAY_UI_H_ */

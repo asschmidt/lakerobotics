@@ -19,7 +19,10 @@ class ButtonDebounce{
     BTN_CALLBACK;
     bool isTimeToUpdate();
   public:
+    ButtonDebounce();
     ButtonDebounce(int pin, unsigned long delay);
+
+    void initializeButton(int pin, unsigned long delay);
     void update();
     int state();
     void setCallback(BTN_CALLBACK);

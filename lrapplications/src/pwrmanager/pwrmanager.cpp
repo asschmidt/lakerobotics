@@ -21,7 +21,7 @@ static void powerManagerHandlePrePowerMode(PWR_STATE_MACHINE* pPwrManager);
 static void powerManagerHandlePowerStartMode(PWR_STATE_MACHINE* pPwrManager);
 static void powerManagerHandleRunMode(PWR_STATE_MACHINE* pPwrManager);
 static void powerManagerHandleShutdown(PWR_STATE_MACHINE* pPwrManager);
-
+static void powerManagerUpdateUIStatus(PWR_STATE_MACHINE* pPwrManager);
 
 /**
  *
@@ -124,35 +124,26 @@ void powerManagerHandlePowerStartMode(PWR_STATE_MACHINE* pPwrManager)
 			powerCtrlActivateElectronics(POWER_ELECTRONIC_CHANNEL3_PIN);
 			pPwrManager->pwrManagerOutputStates.stateElectronic3Power = 1;
 			delay(POWER_STARTUP_STATE_DELAY);
+
+			powerCtrlActivateElectronics(POWER_ELECTRONIC_CHANNEL4_PIN);
+            pPwrManager->pwrManagerOutputStates.stateElectronic4Power = 1;
+            delay(POWER_STARTUP_STATE_DELAY);
 			break;
 	}
 
 	// Check if all Electronic Power Stages have been turned on
 	if (pPwrManager->pwrManagerOutputStates.stateElectronic1Power == 1
 			&& pPwrManager->pwrManagerOutputStates.stateElectronic2Power == 1
-			&& pPwrManager->pwrManagerOutputStates.stateElectronic3Power == 1)
+			&& pPwrManager->pwrManagerOutputStates.stateElectronic3Power == 1
+			&& pPwrManager->pwrManagerOutputStates.stateElectronic4Power == 1)
 	{
-		// If all electronics have been started, switch Motor on
-		if (pPwrManager->pwrManagerOutputStates.stateMotorPower == 0)
-		{
-			#ifdef PWRMGR_DEBUG
-				Serial.println(F("Activating Motor"));
-			#endif
+		powerManagerSwitchMode(pPwrManager, PWRM_MODE_RUN);
 
-			powerCtrlActivateMotor();
-			pPwrManager->pwrManagerOutputStates.stateMotorPower = 1;
+		indicatorLEDBlink(1000);
 
-			// Wait 1 second after activating the motor current
-			delay(1000);
-
-			powerManagerSwitchMode(pPwrManager, PWRM_MODE_RUN);
-
-			indicatorLEDBlink(1000);
-
-			#ifdef PWRMGR_DEBUG
-				Serial.println(F("[powerManagerRunStateMachine]: Entering Run Mode"));
-			#endif
-		}
+        #ifdef PWRMGR_DEBUG
+            Serial.println(F("[powerManagerRunStateMachine]: Entering Run Mode"));
+        #endif
 	}
 }
 
@@ -181,10 +172,9 @@ void powerManagerHandleShutdown(PWR_STATE_MACHINE* pPwrManager)
 
 	indicatorSpeedBlink(POWER_SHUTDOWN_DELAY);
 
-	// Switch Motor off
-	powerCtrlDeactivateMotor();
-	pPwrManager->pwrManagerOutputStates.stateMotorPower = 0;
-	indicatorSpeedBlink(POWER_SHUTDOWN_STAGE_DELAY);
+	powerCtrlDeactivateElectronics(POWER_ELECTRONIC_CHANNEL4_PIN);
+    pPwrManager->pwrManagerOutputStates.stateElectronic4Power = 0;
+    indicatorSpeedBlink(POWER_SHUTDOWN_STAGE_DELAY);
 
 	powerCtrlDeactivateElectronics(POWER_ELECTRONIC_CHANNEL3_PIN);
 	pPwrManager->pwrManagerOutputStates.stateElectronic3Power = 0;
@@ -255,5 +245,44 @@ int16_t powerManagerRunStateMachine(PWR_STATE_MACHINE* pPwrManager)
 		break;
 	}
 
+	// Update the status LEDs
+	powerManagerUpdateUIStatus(pPwrManager);
+
 	return pPwrManager->pwrManagerMode;
+}
+
+/**
+ *
+ */
+void powerManagerUpdateUIStatus(PWR_STATE_MACHINE* pPwrManager)
+{
+    if ( pPwrManager->pwrManagerMode == PWRM_MODE_POWER_START
+        || pPwrManager->pwrManagerMode == PWRM_MODE_RUN)
+    {
+        showMainStatus(STATUS_OK);
+    }
+    else
+    {
+        showMainStatus(STATUS_NOK);
+    }
+
+    if (pPwrManager->pwrManagerMode == PWRM_MODE_RUN)
+    {
+        if (pPwrManager->pwrManagerOutputStates.stateElectronic1Power == 1
+            && pPwrManager->pwrManagerOutputStates.stateElectronic2Power == 1
+            && pPwrManager->pwrManagerOutputStates.stateElectronic3Power == 1
+            && pPwrManager->pwrManagerOutputStates.stateElectronic4Power == 1)
+        {
+            showElectronicStatus(STATUS_OK);
+        }
+        else
+        {
+            showElectronicStatus(STATUS_NOK);
+        }
+    }
+    else
+    {
+        showMotorStatus(STATUS_NOK);
+        showElectronicStatus(STATUS_NOK);
+    }
 }

@@ -84,10 +84,10 @@ void setADCGainToZero(MEASUREMENT_PARAMETER* pParams)
  */
 void calibrateADCSupplyVoltage(MEASUREMENT_PARAMETER* pParams)
 {
-    int16_t vddRawValue = analogRead(ADC_VDD_MEASUREMENT_PIN);
-	float vddVoltage = vddRawValue * 0.0049;
+    //int16_t vddRawValue = analogRead(ADC_VDD_MEASUREMENT_PIN);
+	//float vddVoltage = vddRawValue * 0.0049;
 
-	pParams->adcVDD = vddVoltage;
+	pParams->adcVDD = 5.0; //vddVoltage;
 
 #ifdef PWRMGR_DEBUG
 	Serial.print(F("[calibrateADCSupplyVoltage]: VDD of ADC: "));
@@ -176,24 +176,32 @@ float performVoltageMeasurement(int16_t voltageType)
 float performCurrentMeasurement(int16_t currentType)
 {
 	int16_t adcValue = 0;
+	float currentValue = 0.0;
 
 	if (currentType == CURRENT_MOTOR)
 	{
 		adcValue = g_ADC.readADC_SingleEnded(CURRENT_MOTOR_ADC_CHANNEL);
+
+		// Calculate the measured value into unit Volts [V]
+        float voltageValue = 0.0;
+        voltageValue = (adcValue * g_measurementParams.adcmVperDigit) / 1000;
+
+        // Calculate the current based on measured voltage
+        // voltage - 2,5V zero point
+        currentValue = ((g_measurementParams.adcVDD * 0.5) - voltageValue) / CURRENT_SENSOR_MOTOR_VOLT_PER_AMPERE;
 	}
 	else if (currentType == CURRENT_ELECTRONIC)
 	{
 		adcValue = g_ADC.readADC_SingleEnded(CURRENT_ELECTRONIC_ADC_CHANNEL);
+
+		// Calculate the measured value into unit Volts [V]
+        float voltageValue = 0.0;
+        voltageValue = (adcValue * g_measurementParams.adcmVperDigit) / 1000;
+
+        // Calculate the current based on measured voltage
+        // voltage - 2,5V zero point
+        currentValue = ((g_measurementParams.adcVDD * 0.5) - voltageValue) / CURRENT_SENSOR_ELEC_VOLT_PER_AMPERE;
 	}
-
-	// Calculate the measured value into unit Volts [V]
-	float voltageValue = 0.0;
-	voltageValue = (adcValue * g_measurementParams.adcmVperDigit) / 1000;
-
-	// Calculate the current based on measured voltage
-	// voltage - 2,5V zero point
-	float currentValue = 0.0;
-	currentValue = (voltageValue - (g_measurementParams.adcVDD * 0.5)) / CURRENT_SENSOR_VOLT_PER_AMPERE;
 
 #ifdef PWRMGR_DEBUG
 	if (currentType == CURRENT_MOTOR)

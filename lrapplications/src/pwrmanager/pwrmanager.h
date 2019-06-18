@@ -25,10 +25,10 @@
 
 typedef struct _POWER_OUTPUT_STATES
 {
-	uint16_t stateMotorPower 		: 1;
 	uint16_t stateElectronic1Power 	: 1;
 	uint16_t stateElectronic2Power 	: 1;
 	uint16_t stateElectronic3Power 	: 1;
+	uint16_t stateElectronic4Power  : 1;
 } POWER_OUPUT_STATES;
 
 typedef struct _PWRM_STATE_MACHINE

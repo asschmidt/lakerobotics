@@ -121,10 +121,53 @@ void displayShowMeasurementValues(float voltMotor, float voltElectronic, float c
  */
 int indicatorInitialize()
 {
+    // Set the Buzzer pin to output
 	pinMode(BUZZER_PIN, OUTPUT);
-	pinMode(LED_PIN, OUTPUT);
+
+	// Set the LED pins to output
+	pinMode(LED_MAIN_PIN, OUTPUT);
+	pinMode(LED_ELEC_OK_PIN, OUTPUT);
+	pinMode(LED_ELEC_NOK_PIN, OUTPUT);
+	pinMode(LED_MOTOR_OK_PIN, OUTPUT);
+	pinMode(LED_MOTOR_NOK_PIN, OUTPUT);
+
+	// Set the button pins to input with pullup
+	pinMode(BUTTON_MAIN_PIN, INPUT_PULLUP);
+	pinMode(BUTTON_START1_PIN, INPUT_PULLUP);
+	pinMode(BUTTON_START2_PIN, INPUT_PULLUP);
 
 	return 0;
+}
+
+/**
+ *
+ */
+void showElectronicStatus(int16_t status)
+{
+    if (status == STATUS_OK)
+    {
+        digitalWrite(LED_ELEC_NOK_PIN, LOW);
+        digitalWrite(LED_ELEC_OK_PIN, HIGH);
+    }
+    else if( status == STATUS_NOK)
+    {
+        digitalWrite(LED_ELEC_NOK_PIN, HIGH);
+        digitalWrite(LED_ELEC_OK_PIN, LOW);
+    }
+}
+
+void showMotorStatus(int16_t status)
+{
+    if (status == STATUS_OK)
+    {
+        digitalWrite(LED_MOTOR_NOK_PIN, LOW);
+        digitalWrite(LED_MOTOR_OK_PIN, HIGH);
+    }
+    else if( status == STATUS_NOK)
+    {
+        digitalWrite(LED_MOTOR_NOK_PIN, HIGH);
+        digitalWrite(LED_MOTOR_OK_PIN, LOW);
+    }
 }
 
 /**
@@ -162,9 +205,9 @@ void indicatorLEDBlink(uint32_t duration)
 
 	for (uint32_t i=0; i<(usedDuration / 500); i++)
 	{
-		digitalWrite(LED_PIN, HIGH);
+		digitalWrite(LED_MAIN_PIN, HIGH);
 		delay(250);
-		digitalWrite(LED_PIN, LOW);
+		digitalWrite(LED_MAIN_PIN, LOW);
 		delay(250);
 	}
 }
@@ -183,9 +226,9 @@ void indicatorSpeedBlink(uint32_t duration)
 
 	for (uint32_t i=0; i<(usedDuration / 200); i++)
 	{
-		digitalWrite(LED_PIN, HIGH);
+		digitalWrite(LED_MAIN_PIN, HIGH);
 		delay(100);
-		digitalWrite(LED_PIN, LOW);
+		digitalWrite(LED_MAIN_PIN, LOW);
 		delay(100);
 	}
 }
@@ -206,12 +249,27 @@ void indicatorHazzardBlink(uint32_t duration)
 	{
 		for (int j=0; j<5; j++)
 		{
-			digitalWrite(LED_PIN, HIGH);
+			digitalWrite(LED_MAIN_PIN, HIGH);
 			delay(50);
-			digitalWrite(LED_PIN, LOW);
+			digitalWrite(LED_MAIN_PIN, LOW);
 			delay(50);
 		}
 
 		delay(250);
 	}
+}
+
+/**
+ *
+ */
+void showMainStatus(int16_t status)
+{
+    if (status == STATUS_OK)
+    {
+        digitalWrite(LED_MAIN_PIN, HIGH);
+    }
+    else if( status == STATUS_NOK)
+    {
+        digitalWrite(LED_MAIN_PIN, LOW);
+    }
 }

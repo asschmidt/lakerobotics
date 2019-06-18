@@ -30,7 +30,8 @@ const float ADC_MAX_MILLIVOLT_PER_DIGIT	= 0.1875;
  * Constant for current sensor (ACS712 5A) for voltage per ampere
  * according datasheet 186mV per Ampere
  */
-const float CURRENT_SENSOR_VOLT_PER_AMPERE = 0.185;
+const float CURRENT_SENSOR_ELEC_VOLT_PER_AMPERE = 0.185;
+const float CURRENT_SENSOR_MOTOR_VOLT_PER_AMPERE = 0.100;
 
 /*
  * Constant for zero ampere. Typically this is for ACS712 5A a voltage of 2,5V
