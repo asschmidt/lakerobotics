@@ -53,6 +53,10 @@ macro(checkAndIncludeRealBSP)
         # Include the lib_bsp_uno exports.
         include(${LR_PLATFORM_SOURCE_ROOT}/target/${LR_TARGET_DIRECTORY_NAME}/lib_bsp_uno/lib_bsp_uno_exp.cmake)
         set(BSP_INCLUDE_DIR ${LIB_BSP_UNO_INC_DIR})
+      elseif(LR_TARGET_BOARD MATCHES "NANO")
+        # Include the lib_bsp_nano exports.
+        include(${LR_PLATFORM_SOURCE_ROOT}/target/${LR_TARGET_DIRECTORY_NAME}/lib_bsp_nano/lib_bsp_nano_exp.cmake)
+        set(BSP_INCLUDE_DIR ${LIB_BSP_NANO_INC_DIR})
       elseif(LR_TARGET_BOARD MATCHES "MEGA")
         # Include the lib_bsp_mega exports.
         include(${LR_PLATFORM_SOURCE_ROOT}/target/${LR_TARGET_DIRECTORY_NAME}/lib_bsp_mega/lib_bsp_mega_exp.cmake)
