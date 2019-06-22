@@ -19,8 +19,8 @@ class CANMessageGenerator(BaseMessageGenerator):
         super().__init__(networkBuilder)
                 
         self._jinjaEnv = jinjaEnv
-        self._nodeHeaderTemplate = self._jinjaEnv.get_template('node_header.template')
-        self._nodeCodeTemplate = self._jinjaEnv.get_template('node_code.template')
+        self._nodeCodeTemplate = self._jinjaEnv.get_template('node_code.j2')
+        self._nodeHeaderTemplate = self._jinjaEnv.get_template('node_header.j2')        
         
         self._templateCtx = {}
         
@@ -175,6 +175,7 @@ class CANMessageGenerator(BaseMessageGenerator):
             
             # Iterate over all Interfaces of a node
             for interface in node.Interfaces.values():
+                self._templateCtx['networkVersion'] = self._networkBuilder.getNetworkVersion()
                 self._templateCtx['txMessages'] = interface.TxMessages.values()
                 self._templateCtx['rxMessages'] = interface.RxMessages.values()
 

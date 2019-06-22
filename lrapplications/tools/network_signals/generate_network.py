@@ -18,6 +18,8 @@ def loadNetworkData(fileName):
     tree = ET.parse(fileName)
     root = tree.getroot()
     
+    networkVersion = root.get("Version")
+    
     # Create the parser for the <Network> elements
     networkParser = NetworkDataParser(root.find("Networks"))
     # Create the parser for the <Signal> elements
@@ -38,12 +40,12 @@ def loadNetworkData(fileName):
     nodes = nodeParser.parse()
     
     # Create a NetworkBuilder object and return it
-    networkBuilder = NetworkBuilder(networks, nodes, messages, signals)
+    networkBuilder = NetworkBuilder(networkVersion, networks, nodes, messages, signals)
     return networkBuilder
 
 
 # Load the templates
-env = Environment(loader=FileSystemLoader('templates/'), trim_blocks = True, lstrip_blocks = True)
+env = Environment(loader=FileSystemLoader('templates/'), trim_blocks=True, lstrip_blocks=True)
 
 
 # Load the Network data from XML

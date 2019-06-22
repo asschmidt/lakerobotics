@@ -14,7 +14,8 @@ from signals import *
 class NetworkBuilder:
     '''
     '''
-    def __init__(self, networkDict, nodeDict, messageDict, signalDict):
+    def __init__(self, networkVersion, networkDict, nodeDict, messageDict, signalDict):
+        self._networkVersion = networkVersion
         self._networkDict = networkDict
         self._nodeDict = nodeDict
         self._messageDict = messageDict
@@ -32,3 +33,8 @@ class NetworkBuilder:
     '''
     def getNodes(self):
         return self._nodeDict.values()
+    
+    '''
+    '''
+    def getNetworkVersion(self):
+        return self._networkVersion
