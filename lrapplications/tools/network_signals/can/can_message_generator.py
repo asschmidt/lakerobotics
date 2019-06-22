@@ -171,7 +171,7 @@ class CANMessageGenerator(BaseMessageGenerator):
             self._templateCtx['nodeHeaderName'] = "_" + node.ID.upper() + "_CAN_H_"
             
             outputHeaderFile = open("gen\\" + node.ID + "_CAN.h", "w")
-            outputCodeFile = open("gen\\" + node.ID + "_CAN.c", "w")
+            outputCodeFile = open("gen\\" + node.ID + "_CAN.cpp", "w")
             
             # Iterate over all Interfaces of a node
             for interface in node.Interfaces.values():

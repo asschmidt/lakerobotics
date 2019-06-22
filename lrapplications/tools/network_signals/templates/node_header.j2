@@ -50,7 +50,7 @@
   *
  */
 {% for txMsg in txMessages %}
-	int8_t createMsg_{{txMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{txMsg.Message.ID}}* pMsg);
+	extern int8_t createMsg_{{txMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{txMsg.Message.ID}}* pMsg);
 {% endfor %}
 
  /*
@@ -92,7 +92,7 @@
   *
  */
 {% for rxMsg in rxMessages %}
-	int8_t parseMsg_{{rxMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{rxMsg.Message.ID}}* pMsg);
+	extern int8_t parseMsg_{{rxMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{rxMsg.Message.ID}}* pMsg);
 {% endfor %}
  
  #endif

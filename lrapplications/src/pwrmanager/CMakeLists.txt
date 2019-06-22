@@ -74,7 +74,7 @@ add_platform_library(lib_util)
 include(pwrmanager.cmake)
 
 # Build a executable
-add_executable(${APPLICATION_OUTPUTNAME} ${PWRMANAGER_CXXSRC})
+add_executable(${APPLICATION_OUTPUTNAME} ${PWRMANAGER_CXXSRC} ${PWRMANAGER_GEN_CXXSRC})
 target_link_libraries(${APPLICATION_OUTPUTNAME} ui net os sensor io util core bsp_uno)
 
 # Set target properties like output name

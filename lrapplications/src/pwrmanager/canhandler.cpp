@@ -10,6 +10,8 @@
 #include "canhandler.h"
 #include "display_ui.h"
 
+#include "gen/Node_Pwr_CAN.h"
+
 #include "spi/SPI.h"
 #include "mcp2515/mcp2515.h"
 #include "mcp2515/can.h"
@@ -89,22 +91,45 @@ void canHandlerInterrupt()
  * @param value2
  * @return
  */
-int canHandlerTransmitMeasurementValues(canid_t canID, int16_t value1, int16_t value2)
+int canHandlerTransmitElectronicValues(int16_t voltageValue, int16_t currentValue)
 {
 	struct can_frame transmitFrame;
+	Msg_Power_Supply_Electronic msgData;
 
-	transmitFrame.can_id = canID;
-	transmitFrame.can_dlc = 4;
-	transmitFrame.data[0] = (value1 & 0xFF00) >> 8;
-	transmitFrame.data[1] = (value1 & 0x00FF);
-	transmitFrame.data[2] = (value2 & 0xFF00) >> 8;
-	transmitFrame.data[3] = (value2 & 0x00FF);
+	msgData.Power_Supply_Electronic_Voltage = voltageValue;
+	msgData.Power_Supply_Electronic_Current = currentValue;
+
+	createMsg_Power_Supply_Electronic(&transmitFrame, &msgData);
 
 	MCP2515::ERROR canSendError = g_canController.sendMessage(&transmitFrame);
 	if (canSendError != MCP2515::ERROR_OK)
 		return -1;
 	else
 		return 0;
+}
+
+/**
+ *
+ * @param canID
+ * @param value1
+ * @param value2
+ * @return
+ */
+int canHandlerTransmitMotorValues(int16_t voltageValue, int16_t currentValue)
+{
+    struct can_frame transmitFrame;
+    Msg_Power_Supply_Motor msgData;
+
+    msgData.Power_Supply_Motor_Voltage = voltageValue;
+    msgData.Power_Supply_Motor_Current = currentValue;
+
+    createMsg_Power_Supply_Motor(&transmitFrame, &msgData);
+
+    MCP2515::ERROR canSendError = g_canController.sendMessage(&transmitFrame);
+    if (canSendError != MCP2515::ERROR_OK)
+        return -1;
+    else
+        return 0;
 }
 
 /**

@@ -2,6 +2,7 @@
  * Generated CAN Header File for Node
  ***********************************************************
  * Node: Node_Tele
+ * Network Version: 1.0
  *
  ***********************************************************
  * 
@@ -36,7 +37,7 @@
   * Declare function prototypes for CAN Tx Message creation
   *
  */
-	int8_t createMsg_Power_Control(struct can_frame* pCANFrame, Msg_Power_Control* pMsg);
+	extern int8_t createMsg_Power_Control(struct can_frame* pCANFrame, Msg_Power_Control* pMsg);
 
  /*
   * Defines for RX CAN Messages
