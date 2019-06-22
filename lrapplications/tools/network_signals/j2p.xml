@@ -21,6 +21,21 @@
 					</TxMessages>
 				</Interface>
 			</Interfaces>
+		</Node>
+		
+		<!-- Telematic ECU -->
+		<Node ID="Node_Tele" Name="Telematic Unit">
+			<Interfaces>
+				<Interface ID="Node_Tele_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+					<RxMessages>
+						
+					</RxMessages>
+					
+					<TxMessages>
+						<TxMessage RefID="Power_Control"></TxMessage>
+					</TxMessages>
+				</Interface>
+			</Interfaces>
 		</Node>				
 		
 		<!-- Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axix">

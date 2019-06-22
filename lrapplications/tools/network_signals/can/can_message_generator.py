@@ -56,6 +56,7 @@ class CANMessageGenerator(BaseMessageGenerator):
                         txMessage.GeneratorData[MessageGeneratorData.CAN_ID] = txMessage.Node.GeneratorData[NodeGeneratorData.NODE_ID] + actualMsgNumber
                         txMessage.GeneratorData['CAN_ID_HEX'] = hex(txMessage.GeneratorData[MessageGeneratorData.CAN_ID])
                         actualMsgNumber = actualMsgNumber + 1
+                        
     
     def _calculateMessageDLCs(self):            
         # Iterate over all Nodes 
@@ -79,6 +80,40 @@ class CANMessageGenerator(BaseMessageGenerator):
     
     '''
     '''
+    def _findCorrespondingTxMessage(self, rxMessage):
+        foundTxMessage = None
+        
+        # Iterate over all Nodes 
+        for node in self._networkBuilder.getNodes():
+            if node != None:                               
+                # Iterate over all Interfaces of a node
+                for interface in node.Interfaces.values():
+                    # Iterate over all Tx Messages of a Interface
+                    for txMessage in interface.TxMessages.values():
+                        if txMessage.Message.ID == rxMessage.Message.ID:
+                            foundTxMessage = txMessage
+                            break
+                        
+        return foundTxMessage
+    
+    '''
+    '''
+    def _updateRxMessageGeneratorData(self):
+        # Iterate over all Nodes 
+        for node in self._networkBuilder.getNodes():
+            if node != None:                               
+                # Iterate over all Interfaces of a node
+                for interface in node.Interfaces.values():
+                    # Iterate over all Rx Messages of a Interface
+                    for rxMessage in interface.RxMessages.values():      
+                        # Find txMessage in Network tree
+                        txMessage = self._findCorrespondingTxMessage(rxMessage)
+                        if txMessage != None:                                          
+                            rxMessage.GeneratorData = txMessage.GeneratorData
+                        else:
+                            print("Rx Message " + rxMessage.Message.ID + " not found in Tx list of any node")
+    '''
+    '''
     def _buildTxMessageList(self):
         txMessageList = {}
        
@@ -96,7 +131,7 @@ class CANMessageGenerator(BaseMessageGenerator):
                             print("Multiple nodes sending message " + txMessage.Message.ID)
     
         return txMessageList
-    
+        
     '''
     '''
     def _printNodeIDs(self):
@@ -119,21 +154,13 @@ class CANMessageGenerator(BaseMessageGenerator):
     
     '''
     '''
-    def _generateMessageIDDefine(self, txMessage):
-        messageID = txMessage.Message.ID
-        canID = hex(txMessage.GeneratorData[MessageGeneratorData.CAN_ID])
-        
-        defineStr = "#define " + messageID + "\t\t\t" + canID + "\n"
-        
-        return defineStr
-    '''
-    '''
     def generateCANMessageCode(self, nodeBlockSize):
         # Calculate the Node IDs
         self._calculateNodeIDs(nodeBlockSize)
         self._calculateMessageIDs(nodeBlockSize)    
         self._calculateMessageDLCs()
-            
+        self._updateRxMessageGeneratorData()
+        
         self._printNodeIDs()
         
         txMessageList = self._buildTxMessageList()

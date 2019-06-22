@@ -53,6 +53,14 @@
 {% endfor %}
 
  /*
+  * Defines for RX CAN Messages
+  *
+ */
+ {% for rxMsg in rxMessages %}
+ 	#define CAN_ID_{{rxMsg.Message.ID}}			{{rxMsg.GeneratorData['CAN_ID_HEX']}}
+ {% endfor %}
+
+ /*
   * Declare data type structures for CAN RX Messages
   *
  */

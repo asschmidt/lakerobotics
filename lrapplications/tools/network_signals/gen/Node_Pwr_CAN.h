@@ -49,6 +49,12 @@
 	int8_t createMsg_Power_Supply_Electronic(struct can_frame* pCANFrame, Msg_Power_Supply_Electronic* pMsg);
 
  /*
+  * Defines for RX CAN Messages
+  *
+ */
+ 	#define CAN_ID_Power_Control			0x3ff
+
+ /*
   * Declare data type structures for CAN RX Messages
   *
  */
