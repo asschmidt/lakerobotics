@@ -1,0 +1,40 @@
+/***********************************************************
+ * Generated CAN Code File for Node
+ ***********************************************************
+ * Node: {{ nodeName }}
+ *
+ ***********************************************************
+ * 
+ **********************************************************/
+
+#include "{{nodeName}}_CAN.h" 
+#include "mcp2515/can.h"
+ 
+  /*
+  * Define functions for CAN Tx Message creation
+  *
+ */
+{% for txMsg in txMessages %}
+	int8_t createMsg_{{txMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{txMsg.Message.ID}}* pMsg)
+	{
+		pCANFrame->can_id = CAN_ID_{{txMsg.Message.ID}};
+		pCANFrame->can_dlc = {{txMsg.GeneratorData["DLC"]}};
+		
+		return 0;
+	}
+	
+{% endfor %}
+
+  /*
+  * Define functions for CAN Rx Message parsing
+  *
+ */
+{% for rxMsg in rxMessages %}
+	int8_t parseMsg_{{rxMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{rxMsg.Message.ID}}* pMsg)
+	{
+	
+		return 0;
+	}
+	
+{% endfor %}
+ 

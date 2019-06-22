@@ -12,6 +12,7 @@
 			<Interfaces>
 				<Interface ID="Node_Pwr_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
 					<RxMessages>
+						<RxMessage RefID="Power_Control"></RxMessage>
 					</RxMessages>
 					
 					<TxMessages>
@@ -22,7 +23,7 @@
 			</Interfaces>
 		</Node>				
 		
-		<Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axix">
+		<!-- Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axix">
 			<Interfaces>
 				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
 					<RxMessages>
@@ -59,11 +60,16 @@
 					</TxMessages>
 				</Interface>
 			</Interfaces>
-		</Node>
+		</Node-->
 	</Nodes>
 	
 	<!-- Signal Definitions -->
 	<Signals>
+		<Signal ID="Power_Electronic_1_Active" Name="Activate Power Elect. 1" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
+		<Signal ID="Power_Electronic_2_Active" Name="Activate Power Elect. 2" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
+		<Signal ID="Power_Electronic_3_Active" Name="Activate Power Elect. 3" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
+		<Signal ID="Power_Electronic_4_Active" Name="Activate Power Elect. 4" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
+		
 		<Signal ID="Power_Supply_Motor_Voltage" Name="Voltage of Motor Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mV"></Signal>
 		<Signal ID="Power_Supply_Motor_Current" Name="Current of Motor Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mA"></Signal>
 		<Signal ID="Power_Supply_Electronic_Voltage" Name="Voltage of Electronic Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mV"></Signal>
@@ -79,6 +85,15 @@
 	
 	<!-- Message Definitions -->
 	<Messages>
+		<Message ID="Power_Control" Name="Power Control Bits" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Power_Electronic_1_Active" Position="1"></Signal>
+				<Signal RefID="Power_Electronic_2_Active" Position="2"></Signal>
+				<Signal RefID="Power_Electronic_3_Active" Position="3"></Signal>
+				<Signal RefID="Power_Electronic_4_Active" Position="4"></Signal>
+			</Signals>
+		</Message>
+		
 		<Message ID="Power_Supply_Motor" Name="Power Supply Values Motor" NetworkType="CAN">
 			<Signals>
 				<Signal RefID="Power_Supply_Motor_Voltage" Position="1"></Signal>

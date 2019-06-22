@@ -26,7 +26,7 @@ class BaseMessageGenerator:
         
     '''
     '''
-    def generateMessageIDs(self, nodeBlockSize):
+    def generateCANMessageCode(self, nodeBlockSize):
         raise NotImplementedError
     
     '''

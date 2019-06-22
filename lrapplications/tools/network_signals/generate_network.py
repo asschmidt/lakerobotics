@@ -9,6 +9,8 @@ from network_builder import *
 
 from can.can_message_generator import *
 
+from jinja2 import Environment, Template, FileSystemLoader
+
 '''
 '''
 def loadNetworkData(fileName):
@@ -40,10 +42,13 @@ def loadNetworkData(fileName):
     return networkBuilder
 
 
+# Load the templates
+env = Environment(loader=FileSystemLoader('templates/'), trim_blocks = True, lstrip_blocks = True)
+
 
 # Load the Network data from XML
 networkBuilder = loadNetworkData("j2p.xml")
 
 # Create the CAN Message generator object
-canMsgGen = CANMessageGenerator(networkBuilder)
-canMsgGen.generateMessageIDs(0x1FF)
+canMsgGen = CANMessageGenerator(networkBuilder, env)
+canMsgGen.generateCANMessageCode(0x1FF)
