@@ -10,3 +10,7 @@ lrplatform/out
 **/__pycache__
 **/*.pyc
 **/*.pyo
+/lrapplications/tools/can_commander/.vs/CANcommander/v15
+/lrapplications/tools/can_commander/CANcommander/GeneratedFiles
+/lrapplications/tools/can_commander/CANcommander/x64/Debug
+/lrapplications/tools/can_commander/x64/Debug
