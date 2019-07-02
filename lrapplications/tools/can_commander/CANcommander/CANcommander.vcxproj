@@ -53,7 +53,7 @@
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CHARTS_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_SERIALPORT_LIB;QT_WIDGETS_LIB;QT_XML_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Arduino\Sources\lakerobotics_new\lrapplications\tools\can_commander\CAN_USBTin;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Arduino\Sources\lakerobotics_new\lrapplications\tools\can_commander\CAN_USBTin;D:\Arduino\Sources\lakerobotics_new\lrapplications\tools\can_commander\CANcore;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -69,7 +69,7 @@
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-      <IncludePath>D:\Arduino\Sources\lakerobotics_new\lrapplications\tools\can_commander\CAN_USBTin;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</IncludePath>
+      <IncludePath>D:\Arduino\Sources\lakerobotics_new\lrapplications\tools\can_commander\CAN_USBTin;D:\Arduino\Sources\lakerobotics_new\lrapplications\tools\can_commander\CANcore;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</IncludePath>
       <Define>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CHARTS_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_SERIALPORT_LIB;QT_WIDGETS_LIB;QT_XML_LIB;%(PreprocessorDefinitions)</Define>
     </QtMoc>
     <QtUic>
@@ -126,6 +126,9 @@
     <QtRcc Include="CANcommander.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CANcore\CANcore.vcxproj">
+      <Project>{32491f92-aeeb-4b8b-96d7-0fb3045d75d3}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\CAN_USBTin\CAN_USBTin.vcxproj">
       <Project>{a8edeb2c-a877-4a24-a38b-216f26a97682}</Project>
     </ProjectReference>

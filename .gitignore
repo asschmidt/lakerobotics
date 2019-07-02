@@ -14,3 +14,5 @@ lrplatform/out
 /lrapplications/tools/can_commander/CANcommander/GeneratedFiles
 /lrapplications/tools/can_commander/CANcommander/x64/Debug
 /lrapplications/tools/can_commander/x64/Debug
+/lrapplications/tools/can_commander/CAN_USBTin/x64/Debug
+/lrapplications/tools/can_commander/CANcore/x64/Debug
