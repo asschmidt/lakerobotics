@@ -1,15 +1,29 @@
-#include "CANcommander.h"
-#include "CANMessage.h"
+/*
+ * MainWindow.cpp
+ *
+ *  Created on: 09.07.2019
+ *      Author: Andreas
+ */
 
-#include <QSettings>
+// Qt Includes
+#include <QtWidgets/QtWidgets>
+#include <QtCore/QSettings>
 
-#include "CANcore.h"
-#include "XmlSettings.h"
+// CANcore DLL includes
+#include "CAN/CANMessage.h"
+#include "Utils/XmlSettings.h"
+
+#include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+
+	pMDIArea = new QMdiArea();
+	pMDIArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	pMDIArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	setCentralWidget(pMDIArea);
 
 	/*CANMessage myMsg(QString("T12345678197"));
 
@@ -19,9 +33,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 	unsigned char data2[] = { 0x11, 0x22, 0, 0, 0, 0, 0, 0 };
 	CANMessage msg2(0x001, 2, data2);
-	QString msg2Str = msg2.toString();*/
+	QString msg2Str = msg2.toString();
 
-	/*QSettings::Format xmlFormat = registerXmlSettingsFormat();
+	QSettings::Format xmlFormat = registerXmlSettingsFormat();
 
 	QSettings settings(xmlFormat, QSettings::UserScope, "LakeRobotics", "CANcommander");
 

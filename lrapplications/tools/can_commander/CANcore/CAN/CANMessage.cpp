@@ -1,8 +1,18 @@
+/*
+ * CANMessage.cpp
+ *
+ *  Created on: 09.07.2019
+ *      Author: Andreas
+ */
+
+// Std includes
 #include <cstring>
 
-#include <QString>
-#include "CANMessage.h"
+// Qt includes
+#include <QtCore/QString>
 
+// Project includes
+#include "CANMessage.h"
 
 /*
  Default constructor for a CAN Message

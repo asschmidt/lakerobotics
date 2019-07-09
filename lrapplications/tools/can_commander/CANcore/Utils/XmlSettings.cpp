@@ -1,14 +1,26 @@
-#include <QSettings>
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
+/*
+ * XmlSettings.cpp
+ *
+ *  Created on: 09.07.2019
+ *      Author: Andreas
+ */
 
+// Qt includes
+#include <QtCore/QSettings>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QXmlStreamWriter>
+
+// Project includes
 #include "Utils.h"
-
 #include "XmlSettings.h"
 
+// Static function declarations
 static bool readXmlFile(QIODevice& device, QSettings::SettingsMap& map);
 static bool writeXmlFile(QIODevice& device, const QSettings::SettingsMap& map);
 
+/**
+ *
+ */
 bool readXmlFile(QIODevice& device, QSettings::SettingsMap& map)
 {
 	QXmlStreamReader xmlReader(&device);
@@ -57,6 +69,9 @@ bool readXmlFile(QIODevice& device, QSettings::SettingsMap& map)
 	return true;
 }
 
+/**
+ *
+ */
 bool writeXmlFile(QIODevice& device, const QSettings::SettingsMap& map)
 {
 	QXmlStreamWriter xmlWriter(&device);
@@ -92,6 +107,9 @@ bool writeXmlFile(QIODevice& device, const QSettings::SettingsMap& map)
 	return true;
 }
 
+/**
+ *
+ */
 CANCORE_EXPORT QSettings::Format registerXmlSettingsFormat()
 {
 	QSettings::Format XmlFormat = QSettings::registerFormat("xml", readXmlFile, writeXmlFile);
