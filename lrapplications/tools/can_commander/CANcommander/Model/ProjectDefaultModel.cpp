@@ -40,6 +40,11 @@ ProjectDefaultModel::ProjectDefaultModel(QString rootName)
  */
 ProjectDefaultModel::~ProjectDefaultModel()
 {
+    if (m_pMainCAN != nullptr)
+    {
+        delete m_pMainCAN;
+    }
+
     if (m_pHWInterfaces != nullptr)
     {
         delete m_pHWInterfaces;

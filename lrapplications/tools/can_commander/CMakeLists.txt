@@ -64,11 +64,22 @@ set(CANCOMMANDER_MODEL_SRCS
 set(CANCOMMANDER_WIDGET_SRCS
 	CANcommander/Widgets/ProjectExplorerWidget.cpp)
 
+# Set the UI sources for the GUI
+set(CANCOMMANDER_UI_SRCS
+	CANcommander/CANcommander.ui
+	CANcommander/Ui/canhwinterfaceoptiondlg.ui)
+
+# Set the C++ sources for the UI files
+set(CANCOMMANDER_UI_CXX_SRCS	
+	CANcommander/Ui/canhwinterfaceoptiondlg.cpp)
+
+
 # Populate a CMake variable with the sources
 set(CANCOMMANDER_SRCS
 	${CANCOMMANDER_MODEL_SRCS}
 	${CANCOMMANDER_WIDGET_SRCS}
-    CANcommander/CANcommander.ui
+	${CANCOMMANDER_UI_SRCS}    
+	${CANCOMMANDER_UI_CXX_SRCS}
     CANcommander/CANcommander.qrc
     CANcommander/MainWindow.cpp
     CANcommander/main.cpp)

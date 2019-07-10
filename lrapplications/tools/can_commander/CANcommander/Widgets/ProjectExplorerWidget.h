@@ -25,10 +25,14 @@ class ProjectExplorerWidget : public QWidget
 
         void setProjectModel(ProjectModel* pModel);
 
+    private slots:
+        void itemDoubleClicked(const QModelIndex& index);
+
     private:
         void createWidgetLayout();
 
         QTreeView* m_pTreeView;
+        ProjectModel* m_pModel;
 };
 
 
