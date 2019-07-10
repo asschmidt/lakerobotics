@@ -47,16 +47,31 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Add the CANcore DLL
 add_subdirectory(CANcore/)
+
 # Add the CANcore DLL include path
 include_directories(CANcore/)
+include_directories(CANcommander/)
+
+# Set the sources for the model modules
+set(CANCOMMANDER_MODEL_SRCS
+	CANcommander/Model/ProjectModel.cpp
+	CANcommander/Model/ProjectDefaultModel.cpp
+	CANcommander/Model/ProjectModelItem.cpp
+	CANcommander/Model/ProjectModelFolderItem.cpp
+	CANcommander/Model/ProjectModelHWInterface.cpp)
+
+# Set the sources for the custom widgets
+set(CANCOMMANDER_WIDGET_SRCS
+	CANcommander/Widgets/ProjectExplorerWidget.cpp)
 
 # Populate a CMake variable with the sources
 set(CANCOMMANDER_SRCS
+	${CANCOMMANDER_MODEL_SRCS}
+	${CANCOMMANDER_WIDGET_SRCS}
     CANcommander/CANcommander.ui
     CANcommander/CANcommander.qrc
     CANcommander/MainWindow.cpp
-    CANcommander/main.cpp
-)
+    CANcommander/main.cpp)
 
 # Tell CMake to create the helloworld executable
 add_executable(cancommander WIN32 ${CANCOMMANDER_SRCS})

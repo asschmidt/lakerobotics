@@ -13,17 +13,24 @@
 #include "CAN/CANMessage.h"
 #include "Utils/XmlSettings.h"
 
+// Project includes
+#include "Model/ProjectModel.h"
+#include "Model/ProjectDefaultModel.h"
+
+#include "Widgets/ProjectExplorerWidget.h"
+
 #include "MainWindow.h"
 
+/**
+ *
+ */
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
 
-	pMDIArea = new QMdiArea();
-	pMDIArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	pMDIArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	setCentralWidget(pMDIArea);
+    createMdiArea();
+	createDockWidgets();
 
 	/*CANMessage myMsg(QString("T12345678197"));
 
@@ -44,4 +51,34 @@ MainWindow::MainWindow(QWidget *parent)
 	settings.beginGroup("Hardware");
 	settings.setValue("CAN1", "COM3");	
 	settings.endGroup();*/
+}
+
+/**
+ *
+ */
+void MainWindow::createMdiArea()
+{
+    pMDIArea = new QMdiArea();
+    pMDIArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    pMDIArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    setCentralWidget(pMDIArea);
+}
+
+/**
+ *
+ */
+void MainWindow::createDockWidgets()
+{
+    // Create the Dock widget for Project Explorer
+    QDockWidget *dock = new QDockWidget(tr("Project Explorer"), this);
+    dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+    // Create the project explorer and add it to the dock widget
+    m_pProjectExplorer = new ProjectExplorerWidget(dock);
+    dock->setWidget(m_pProjectExplorer);
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+
+    // Create a temporary model
+    m_pProjectModel = new ProjectDefaultModel("Root Item");
+    m_pProjectExplorer->setProjectModel(m_pProjectModel);
 }

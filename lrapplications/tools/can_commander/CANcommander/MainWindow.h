@@ -7,11 +7,15 @@
 #ifndef _MAINWINDOW_H_
 #define _MAINWINDOW_H_
 
+// Qt includes
 #include <QtWidgets/QMainWindow>
-#include "ui_CANcommander.h"
+#include <QtWidgets/QMdiArea>
 
-class QMdiArea;
-class QMdiSubWindow;
+// Project includes
+#include "ui_CANcommander.h"
+#include "Model/ProjectModel.h"
+#include "Widgets/ProjectExplorerWidget.h"
+
 
 class MainWindow : public QMainWindow
 {
@@ -21,9 +25,16 @@ public:
 	MainWindow(QWidget *parent = Q_NULLPTR);
 
 private:
+	void createDockWidgets();
+    void createMdiArea();
+
+private:
 	Ui::CANcommanderClass ui;
 
 	QMdiArea* pMDIArea;
+
+	ProjectModel* m_pProjectModel;
+	ProjectExplorerWidget* m_pProjectExplorer;
 };
 
 #endif

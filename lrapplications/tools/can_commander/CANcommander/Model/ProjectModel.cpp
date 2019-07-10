@@ -1,0 +1,167 @@
+/*
+ * ProjectModelFolderItem.cpp
+ *
+ *  Created on: 09.07.2019
+ *      Author: Andreas
+ */
+
+// Project includes
+#include "ProjectModel.h"
+#include "ProjectModelFolderItem.h"
+
+/**
+ *
+ */
+ProjectModel::ProjectModel(QString rootName)
+    : QAbstractItemModel(nullptr)
+{
+    // Create the root node
+    m_pRootNode = new ProjectModelFolderItem(rootName, nullptr);
+}
+
+/**
+ *
+ */
+ProjectModel::~ProjectModel()
+{
+    if (m_pRootNode != nullptr)
+    {
+        delete m_pRootNode;
+    }
+}
+
+/**
+ *
+ */
+int ProjectModel::columnCount(const QModelIndex &parent) const
+{
+    if (parent.isValid())
+    {
+        return static_cast<ProjectModelItem*>(parent.internalPointer())->getColumnCount();
+    }
+    else
+    {
+        return m_pRootNode->getColumnCount();
+    }
+}
+
+/**
+ *
+ */
+QVariant ProjectModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+    {
+        return QVariant();
+    }
+
+    if (role != Qt::DisplayRole)
+    {
+        return QVariant();
+    }
+
+    ProjectModelItem *item = static_cast<ProjectModelItem*>(index.internalPointer());
+
+    return item->getData();
+}
+
+/**
+ *
+ */
+Qt::ItemFlags ProjectModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+    {
+        return Qt::NoItemFlags;
+    }
+
+    return QAbstractItemModel::flags(index);
+}
+
+/**
+ *
+ */
+QVariant ProjectModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        return m_pRootNode->getData();
+    }
+
+    return QVariant();
+}
+
+/**
+ *
+ */
+QModelIndex ProjectModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (!hasIndex(row, column, parent))
+    {
+        return QModelIndex();
+    }
+
+    ProjectModelItem* parentItem;
+
+    if (!parent.isValid())
+    {
+        parentItem = m_pRootNode;
+    }
+    else
+    {
+        parentItem = static_cast<ProjectModelItem*>(parent.internalPointer());
+    }
+
+    ProjectModelItem* childItem = parentItem->getChild(row);
+    if (childItem)
+    {
+        return createIndex(row, column, childItem);
+    }
+
+    return QModelIndex();
+}
+
+/**
+ *
+ */
+QModelIndex ProjectModel::parent(const QModelIndex &index) const
+{
+    if (!index.isValid())
+    {
+        return QModelIndex();
+    }
+
+    ProjectModelItem* childItem = static_cast<ProjectModelItem*>(index.internalPointer());
+    ProjectModelItem* parentItem = childItem->getParent();
+
+    if (parentItem == m_pRootNode || parentItem == nullptr)
+    {
+        return QModelIndex();
+    }
+
+    return createIndex(parentItem->getRow(), 0, parentItem);
+}
+
+/**
+ *
+ */
+int ProjectModel::rowCount(const QModelIndex &parent) const
+{
+    ProjectModelItem* parentItem;
+
+    if (parent.column() > 0)
+    {
+        return 0;
+    }
+
+    if (!parent.isValid())
+    {
+        parentItem = m_pRootNode;
+    }
+    else
+    {
+        parentItem = static_cast<ProjectModelItem*>(parent.internalPointer());
+    }
+
+    return parentItem->getChildCount();
+}
