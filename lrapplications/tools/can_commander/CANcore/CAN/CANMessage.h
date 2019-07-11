@@ -7,6 +7,10 @@
 #ifndef _CANMESSAGE_H_
 #define _CANMESSAGE_H_
 
+// Qt includes
+#include <QtCore/QString>
+#include <QtCore/QDateTime>
+
 #include "cancore_global.h"
 
 // Maximum length of the data field in a CAN message (number of bytes)
@@ -34,9 +38,15 @@ public:
 
 	void setData(unsigned char data[MAX_CAN_MESSAGE_LENGTH]);
 
+	void setTimestamp(QDateTime timestamp);
+	QDateTime getTimestamp();
+
 	QString toString();
 
 private:
+	// Timestamp
+	QDateTime m_Timestamp;
+
 	// CAN ID
 	int _id;
 	

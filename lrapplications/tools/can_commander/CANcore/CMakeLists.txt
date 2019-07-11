@@ -35,7 +35,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find the Qt libraries used in the CANcore DLL
-find_package(Qt5 COMPONENTS Core Xml REQUIRED)
+find_package(Qt5 COMPONENTS Core Xml SerialPort REQUIRED)
 
 # Activate the Debug Flag for generation of Debug Symbols
 set(CMAKE_CXX_FLAGS "-g")
@@ -45,7 +45,9 @@ set(CMAKE_CXX_FLAGS "-g")
 #
 # Sources for CAN related modules
 set(CANCORE_CAN_SRCS
- 	CAN/CANMessage.cpp)
+ 	CAN/CANMessage.cpp
+ 	CAN/USBtin.cpp
+ 	CAN/CANHandlerThread.cpp)
 
 # Sources for Utility modules
 set(CANCORE_UTILS_SRCS
@@ -66,4 +68,4 @@ add_library(CANcore SHARED ${CANCORE_SRCS})
 
 # Use the libraries from Qt5
 # This is also need because of Qt5 include paths
-target_link_libraries(CANcore Qt5::Core Qt5::Xml)
+target_link_libraries(CANcore Qt5::Core Qt5::Xml Qt5::SerialPort)

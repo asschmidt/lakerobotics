@@ -19,6 +19,9 @@
 
 #include "Widgets/ProjectExplorerWidget.h"
 
+#include "CAN/CANMessage.h"
+#include "CAN/USBtin.h"
+
 #include "MainWindow.h"
 
 /**
@@ -51,6 +54,22 @@ MainWindow::MainWindow(QWidget *parent)
 	settings.beginGroup("Hardware");
 	settings.setValue("CAN1", "COM3");	
 	settings.endGroup();*/
+
+	/*USBtin usbtin;
+	usbtin.connect("COM4");
+	usbtin.openCANChannel(125000, ACTIVE);
+
+	unsigned char data1[] = { 0x97, 0, 0, 0, 0, 0, 0, 0 };
+    CANMessage msg1(0x12345678, 1, data1);
+    usbtin.sendMessageToFIFO(&msg1);
+    usbtin.sendFirstFIFOMessage();
+
+    QQueue<CANMessage*> receiveQueue;
+
+    for (int i=0; i<10; i++)
+    {
+        usbtin.receiveMessages(receiveQueue);
+    }*/
 }
 
 /**
@@ -78,7 +97,7 @@ void MainWindow::createDockWidgets()
     dock->setWidget(m_pProjectExplorer);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
-    // Create a temporary model
+    // Create a temporary project model
     m_pProjectModel = new ProjectDefaultModel("Root Item");
     m_pProjectExplorer->setProjectModel(m_pProjectModel);
 }

@@ -9,6 +9,7 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLayout>
+#include <QtSerialPort/QSerialPortInfo>
 
 // Project includes
 #include "ui_CANHwInterfaceOptionDlg.h"
@@ -34,25 +35,25 @@ CANHwInterfaceOptionDlg::CANHwInterfaceOptionDlg(QWidget *parent)
  */
 void CANHwInterfaceOptionDlg::setInterfaceItem(ProjectModelHWInterface* pItem)
 {
-   m_pInterface = pItem;
+    m_pInterface = pItem;
 
-   int index = m_UI.cmbCOMPort->findData(m_pInterface->getHWInterfaceData()->getPortName());
-   if (index != -1)
-   {
+    int index = m_UI.cmbCOMPort->findData(m_pInterface->getHWInterfaceData()->getPortName());
+    if (index != -1)
+    {
        m_UI.cmbCOMPort->setCurrentIndex(index);
-   }
+    }
 
-   index = m_UI.cmbPortBaudrate->findData(m_pInterface->getHWInterfaceData()->getPortBaudrate());
-   if (index != -1)
-   {
+    index = m_UI.cmbPortBaudrate->findData(m_pInterface->getHWInterfaceData()->getPortBaudrate());
+    if (index != -1)
+    {
        m_UI.cmbPortBaudrate->setCurrentIndex(index);
-   }
+    }
 
-   index = m_UI.cmbCANBaudrate->findData(m_pInterface->getHWInterfaceData()->getInterfaceBaudrate());
-   if (index != -1)
-   {
+    index = m_UI.cmbCANBaudrate->findData(m_pInterface->getHWInterfaceData()->getInterfaceBaudrate());
+    if (index != -1)
+    {
        m_UI.cmbCANBaudrate->setCurrentIndex(index);
-   }
+    }
 }
 
 /**
@@ -60,14 +61,16 @@ void CANHwInterfaceOptionDlg::setInterfaceItem(ProjectModelHWInterface* pItem)
  */
 void CANHwInterfaceOptionDlg::initializeCOMPortUI()
 {
-   m_UI.cmbCOMPort->addItem("COM1", QVariant("COM1"));
-   m_UI.cmbCOMPort->addItem("COM2", QVariant("COM2"));
-   m_UI.cmbCOMPort->addItem("COM3", QVariant("COM3"));
-   m_UI.cmbCOMPort->addItem("COM4", QVariant("COM4"));
-   m_UI.cmbCOMPort->addItem("COM5", QVariant("COM5"));
+    QList<QSerialPortInfo> availablePort = QSerialPortInfo::availablePorts();
 
-   m_UI.cmbPortBaudrate->addItem("9600", QVariant(9600));
-   m_UI.cmbPortBaudrate->addItem("115200", QVariant(115200));
+    for (const QSerialPortInfo &info : availablePort)
+    {
+        m_UI.cmbCOMPort->addItem(info.portName(), QVariant(info.portName()));
+    }
+
+
+    m_UI.cmbPortBaudrate->addItem("9600", QVariant(9600));
+    m_UI.cmbPortBaudrate->addItem("115200", QVariant(115200));
 }
 
 /**
@@ -75,13 +78,13 @@ void CANHwInterfaceOptionDlg::initializeCOMPortUI()
  */
 void CANHwInterfaceOptionDlg::initializeCANUI()
 {
-   m_UI.cmbCANBaudrate->addItem("10k", QVariant(10000));
-   m_UI.cmbCANBaudrate->addItem("20k", QVariant(20000));
-   m_UI.cmbCANBaudrate->addItem("50k", QVariant(50000));
-   m_UI.cmbCANBaudrate->addItem("100k", QVariant(100000));
-   m_UI.cmbCANBaudrate->addItem("125k", QVariant(125000));
-   m_UI.cmbCANBaudrate->addItem("250k", QVariant(250000));
-   m_UI.cmbCANBaudrate->addItem("500k", QVariant(500000));
-   m_UI.cmbCANBaudrate->addItem("800k", QVariant(800000));
-   m_UI.cmbCANBaudrate->addItem("1M", QVariant(1000000));
+    m_UI.cmbCANBaudrate->addItem("10k", QVariant(10000));
+    m_UI.cmbCANBaudrate->addItem("20k", QVariant(20000));
+    m_UI.cmbCANBaudrate->addItem("50k", QVariant(50000));
+    m_UI.cmbCANBaudrate->addItem("100k", QVariant(100000));
+    m_UI.cmbCANBaudrate->addItem("125k", QVariant(125000));
+    m_UI.cmbCANBaudrate->addItem("250k", QVariant(250000));
+    m_UI.cmbCANBaudrate->addItem("500k", QVariant(500000));
+    m_UI.cmbCANBaudrate->addItem("800k", QVariant(800000));
+    m_UI.cmbCANBaudrate->addItem("1M", QVariant(1000000));
 }

@@ -19,6 +19,8 @@
 */
 CANMessage::CANMessage()
 {
+    this->m_Timestamp = QDateTime::currentDateTime();
+
 	this->_id = 0;
 	this->_dlc = 0;
 
@@ -209,6 +211,22 @@ void CANMessage::setId(int id)
 	{
 		this->_extended = false;
 	}
+}
+
+/**
+ *
+ */
+void CANMessage::setTimestamp(QDateTime timestamp)
+{
+    m_Timestamp = timestamp;
+}
+
+/**
+ *
+ */
+QDateTime CANMessage::getTimestamp()
+{
+    return m_Timestamp;
 }
 
 /*

@@ -35,7 +35,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find the Qt libraries used in the CANcommander executable
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets Xml SerialPort REQUIRED)
 
 # Activate the Debug Flag for generation of Debug Symbols
 set(CMAKE_CXX_FLAGS "-g")
@@ -89,4 +89,4 @@ add_executable(cancommander WIN32 ${CANCOMMANDER_SRCS})
 
 # Use the libraries from Qt5 and also the CANcore
 # This is also need because of Qt5 include paths
-target_link_libraries(cancommander CANcore Qt5::Widgets)
+target_link_libraries(cancommander CANcore Qt5::Core Qt5::Widgets Qt5::Xml Qt5::SerialPort)
