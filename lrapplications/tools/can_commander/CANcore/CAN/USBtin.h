@@ -44,10 +44,7 @@ class CANCORE_EXPORT USBtin
         void openCANChannel(int baudrate, USBtinOpenMode mode);
         void closeCANChannel();
 
-        int getFIFOMessageCount();
-        int sendMessageToFIFO(CANMessage* pMessage);
-        bool sendFirstFIFOMessage();
-
+        bool sendMessage(CANMessage* pMessage);
         int receiveMessages(QQueue<CANMessage*>& receiveQueue);
 
     private:
@@ -58,7 +55,6 @@ class CANCORE_EXPORT USBtin
         QSerialPort* m_pPort;
 
         QString m_IncomingMessage;
-        QQueue<CANMessage>* m_TxFifo;
 
         QString m_FirmwareVersion;
         QString m_HardwareVersion;

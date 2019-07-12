@@ -6,8 +6,9 @@
  */
 
 // Qt Includes
-#include <QtWidgets/QtWidgets>
 #include <QtCore/QSettings>
+#include <QtWidgets/QtWidgets>
+#include <QtWidgets/QMenu>
 
 // CANcore DLL includes
 #include "CAN/CANMessage.h"
@@ -16,6 +17,7 @@
 // Project includes
 #include "Model/ProjectModel.h"
 #include "Model/ProjectDefaultModel.h"
+#include "Model/ModelRepository.h"
 
 #include "Widgets/ProjectExplorerWidget.h"
 
@@ -32,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	createMenubar();
+	createToolbar();
+	createStatusbar();
     createMdiArea();
 	createDockWidgets();
 
@@ -75,6 +80,51 @@ MainWindow::MainWindow(QWidget *parent)
 /**
  *
  */
+void MainWindow::createMenubar()
+{
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+
+    fileMenu->addSeparator();
+
+    const QIcon exitIcon = QIcon::fromTheme("application-exit");
+    QAction *exitAct = fileMenu->addAction(exitIcon, tr("E&xit"), this, &QWidget::close);
+    exitAct->setShortcuts(QKeySequence::Quit);
+    exitAct->setStatusTip(tr("Exit the application"));
+
+
+    QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
+    QAction *aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::actAbout);
+    aboutAct->setStatusTip(tr("Show the application's About box"));
+}
+
+/**
+ *
+ */
+void MainWindow::createToolbar()
+{
+    QToolBar *fileToolBar = addToolBar(tr("File"));
+}
+
+/**
+ *
+ */
+void MainWindow::createStatusbar()
+{
+    statusBar()->showMessage(tr("Ready"));
+}
+
+/**
+ *
+ */
+void MainWindow::actAbout()
+{
+    QMessageBox::about(this, tr("About CANcommander"),
+                tr("The <b>CANcommander</b> is a CAN Analyzer SW "));
+}
+
+/**
+ *
+ */
 void MainWindow::createMdiArea()
 {
     pMDIArea = new QMdiArea();
@@ -98,6 +148,8 @@ void MainWindow::createDockWidgets()
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
     // Create a temporary project model
-    m_pProjectModel = new ProjectDefaultModel("Root Item");
-    m_pProjectExplorer->setProjectModel(m_pProjectModel);
+    //m_pProjectModel = new ProjectDefaultModel("Root Item");
+    ModelRepository::getInstance()->createDefaultProjectModel();
+    ProjectModel* pProjectModel = ModelRepository::getInstance()->getProjectModel();
+    m_pProjectExplorer->setProjectModel(pProjectModel);
 }

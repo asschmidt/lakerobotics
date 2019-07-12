@@ -26,7 +26,7 @@ HWInterfaceData::HWInterfaceData(QString interfaceName)
     m_InterfaceName = interfaceName;
     m_InterfaceBaudrate = 125000;
 
-    m_PortName = "COM1";
+    m_PortName = "COM4";
     m_PortBaudrate = 115200;
 }
 

@@ -27,8 +27,6 @@ USBtin::USBtin()
 {
     m_pPort = nullptr;
 
-    m_TxFifo = new QQueue<CANMessage>();
-
     m_FirmwareVersion = "Unknown";
     m_HardwareVersion = "Unknown";
     m_SerialNumber = "Unknown";
@@ -39,11 +37,6 @@ USBtin::USBtin()
  */
 USBtin::~USBtin()
 {
-    if (m_TxFifo != nullptr)
-    {
-        delete m_TxFifo;
-    }
-
     if (m_pPort != nullptr)
     {
         this->closeCANChannel();
@@ -204,37 +197,14 @@ void USBtin::closeCANChannel()
 /**
  *
  */
-int USBtin::getFIFOMessageCount()
-{
-    return m_TxFifo->count();
-}
-
-/**
- *
- */
-int USBtin::sendMessageToFIFO(CANMessage* pMessage)
-{
-    if (pMessage != nullptr)
-    {
-        m_TxFifo->enqueue(*pMessage);
-    }
-
-    return m_TxFifo->count();
-}
-
-/**
- *
- */
-bool USBtin::sendFirstFIFOMessage()
+bool USBtin::sendMessage(CANMessage* pMessage)
 {
     bool messageSent = false;
 
-    if (m_TxFifo->count() > 0)
+    if (pMessage != nullptr)
     {
-        CANMessage msg = m_TxFifo->dequeue();
-
         // Create the message string and send it to serial port
-        QString msgString = msg.toString() + "\015";
+        QString msgString = pMessage->toString() + "\015";
         int writtenBytes = m_pPort->write(msgString.toLocal8Bit());
 
         if (writtenBytes > 0)
@@ -303,7 +273,7 @@ int USBtin::receiveMessages(QQueue<CANMessage*>& receiveQueue)
                 if ((cmd == 't') || (cmd == 'T') || (cmd == 'r') || (cmd == 'R'))
                 {
                     CANMessage* pMessage = new CANMessage(incomingMessage);
-                    qDebug() << pMessage->getTimestamp().toMSecsSinceEpoch() << " Message: " << pMessage->getId();
+                    //qDebug() << pMessage->getTimestamp().toMSecsSinceEpoch() << " Message: " << pMessage->getId();
 
                     receiveQueue.enqueue(pMessage);
 

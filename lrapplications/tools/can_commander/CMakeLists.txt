@@ -54,6 +54,9 @@ include_directories(CANcommander/)
 
 # Set the sources for the model modules
 set(CANCOMMANDER_MODEL_SRCS
+	CANcommander/Model/CANModel.cpp
+	CANcommander/Model/CANMessageObject.cpp
+	CANcommander/Model/ModelRepository.cpp
 	CANcommander/Model/ProjectModel.cpp
 	CANcommander/Model/ProjectDefaultModel.cpp
 	CANcommander/Model/ProjectModelItem.cpp

@@ -28,6 +28,8 @@ class CANCORE_EXPORT CANHandlerThread : public QThread
 
     private:
         USBtin* m_pCANInterface;
+
+        QQueue<CANMessage*> m_TransmitQueue;
         QQueue<CANMessage*> m_ReceiveQueue;
 };
 

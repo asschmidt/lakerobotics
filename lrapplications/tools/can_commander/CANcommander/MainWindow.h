@@ -25,15 +25,21 @@ public:
 	MainWindow(QWidget *parent = Q_NULLPTR);
 
 private:
+	void createMenubar();
+	void createToolbar();
+	void createStatusbar();
+
 	void createDockWidgets();
     void createMdiArea();
+
+private:
+    void actAbout();
 
 private:
 	Ui::CANcommanderClass ui;
 
 	QMdiArea* pMDIArea;
 
-	ProjectModel* m_pProjectModel;
 	ProjectExplorerWidget* m_pProjectExplorer;
 };
 

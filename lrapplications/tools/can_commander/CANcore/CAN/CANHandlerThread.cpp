@@ -29,6 +29,17 @@ void CANHandlerThread::run()
 {
     while(!isInterruptionRequested())
     {
+        // Process sending of messages
+        while (m_TransmitQueue.count() > 0)
+        {
+            CANMessage* pTransmitMsg = m_TransmitQueue.dequeue();
+            if (pTransmitMsg != nullptr)
+            {
+                bool transmitSuccessful = m_pCANInterface->sendMessage(pTransmitMsg);
+            }
+        }
+
+        // Process receiption of messages
         int numberOfMessages = m_pCANInterface->receiveMessages(m_ReceiveQueue);
         if (numberOfMessages > 0)
         {
