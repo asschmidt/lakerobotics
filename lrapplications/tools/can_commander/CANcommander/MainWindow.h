@@ -13,7 +13,7 @@
 
 // Project includes
 #include "ui_CANcommander.h"
-#include "Model/ProjectModel.h"
+#include "Model/Project/ProjectModel.h"
 #include "Widgets/ProjectExplorerWidget.h"
 
 

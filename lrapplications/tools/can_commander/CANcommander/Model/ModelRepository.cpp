@@ -8,9 +8,9 @@
 // Qt includes
 
 // Project includes
-#include "ProjectModel.h"
-#include "ProjectDefaultModel.h"
-#include "CANModel.h"
+#include "Project/ProjectModel.h"
+#include "Project/ProjectDefaultModel.h"
+#include "CAN/CANModel.h"
 
 #include "ModelRepository.h"
 

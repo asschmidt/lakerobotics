@@ -54,14 +54,15 @@ include_directories(CANcommander/)
 
 # Set the sources for the model modules
 set(CANCOMMANDER_MODEL_SRCS
-	CANcommander/Model/CANModel.cpp
-	CANcommander/Model/CANMessageObject.cpp
-	CANcommander/Model/ModelRepository.cpp
-	CANcommander/Model/ProjectModel.cpp
-	CANcommander/Model/ProjectDefaultModel.cpp
-	CANcommander/Model/ProjectModelItem.cpp
-	CANcommander/Model/ProjectModelFolderItem.cpp
-	CANcommander/Model/ProjectModelHWInterface.cpp)
+	CANcommander/Model/CAN/CANModel.cpp
+	CANcommander/Model/CAN/CANMessageObject.cpp	
+	CANcommander/Model/Project/ProjectModel.cpp
+	CANcommander/Model/Project/ProjectDefaultModel.cpp
+	CANcommander/Model/Project/ProjectModelItem.cpp
+	CANcommander/Model/Project/ProjectModelFolderItem.cpp
+	CANcommander/Model/Project/ProjectModelHWInterface.cpp
+	CANcommander/Model/AbstractUIModelItem.cpp
+	CANcommander/Model/ModelRepository.cpp)
 
 # Set the sources for the custom widgets
 set(CANCOMMANDER_WIDGET_SRCS

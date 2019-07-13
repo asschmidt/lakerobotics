@@ -14,7 +14,7 @@
 #include <QtWidgets/QTreeView>
 
 // Project Includes
-#include "Model/ProjectModel.h"
+#include "Model/Project/ProjectModel.h"
 
 class ProjectExplorerWidget : public QWidget
 {

@@ -13,8 +13,8 @@
 #include <QtWidgets/QVBoxLayout>
 
 // Project includes
-#include "Model/ProjectModelItem.h"
-#include "Model/ProjectModelHWInterface.h"
+#include "Model/Project/ProjectModelItem.h"
+#include "Model/Project/ProjectModelHWInterface.h"
 
 #include "ProjectExplorerWidget.h"
 #include "Ui/canhwinterfaceoptiondlg.h"

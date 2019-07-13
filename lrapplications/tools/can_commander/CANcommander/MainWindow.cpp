@@ -15,8 +15,8 @@
 #include "Utils/XmlSettings.h"
 
 // Project includes
-#include "Model/ProjectModel.h"
-#include "Model/ProjectDefaultModel.h"
+#include "Model/Project/ProjectModel.h"
+#include "Model/Project/ProjectDefaultModel.h"
 #include "Model/ModelRepository.h"
 
 #include "Widgets/ProjectExplorerWidget.h"

@@ -13,8 +13,8 @@
 #include <QtWidgets/QDialog>
 
 // Project includes
-#include "Model/ProjectModelItem.h"
-#include "Model/ProjectModelHWInterface.h"
+#include "Model/Project/ProjectModelItem.h"
+#include "Model/Project/ProjectModelHWInterface.h"
 
 #include "ui_CANHwInterfaceOptionDlg.h"
 

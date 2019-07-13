@@ -9,8 +9,8 @@
 #define _MODEL_REPOSITORY_H_
 
 // Project includes
-#include "ProjectModel.h"
-#include "CANModel.h"
+#include "Project/ProjectModel.h"
+#include "CAN/CANModel.h"
 
 class ModelRepository
 {
