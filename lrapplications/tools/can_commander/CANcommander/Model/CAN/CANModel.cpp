@@ -4,11 +4,13 @@
  *  Created on: 11.07.2019
  *      Author: Andreas
  */
+#include <iostream>
 
 // Qt includes
 #include <QtCore/QLinkedList>
 #include <QtCore/QHash>
 #include <QtCore/QMutex>
+#include <QtCore/QDebug>
 
 // Project includes
 #include "CAN/CANMessage.h"
@@ -42,26 +44,7 @@ int CANModel::addCANRawMessage(CANMessage* pRawMessage)
 
         m_ListMutex.unlock();
 
-        m_HashMutex.lock();
-
-        QLinkedList<CANMessage*>* pMessageList = nullptr;
-
-        /*if (!m_CANObjectDict.contains(pRawMessage->getId()))
-        {
-            pMessageList = new QLinkedList<CANMessage*>();
-        }
-        else
-        {
-            pMessageList = m_CANObjectDict.value(pRawMessage->getId());
-        }
-
-        if (pMessageList != nullptr)
-        {
-            pMessageList->append(pRawMessage);
-            m_CANObjectDict.insert(pRawMessage->getId(), )
-        }*/
-
-        m_HashMutex.unlock();
+        //std::cout << "Received CAN Message in Model: " << pRawMessage->getId() << " No: " << totalObjectNumer << std::endl;
     }
 
     return totalObjectNumer;

@@ -11,42 +11,34 @@
 #include <QtCore/QVector>
 #include <QtCore/QVariant>
 
+// Project includes
+#include "Model/AbstractUIModelItem.h"
+
 /**
  * Enumeration of different project model item types
  */
 enum ProjectModelItemType
 {
-    GROUP_ITEM  = 1,
-    HW_INTERFACE_ITEM = 2
+    GROUP_ITEM              = 1,
+    HW_INTERFACE_ITEM       = 2,
+    DATA_DEF_FILE_ITEM      = 3
 };
 
 /**
  * Generic class for project model items in the project tree
  */
-class ProjectModelItem
+class ProjectModelItem : public AbstractUIModelItem
 {
     public:
-        ProjectModelItem(QString itemName, ProjectModelItemType type, ProjectModelItem* pParent = nullptr);
+        ProjectModelItem(QString itemName, ProjectModelItemType type, AbstractUIModelItem* pParent = nullptr);
         virtual ~ProjectModelItem();
 
-        ProjectModelItem* getParent();
-        ProjectModelItem* getChild(int row);
-        int getChildCount() const;
-        int getColumnCount() const;
-        int getRow() const;
         ProjectModelItemType getType() const;
         QString getName() const;
-
-        ProjectModelItem* appendChild(ProjectModelItem* pChild);
-
-        virtual QVariant getData() = 0;
 
     protected:
         QString m_Name;
         ProjectModelItemType m_ItemType;
-
-        ProjectModelItem* m_pParentItem;
-        QVector<ProjectModelItem*> m_Childs;
 };
 
 #endif

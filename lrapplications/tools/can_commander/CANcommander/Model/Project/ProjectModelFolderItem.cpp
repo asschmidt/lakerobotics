@@ -31,7 +31,7 @@ ProjectModelFolderItem::~ProjectModelFolderItem()
  * Returns the item name as folder data
  * For a folder item the name (also used in UI) is the only data this item has
  */
-QVariant ProjectModelFolderItem::getData()
+QVariant ProjectModelFolderItem::getData(const QModelIndex& index)
 {
     return QVariant(m_Name);
 }

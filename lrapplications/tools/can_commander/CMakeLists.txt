@@ -33,6 +33,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
+#
+set(CMAKE_AUTORCC ON)
 
 # Find the Qt libraries used in the CANcommander executable
 find_package(Qt5 COMPONENTS Core Widgets Xml SerialPort REQUIRED)
@@ -54,6 +56,8 @@ include_directories(CANcommander/)
 
 # Set the sources for the model modules
 set(CANCOMMANDER_MODEL_SRCS
+	CANcommander/Accquire/CANProcessorThread.cpp
+	CANcommander/Accquire/CANThreadManager.cpp
 	CANcommander/Model/CAN/CANModel.cpp
 	CANcommander/Model/CAN/CANMessageObject.cpp	
 	CANcommander/Model/Project/ProjectModel.cpp
@@ -71,11 +75,14 @@ set(CANCOMMANDER_WIDGET_SRCS
 # Set the UI sources for the GUI
 set(CANCOMMANDER_UI_SRCS
 	CANcommander/CANcommander.ui
-	CANcommander/Ui/canhwinterfaceoptiondlg.ui)
+	CANcommander/Ui/cantracewindow.ui	
+	CANcommander/Ui/Dialogs/canhwinterfaceoptiondlg.ui)
 
 # Set the C++ sources for the UI files
 set(CANCOMMANDER_UI_CXX_SRCS	
-	CANcommander/Ui/canhwinterfaceoptiondlg.cpp)
+	CANcommander/Ui/QuickTraceAction.cpp
+	CANcommander/Ui/cantracewindow.cpp
+	CANcommander/Ui/Dialogs/canhwinterfaceoptiondlg.cpp)
 
 
 # Populate a CMake variable with the sources
@@ -84,7 +91,7 @@ set(CANCOMMANDER_SRCS
 	${CANCOMMANDER_WIDGET_SRCS}
 	${CANCOMMANDER_UI_SRCS}    
 	${CANCOMMANDER_UI_CXX_SRCS}
-    CANcommander/CANcommander.qrc
+    CANcommander/Resources/CANcommander.qrc
     CANcommander/MainWindow.cpp
     CANcommander/main.cpp)
 

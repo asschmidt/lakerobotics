@@ -5,9 +5,17 @@
  *      Author: Andreas
  */
 
+// Qt includes
+#include <QtCore/QObject>
+#include <QtCore/QVector>
+#include <QtCore/QVariant>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
+
 // Project includes
 #include "ProjectModelItem.h"
 #include "ProjectModelHWInterface.h"
+#include "Ui/QuickTraceAction.h"
 
 /**
  *
@@ -126,8 +134,22 @@ HWInterfaceData* ProjectModelHWInterface::getHWInterfaceData()
  * Returns the item name as folder data
  * For a folder item the name (also used in UI) is the only data this item has
  */
-QVariant ProjectModelHWInterface::getData()
+QVariant ProjectModelHWInterface::getData(const QModelIndex& index)
 {
     QVariant interfaceVariant(m_pHWInterface->getInterfaceName());
     return interfaceVariant;
+}
+
+/**
+ * Default implementation doesn't return a menu.
+ */
+QMenu* ProjectModelHWInterface::createItemContextMenu(QMenu* pParentMenu)
+{
+    QAction* pQuickTraceActionUi = new QAction("Quick Trace Window", pParentMenu->parentWidget());
+    QuickTraceAction* pQuickTraceAction = new QuickTraceAction(this, pQuickTraceActionUi);
+
+    QObject::connect(pQuickTraceActionUi, SIGNAL(triggered()), pQuickTraceAction, SLOT(execute()));
+    pParentMenu->addAction(pQuickTraceActionUi);
+
+    return pParentMenu;
 }

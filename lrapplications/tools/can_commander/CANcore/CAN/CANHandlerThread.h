@@ -12,11 +12,16 @@
 #include <QtCore/QQueue>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
+#include <QtCore/QList>
 
 // Project includes
 #include "CANMessage.h"
 #include "USBtin.h"
+#include "ICANProcessor.h"
 
+/**
+ *
+ */
 class CANCORE_EXPORT CANHandlerThread : public QThread
 {
     Q_OBJECT
@@ -24,13 +29,18 @@ class CANCORE_EXPORT CANHandlerThread : public QThread
     public:
         CANHandlerThread(USBtin* pCANInterface);
 
+        void registerCANProcessor(ICANProcessor* pCANProcessor);
         void run() override;
+
+        void closeInterface();
 
     private:
         USBtin* m_pCANInterface;
 
         QQueue<CANMessage*> m_TransmitQueue;
         QQueue<CANMessage*> m_ReceiveQueue;
+
+        QList<ICANProcessor*> m_CANProcessors;
 };
 
 

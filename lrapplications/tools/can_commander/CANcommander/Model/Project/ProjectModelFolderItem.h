@@ -23,7 +23,7 @@ class ProjectModelFolderItem : public ProjectModelItem
         ProjectModelFolderItem(QString itemName, ProjectModelItem* pParent = nullptr);
         virtual ~ProjectModelFolderItem();
 
-        virtual QVariant getData();
+        virtual QVariant getData(const QModelIndex& index);
 
     private:
 

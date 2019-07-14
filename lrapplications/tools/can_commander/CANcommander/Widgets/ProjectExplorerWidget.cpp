@@ -11,13 +11,15 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
 
 // Project includes
 #include "Model/Project/ProjectModelItem.h"
 #include "Model/Project/ProjectModelHWInterface.h"
 
 #include "ProjectExplorerWidget.h"
-#include "Ui/canhwinterfaceoptiondlg.h"
+#include "Ui/Dialogs/canhwinterfaceoptiondlg.h"
 
 /**
  *
@@ -35,9 +37,11 @@ void ProjectExplorerWidget::createWidgetLayout()
 {
     m_pTreeView = new QTreeView();
     m_pTreeView->header()->hide();
+    m_pTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     // Connect the doubleclick signal to the method
     connect(m_pTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemDoubleClicked(QModelIndex)));
+    connect(m_pTreeView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customMenuRequested(QPoint)));
 
     QVBoxLayout* pLayout = new QVBoxLayout(this);
     pLayout->addWidget(m_pTreeView);
@@ -68,6 +72,38 @@ void ProjectExplorerWidget::itemDoubleClicked(const QModelIndex& index)
             }
         }
     }
+}
+
+/**
+ *
+ */
+void ProjectExplorerWidget::customMenuRequested(QPoint pos)
+{
+    QModelIndex index = m_pTreeView->indexAt(pos);
+
+    QMenu *menu=new QMenu(this);
+    menu->addAction(new QAction("Action 1", this));
+    menu->addAction(new QAction("Action 2", this));
+    menu->addAction(new QAction("Action 3", this));
+
+    ProjectModelItem* pSelectedItem = static_cast<ProjectModelItem*>(index.internalPointer());
+    if (pSelectedItem != nullptr)
+    {
+        pSelectedItem->createItemContextMenu(menu);
+    }
+
+    menu->popup(m_pTreeView->viewport()->mapToGlobal(pos));
+}
+
+void ProjectExplorerWidget::customHeaderMenuRequested(QPoint pos)
+{
+    int column = m_pTreeView->header()->logicalIndexAt(pos);
+
+    QMenu *menu=new QMenu(this);
+    menu->addAction(new QAction("Header Action 1", this));
+    menu->addAction(new QAction("Header Action 2", this));
+    menu->addAction(new QAction("Header Action 3", this));
+    menu->popup(m_pTreeView->header()->viewport()->mapToGlobal(pos));
 }
 
 /**

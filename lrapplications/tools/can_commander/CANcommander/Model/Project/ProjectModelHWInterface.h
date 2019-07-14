@@ -10,6 +10,7 @@
 // Qt includes
 #include <QtCore/QVector>
 #include <QtCore/QVariant>
+#include <QtWidgets/QMenu>
 
 // Project includes
 #include "ProjectModelItem.h"
@@ -56,9 +57,11 @@ class ProjectModelHWInterface : public ProjectModelItem
         ProjectModelHWInterface(QString itemName, ProjectModelItem* pParent);
         virtual ~ProjectModelHWInterface();
 
-        virtual QVariant getData();
+        virtual QVariant getData(const QModelIndex& index);
 
         HWInterfaceData* getHWInterfaceData();
+
+        virtual QMenu* createItemContextMenu(QMenu* pParentMenu);
 
     private:
         HWInterfaceData* m_pHWInterface;

@@ -12,6 +12,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
+#include <QtWidgets/QMenu>
 
 // Project includes
 
@@ -27,17 +28,19 @@ class AbstractUIModelItem
         AbstractUIModelItem(AbstractUIModelItem* pParent);
         virtual ~AbstractUIModelItem();
 
-        AbstractUIModelItem* getParent();
-        AbstractUIModelItem* getChild(int row);
+        virtual AbstractUIModelItem* getParent();
+        virtual AbstractUIModelItem* getChild(int row);
 
-        int getChildCount() const;
-        int getColumnCount() const;
+        virtual int getChildCount() const;
+        virtual int getColumnCount() const;
 
-        int getRow() const;
+        virtual int getRow() const;
 
-        AbstractUIModelItem* appendChild(AbstractUIModelItem* pChild);
+        virtual AbstractUIModelItem* appendChild(AbstractUIModelItem* pChild);
 
         virtual QVariant getData(const QModelIndex& index) = 0;
+
+        virtual QMenu* createItemContextMenu(QMenu* pParentMenu);
 
     protected:
         AbstractUIModelItem* m_pParentItem;

@@ -16,6 +16,7 @@
 #include "Model/Project/ProjectModel.h"
 #include "Widgets/ProjectExplorerWidget.h"
 
+#include "Accquire/CANThreadManager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -32,8 +33,10 @@ private:
 	void createDockWidgets();
     void createMdiArea();
 
-private:
+private slots:
     void actAbout();
+    void actStartMeasurement();
+    void actStopMeasurement();
 
 private:
 	Ui::CANcommanderClass ui;
@@ -41,6 +44,8 @@ private:
 	QMdiArea* pMDIArea;
 
 	ProjectExplorerWidget* m_pProjectExplorer;
+
+	CANThreadManager* m_ThreadManager;
 };
 
 #endif

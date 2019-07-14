@@ -62,7 +62,7 @@ QVariant ProjectModel::data(const QModelIndex &index, int role) const
 
     ProjectModelItem *item = static_cast<ProjectModelItem*>(index.internalPointer());
 
-    return item->getData();
+    return item->getData(index);
 }
 
 /**
@@ -85,7 +85,8 @@ QVariant ProjectModel::headerData(int section, Qt::Orientation orientation, int 
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
     {
-        return m_pRootNode->getData();
+        QModelIndex invalidIndex;
+        return m_pRootNode->getData(invalidIndex);
     }
 
     return QVariant();
@@ -101,7 +102,7 @@ QModelIndex ProjectModel::index(int row, int column, const QModelIndex &parent) 
         return QModelIndex();
     }
 
-    ProjectModelItem* parentItem;
+    AbstractUIModelItem* parentItem;
 
     if (!parent.isValid())
     {
@@ -109,10 +110,10 @@ QModelIndex ProjectModel::index(int row, int column, const QModelIndex &parent) 
     }
     else
     {
-        parentItem = static_cast<ProjectModelItem*>(parent.internalPointer());
+        parentItem = static_cast<AbstractUIModelItem*>(parent.internalPointer());
     }
 
-    ProjectModelItem* childItem = parentItem->getChild(row);
+    AbstractUIModelItem* childItem = parentItem->getChild(row);
     if (childItem)
     {
         return createIndex(row, column, childItem);
@@ -131,8 +132,8 @@ QModelIndex ProjectModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
 
-    ProjectModelItem* childItem = static_cast<ProjectModelItem*>(index.internalPointer());
-    ProjectModelItem* parentItem = childItem->getParent();
+    AbstractUIModelItem* childItem = static_cast<AbstractUIModelItem*>(index.internalPointer());
+    AbstractUIModelItem* parentItem = childItem->getParent();
 
     if (parentItem == m_pRootNode || parentItem == nullptr)
     {

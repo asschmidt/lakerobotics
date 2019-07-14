@@ -254,9 +254,11 @@ int USBtin::receiveMessages(QQueue<CANMessage*>& receiveQueue)
     int bytesRead = 0;
 
     // Check for the available data
-    bool dataReady = m_pPort->waitForReadyRead(10);
+    bool dataReady = m_pPort->waitForReadyRead(1000);
     if (dataReady)
     {
+        //std::cout << "Data Ready" << std::endl;
+
         // Read all the data at once
         QByteArray buffer = m_pPort->readAll();
         QString incomingMessage;
@@ -293,6 +295,10 @@ int USBtin::receiveMessages(QQueue<CANMessage*>& receiveQueue)
                 incomingMessage.append(b);
             }
         }
+    }
+    else
+    {
+        //std::cout << "No Data available" << std::endl;
     }
 
     return msgReceived;

@@ -9,6 +9,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
+#include <QtWidgets/QMenu>
 
 // Project includes
 #include "AbstractUIModelItem.h"
@@ -98,4 +99,12 @@ AbstractUIModelItem* AbstractUIModelItem::appendChild(AbstractUIModelItem* pChil
    }
 
    return pChild;
+}
+
+/**
+ * Default implementation doesn't return a menu.
+ */
+QMenu* AbstractUIModelItem::createItemContextMenu(QMenu* pParentMenu)
+{
+    return nullptr;
 }

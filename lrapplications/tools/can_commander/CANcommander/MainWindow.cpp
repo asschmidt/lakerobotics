@@ -19,6 +19,8 @@
 #include "Model/Project/ProjectDefaultModel.h"
 #include "Model/ModelRepository.h"
 
+#include "Accquire/CANThreadManager.h"
+
 #include "Widgets/ProjectExplorerWidget.h"
 
 #include "CAN/CANMessage.h"
@@ -33,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+
+	ModelRepository::getInstance()->createDefaultProjectModel();
+	m_ThreadManager = new CANThreadManager(ModelRepository::getInstance()->getCANModel());
 
 	createMenubar();
 	createToolbar();
@@ -102,7 +107,21 @@ void MainWindow::createMenubar()
  */
 void MainWindow::createToolbar()
 {
-    QToolBar *fileToolBar = addToolBar(tr("File"));
+    QToolBar* pMeasurementToolBar = addToolBar("Measurement");
+
+    QAction* pStartAction = new QAction(this);
+    QPixmap* pStartIcon = new QPixmap(":/Images/media-playback-start.svg");
+    pStartAction->setIcon(*pStartIcon);
+
+    pMeasurementToolBar->addAction(pStartAction);
+    connect(pStartAction, SIGNAL(triggered()), this, SLOT(actStartMeasurement()));
+
+    QAction* pStopAction = new QAction(this);
+    QPixmap* pStopIcon = new QPixmap(":/Images/media-playback-pause.svg");
+    pStopAction->setIcon(*pStopIcon);
+
+    pMeasurementToolBar->addAction(pStopAction);
+    connect(pStopAction, SIGNAL(triggered()), this, SLOT(actStopMeasurement()));
 }
 
 /**
@@ -116,21 +135,12 @@ void MainWindow::createStatusbar()
 /**
  *
  */
-void MainWindow::actAbout()
-{
-    QMessageBox::about(this, tr("About CANcommander"),
-                tr("The <b>CANcommander</b> is a CAN Analyzer SW "));
-}
-
-/**
- *
- */
 void MainWindow::createMdiArea()
 {
     pMDIArea = new QMdiArea();
     pMDIArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     pMDIArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    setCentralWidget(pMDIArea);
+    this->setCentralWidget(pMDIArea);
 }
 
 /**
@@ -145,11 +155,42 @@ void MainWindow::createDockWidgets()
     // Create the project explorer and add it to the dock widget
     m_pProjectExplorer = new ProjectExplorerWidget(dock);
     dock->setWidget(m_pProjectExplorer);
-    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    this->addDockWidget(Qt::LeftDockWidgetArea, dock);
 
     // Create a temporary project model
-    //m_pProjectModel = new ProjectDefaultModel("Root Item");
-    ModelRepository::getInstance()->createDefaultProjectModel();
     ProjectModel* pProjectModel = ModelRepository::getInstance()->getProjectModel();
     m_pProjectExplorer->setProjectModel(pProjectModel);
+}
+
+/**
+ *
+ */
+void MainWindow::actAbout()
+{
+    QMessageBox::about(this, tr("About CANcommander"),
+                tr("The <b>CANcommander</b> is a CAN Analyzer SW "));
+}
+
+/**
+ *
+ */
+void MainWindow::actStartMeasurement()
+{
+    statusBar()->showMessage(tr("Starting Measurement..."));
+
+    USBtin* pCANInterface = new USBtin();
+    pCANInterface->connect("COM4");
+    pCANInterface->openCANChannel(125000, ACTIVE);
+
+    m_ThreadManager->createCANThreads("CAN1", pCANInterface);
+    m_ThreadManager->startAllThreads();
+}
+
+/**
+ *
+ */
+void MainWindow::actStopMeasurement()
+{
+    statusBar()->showMessage(tr("Measurement stopped"));
+    m_ThreadManager->stopAllThreads();
 }

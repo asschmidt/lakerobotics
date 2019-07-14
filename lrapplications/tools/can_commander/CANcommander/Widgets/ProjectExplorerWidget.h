@@ -27,6 +27,8 @@ class ProjectExplorerWidget : public QWidget
 
     private slots:
         void itemDoubleClicked(const QModelIndex& index);
+        void customMenuRequested(QPoint pos);
+        void customHeaderMenuRequested(QPoint pos);
 
     private:
         void createWidgetLayout();
