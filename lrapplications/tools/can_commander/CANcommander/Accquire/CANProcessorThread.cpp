@@ -56,7 +56,9 @@ void CANProcessorThread::run()
 
             if (pMessage != nullptr)
             {
-                m_pCANModel->addCANRawMessage(pMessage);
+                CANMessageObject* pMsgObject = m_pCANModel->addCANRawMessage(pMessage);
+
+                // TODO: Add the decoding of the raw message based on the data files
             }
         }
         else

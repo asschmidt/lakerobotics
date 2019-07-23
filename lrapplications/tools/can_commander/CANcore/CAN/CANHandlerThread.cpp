@@ -19,9 +19,10 @@
 /**
  *
  */
-CANHandlerThread::CANHandlerThread(USBtin* pCANInterface)
+CANHandlerThread::CANHandlerThread(QString interfaceName, USBtin* pCANInterface)
 {
     this->setObjectName("CANHandlerThread");
+    m_InterfaceName = interfaceName;
     m_pCANInterface = pCANInterface;
 }
 
@@ -84,7 +85,6 @@ void CANHandlerThread::run()
 
             runCounter += numberOfMessages;
 
-            // Clear the receive message
             if (runCounter >= 50)
             {
                 std::cout << "CANHandlerThread processed " << runCounter << " messages" << std::endl;
@@ -94,11 +94,12 @@ void CANHandlerThread::run()
                 runCounter = 0;
             }
 
+            // Clear the receive message
             m_ReceiveQueue.clear();
         }
         else
         {
-            std::cout << "CANHandlerThread waiting" << std::endl;
+            std::cout << "[CANHandlerThread] - Interface " << m_InterfaceName.toStdString() << " waiting" << std::endl;
             std::cout.flush();
             QThread::msleep(1000);
         }

@@ -23,8 +23,16 @@ CANTraceWindow::CANTraceWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CANTraceWindow)
 {
+    ModelRepository::getInstance()->getCANModel()->registerCANModelConnector(&m_CANModel);
+
+    connect(&m_CANModel, &CANUIModel::rowsInserted, this, &CANTraceWindow::canModelChanged);
+
     ui->setupUi(this);
     this->createLayout();
+
+    /*connect(&m_CANModel,
+                SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this,
+                SLOT(canModelChanged(QModelIndex,QModelIndex,QVector<int>)));*/
 }
 
 /**
@@ -33,6 +41,11 @@ CANTraceWindow::CANTraceWindow(QWidget *parent) :
 CANTraceWindow::~CANTraceWindow()
 {
     delete ui;
+}
+
+void CANTraceWindow::canModelChanged(const QModelIndex &parent, int first, int last)
+{
+    m_pTreeView->scrollToBottom();
 }
 
 /**
@@ -50,4 +63,6 @@ void CANTraceWindow::createLayout()
     pLayout->addWidget(m_pTreeView);
 
     this->setLayout(pLayout);
+
+    m_pTreeView->setModel(&m_CANModel);
 }

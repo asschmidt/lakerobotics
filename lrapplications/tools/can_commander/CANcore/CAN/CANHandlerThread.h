@@ -9,6 +9,7 @@
 #define _CANHANDLER_THREAD_H_
 
 // Qt includes
+#include <QtCore/QString>
 #include <QtCore/QQueue>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
@@ -27,7 +28,7 @@ class CANCORE_EXPORT CANHandlerThread : public QThread
     Q_OBJECT
 
     public:
-        CANHandlerThread(USBtin* pCANInterface);
+        CANHandlerThread(QString interfaceName, USBtin* pCANInterface);
 
         void registerCANProcessor(ICANProcessor* pCANProcessor);
         void run() override;
@@ -35,6 +36,7 @@ class CANCORE_EXPORT CANHandlerThread : public QThread
         void closeInterface();
 
     private:
+        QString m_InterfaceName;
         USBtin* m_pCANInterface;
 
         QQueue<CANMessage*> m_TransmitQueue;

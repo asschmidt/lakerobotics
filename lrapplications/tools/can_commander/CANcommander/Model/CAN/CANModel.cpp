@@ -29,23 +29,53 @@ CANModel::CANModel()
 /**
  *
  */
-int CANModel::addCANRawMessage(CANMessage* pRawMessage)
+CANMessageObject* CANModel::addCANRawMessage(CANMessage* pRawMessage)
 {
-    int totalObjectNumer = 0;
+    CANMessageObject* pMsgObject = nullptr;
 
     if (pRawMessage != nullptr)
     {
-        CANMessageObject* pMsgObject = new CANMessageObject(pRawMessage);
+        pMsgObject = new CANMessageObject(pRawMessage);
 
         m_ListMutex.lock();
 
         m_CANObjectList.append(pMsgObject);
-        totalObjectNumer = m_CANObjectList.count();
 
         m_ListMutex.unlock();
 
+        this->notifyAllConnectors(pMsgObject);
         //std::cout << "Received CAN Message in Model: " << pRawMessage->getId() << " No: " << totalObjectNumer << std::endl;
     }
 
-    return totalObjectNumer;
+    return pMsgObject;
+}
+
+/**
+ *
+ */
+void CANModel::registerCANModelConnector(ICANModelConnector* pConnector)
+{
+    m_ModelConnectors.append(pConnector);
+}
+
+/**
+ *
+ */
+void CANModel::unregisterCANModelConnector(ICANModelConnector* pConnector)
+{
+    m_ModelConnectors.removeAll(pConnector);
+}
+
+/**
+ *
+ */
+void CANModel::notifyAllConnectors(CANMessageObject* pCANMessage)
+{
+    QLinkedListIterator<ICANModelConnector*> iterConnector(m_ModelConnectors);
+
+    while (iterConnector.hasNext())
+    {
+        ICANModelConnector* pConnector = iterConnector.next();
+        pConnector->notifyModelChange(pCANMessage);
+    }
 }

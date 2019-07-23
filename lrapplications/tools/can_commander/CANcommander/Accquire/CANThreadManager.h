@@ -36,7 +36,7 @@ class CANThreadManager : public QObject
     public:
         CANThreadManager(CANModel* pCANModel);
 
-        void createCANThreads(QString interfaceName, USBtin* pCANInterface);
+        void createCANThread(QString interfaceName, USBtin* pCANInterface);
 
         int startAllThreads();
         int stopAllThreads();

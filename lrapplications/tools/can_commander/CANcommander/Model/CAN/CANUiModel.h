@@ -1,28 +1,36 @@
 /*
- * ProjectModel.h
+ * CANUiModel.h
  *
- *  Created on: 09.07.2019
+ *  Created on: 11.07.2019
  *      Author: Andreas
  */
-#ifndef _PROJECTMODEL_H_
-#define _PROJECTMODEL_H_
+
+#ifndef _CAN_UI_MODEL_H_
+#define _CAN_UI_MODEL_H_
 
 // Qt includes
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
+#include <QtCore/QLinkedList>
+#include <QtCore/QHash>
+#include <QtCore/QMutex>
 #include <QtCore/QVector>
 
 // Project includes
-#include "ProjectModelItem.h"
+#include "CAN/CANMessage.h"
+#include "CANMessageObject.h"
 
-class ProjectModel : public QAbstractItemModel
+#include "ICANModelConnector.h"
+
+class CANUIModel : public ICANModelConnector, public QAbstractItemModel
 {
-        Q_OBJECT
-
     public:
-        ProjectModel(QString rootName);
-        virtual ~ProjectModel();
+        CANUIModel();
+        virtual ~CANUIModel();
+
+        void populateModel(QLinkedList<CANMessageObject*> canMessageList) override;
+        void notifyModelChange(CANMessageObject* newMessageObj) override;
 
         QVariant data(const QModelIndex &index, int role) const override;
 
@@ -35,10 +43,10 @@ class ProjectModel : public QAbstractItemModel
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        QVector<ProjectModelItem*>* getAllItemsOfType(ProjectModelItemType itemType) const;
-
-    protected:
-        ProjectModelItem* m_pRootNode;
+    private:
+        QMutex m_ListMutex;
+        QVector<CANMessageObject*> m_CANObjectList;
 };
 
-#endif
+
+#endif /* _CAN_UI_MODEL_H_ */

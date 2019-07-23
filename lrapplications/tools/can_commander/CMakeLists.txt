@@ -59,6 +59,7 @@ set(CANCOMMANDER_MODEL_SRCS
 	CANcommander/Accquire/CANProcessorThread.cpp
 	CANcommander/Accquire/CANThreadManager.cpp
 	CANcommander/Model/CAN/CANModel.cpp
+	CANcommander/Model/CAN/CANUiModel.cpp
 	CANcommander/Model/CAN/CANMessageObject.cpp	
 	CANcommander/Model/Project/ProjectModel.cpp
 	CANcommander/Model/Project/ProjectDefaultModel.cpp
@@ -80,6 +81,7 @@ set(CANCOMMANDER_UI_SRCS
 
 # Set the C++ sources for the UI files
 set(CANCOMMANDER_UI_CXX_SRCS	
+	CANcommander/Ui/UIRepository.cpp
 	CANcommander/Ui/QuickTraceAction.cpp
 	CANcommander/Ui/cantracewindow.cpp
 	CANcommander/Ui/Dialogs/canhwinterfaceoptiondlg.cpp)

@@ -37,12 +37,16 @@ class HWInterfaceData
         void setPortBaudrate(int portBaudrate);
         int getPortBaudrate();
 
+        bool isEnabled();
+        void setEnabled(bool enabled);
+
     private:
         QString m_InterfaceName;
         QString m_PortName;
         int m_PortBaudrate;
 
         int m_InterfaceBaudrate;
+        bool m_InterfaceEnabled;
 };
 
 // Make the HWInterfaceData compliant to the QVariant

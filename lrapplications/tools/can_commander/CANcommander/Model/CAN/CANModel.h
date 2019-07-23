@@ -16,13 +16,20 @@
 // Project includes
 #include "CAN/CANMessage.h"
 #include "CANMessageObject.h"
+#include "ICANModelConnector.h"
 
 class CANModel
 {
     public:
         CANModel();
 
-        int addCANRawMessage(CANMessage* pRawMessage);
+        CANMessageObject* addCANRawMessage(CANMessage* pRawMessage);
+
+        void registerCANModelConnector(ICANModelConnector* pConnector);
+        void unregisterCANModelConnector(ICANModelConnector* pConnector);
+
+    private:
+        void notifyAllConnectors(CANMessageObject* pCANMessage);
 
     private:
         QMutex m_ListMutex;
@@ -30,6 +37,8 @@ class CANModel
 
         QLinkedList<CANMessageObject*> m_CANObjectList;
         QHash<int, CANMessageObject*> m_CANObjectDict;
+
+        QLinkedList<ICANModelConnector*> m_ModelConnectors;
 };
 
 

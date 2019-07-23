@@ -275,6 +275,8 @@ int USBtin::receiveMessages(QQueue<CANMessage*>& receiveQueue)
                 if ((cmd == 't') || (cmd == 'T') || (cmd == 'r') || (cmd == 'R'))
                 {
                     CANMessage* pMessage = new CANMessage(incomingMessage);
+                    pMessage->setTimestamp(QDateTime::currentDateTime());
+
                     //qDebug() << pMessage->getTimestamp().toMSecsSinceEpoch() << " Message: " << pMessage->getId();
 
                     receiveQueue.enqueue(pMessage);

@@ -36,6 +36,8 @@ HWInterfaceData::HWInterfaceData(QString interfaceName)
 
     m_PortName = "COM4";
     m_PortBaudrate = 115200;
+
+    m_InterfaceEnabled = true;
 }
 
 /**
@@ -102,6 +104,21 @@ int HWInterfaceData::getPortBaudrate()
     return m_PortBaudrate;
 }
 
+/**
+ *
+ */
+bool HWInterfaceData::isEnabled()
+{
+   return m_InterfaceEnabled;
+}
+
+/**
+ *
+ */
+void HWInterfaceData::setEnabled(bool enabled)
+{
+   m_InterfaceEnabled = enabled;
+}
 
 /**
  *

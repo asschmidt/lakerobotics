@@ -5,6 +5,9 @@
  *      Author: Andreas
  */
 
+// Standard includes
+#include <iostream>
+
 // Qt Includes
 #include <QtCore/QSettings>
 #include <QtWidgets/QtWidgets>
@@ -22,6 +25,7 @@
 #include "Accquire/CANThreadManager.h"
 
 #include "Widgets/ProjectExplorerWidget.h"
+#include "Ui/UIRepository.h"
 
 #include "CAN/CANMessage.h"
 #include "CAN/USBtin.h"
@@ -35,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+
+	UIRepository::getInstance()->setMainWindow(this);
 
 	ModelRepository::getInstance()->createDefaultProjectModel();
 	m_ThreadManager = new CANThreadManager(ModelRepository::getInstance()->getCANModel());
@@ -141,6 +147,8 @@ void MainWindow::createMdiArea()
     pMDIArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     pMDIArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->setCentralWidget(pMDIArea);
+
+    UIRepository::getInstance()->setMDIArea(pMDIArea);
 }
 
 /**
@@ -167,8 +175,7 @@ void MainWindow::createDockWidgets()
  */
 void MainWindow::actAbout()
 {
-    QMessageBox::about(this, tr("About CANcommander"),
-                tr("The <b>CANcommander</b> is a CAN Analyzer SW "));
+    QMessageBox::about(this, tr("About CANcommander"), tr("The <b>CANcommander</b> is a CAN Analyzer SW "));
 }
 
 /**
@@ -178,11 +185,36 @@ void MainWindow::actStartMeasurement()
 {
     statusBar()->showMessage(tr("Starting Measurement..."));
 
-    USBtin* pCANInterface = new USBtin();
-    pCANInterface->connect("COM4");
-    pCANInterface->openCANChannel(125000, ACTIVE);
+    // Get all HW Interfaces where we want to start the measurement
+    QVector<ProjectModelItem*>* pItemList = ModelRepository::getInstance()->getProjectModel()->getAllItemsOfType(HW_INTERFACE_ITEM);
+    if (pItemList != nullptr)
+    {
+        for( int i=0; i<pItemList->count(); i++)
+        {
+            // Get the HW interface object
+            ProjectModelHWInterface* pItem = static_cast<ProjectModelHWInterface*>(pItemList->at(i));
+            std::cout << "Creating Thread for HW Interface: " << pItem->getName().toStdString() << " (" << pItem->getHWInterfaceData()->getInterfaceName().toStdString() << ")" << std::endl;
 
-    m_ThreadManager->createCANThreads("CAN1", pCANInterface);
+            // If it is enabled, then create a thread for it
+            if (pItem->getHWInterfaceData()->isEnabled() == true)
+            {
+                QString interfacePort = pItem->getHWInterfaceData()->getPortName();
+                int interfaceBaudrate = pItem->getHWInterfaceData()->getInterfaceBaudrate();
+                QString interfaceName = pItem->getHWInterfaceData()->getInterfaceName();
+
+                // Create the HW interface object and open the channel
+                USBtin* pCANInterface = new USBtin();
+                pCANInterface->connect(interfacePort);
+                pCANInterface->openCANChannel(interfaceBaudrate, ACTIVE);
+
+                m_ThreadManager->createCANThread(interfaceName, pCANInterface);
+            }
+
+        }
+    }
+
+    delete pItemList;
+
     m_ThreadManager->startAllThreads();
 }
 

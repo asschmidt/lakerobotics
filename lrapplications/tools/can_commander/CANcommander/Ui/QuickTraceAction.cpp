@@ -10,10 +10,16 @@
 #include <QtCore/QVariant>
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMdiArea>
 
 // Project Includes
 #include "Model/Project/ProjectModelItem.h"
 #include "Model/Project/ProjectModelHWInterface.h"
+
+#include "Ui/UIRepository.h"
+#include "Ui/cantracewindow.h"
+
 #include "QuickTraceAction.h"
 
 /**
@@ -30,5 +36,14 @@ QuickTraceAction::QuickTraceAction(ProjectModelHWInterface* pHWInterface, QObjec
  */
 void QuickTraceAction::execute()
 {
+    QMdiArea* pMDIArea = UIRepository::getInstance()->getMDIArea();
+
+    if (pMDIArea != nullptr)
+    {
+        CANTraceWindow* pTraceWindow = new CANTraceWindow();
+        pMDIArea->addSubWindow(pTraceWindow);
+        pTraceWindow->show();
+    }
+
     qDebug() << "Triggered QuickTraceAction for " << m_pHWInterface->getHWInterfaceData()->getInterfaceName();
 }

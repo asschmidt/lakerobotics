@@ -33,9 +33,9 @@ CANThreadManager::CANThreadManager(CANModel* pCANModel)
 /**
  *
  */
-void CANThreadManager::createCANThreads(QString interfaceName, USBtin* pCANInterface)
+void CANThreadManager::createCANThread(QString interfaceName, USBtin* pCANInterface)
 {
-    CANHandlerThread* pHandlerThread = new CANHandlerThread(pCANInterface);
+    CANHandlerThread* pHandlerThread = new CANHandlerThread(interfaceName, pCANInterface);
     CANProcessorThread* pProcessorThread = new CANProcessorThread(m_pCANModel, nullptr);
 
     pHandlerThread->registerCANProcessor(pProcessorThread);
@@ -94,6 +94,7 @@ int CANThreadManager::stopAllThreads()
     {
         CANProcessorThread* pProcessorThread = m_CANProcessorThreads.value(interfaceName);
         pProcessorThread->requestInterruption();
+        pProcessorThread->wait();
 
         totalNumberOfThreads++;
     }

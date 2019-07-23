@@ -5,6 +5,9 @@
  *      Author: Andreas
  */
 
+// Qt includes
+#include <QtCore/QStack>
+
 // Project includes
 #include "ProjectModel.h"
 #include "ProjectModelFolderItem.h"
@@ -165,4 +168,39 @@ int ProjectModel::rowCount(const QModelIndex &parent) const
     }
 
     return parentItem->getChildCount();
+}
+
+/**
+ *
+ */
+QVector<ProjectModelItem*>* ProjectModel::getAllItemsOfType(ProjectModelItemType itemType) const
+{
+    QVector<ProjectModelItem*>* pItemList = new QVector<ProjectModelItem*>();
+
+    QStack<ProjectModelItem*> itemStack;
+    itemStack.push(m_pRootNode);
+
+    while (itemStack.count() > 0)
+    {
+        ProjectModelItem* pCurrentItem = itemStack.pop();
+
+        for( int i=0; i<pCurrentItem->getChildCount(); i++)
+        {
+            ProjectModelItem* pItem = static_cast<ProjectModelItem*>(pCurrentItem->getChild(i));
+            if (pItem != nullptr)
+            {
+                if (pItem->getType() == itemType)
+                {
+                    pItemList->append(pItem);
+                }
+
+                if (pItem->getType() == GROUP_ITEM)
+                {
+                    itemStack.push(pItem);
+                }
+            }
+        }
+    }
+
+    return pItemList;
 }
