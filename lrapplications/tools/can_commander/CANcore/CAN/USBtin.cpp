@@ -51,6 +51,14 @@ USBtin::~USBtin()
 /**
  *
  */
+void USBtin::initializeTimer()
+{
+    m_Timer.start();
+}
+
+/**
+ *
+ */
 QString USBtin::getFirmwareVersion() const
 {
     return m_FirmwareVersion;
@@ -276,6 +284,7 @@ int USBtin::receiveMessages(QQueue<CANMessage*>& receiveQueue)
                 {
                     CANMessage* pMessage = new CANMessage(incomingMessage);
                     pMessage->setTimestamp(QDateTime::currentDateTime());
+                    pMessage->setReceiveTime(m_Timer.elapsed());
 
                     //qDebug() << pMessage->getTimestamp().toMSecsSinceEpoch() << " Message: " << pMessage->getId();
 

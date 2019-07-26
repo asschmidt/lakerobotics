@@ -36,16 +36,22 @@ public:
 	bool isExtended();
 	bool isRTR();
 
+	unsigned char getData(int dataIdx);
 	void setData(unsigned char data[MAX_CAN_MESSAGE_LENGTH]);
 
 	void setTimestamp(QDateTime timestamp);
 	QDateTime getTimestamp();
+
+	void setReceiveTime(qint64 receiveTime);
+	qint64 getReceiveTime();
 
 	QString toString();
 
 private:
 	// Timestamp
 	QDateTime m_Timestamp;
+
+	qint64 m_ElapsedTime;
 
 	// CAN ID
 	int _id;

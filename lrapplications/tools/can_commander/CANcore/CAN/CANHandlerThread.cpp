@@ -53,6 +53,8 @@ void CANHandlerThread::run()
 {
     int runCounter = 0;
 
+    m_pCANInterface->initializeTimer();
+
     while(!isInterruptionRequested())
     {
         // Process sending of messages
@@ -101,7 +103,7 @@ void CANHandlerThread::run()
         {
             std::cout << "[CANHandlerThread] - Interface " << m_InterfaceName.toStdString() << " waiting" << std::endl;
             std::cout.flush();
-            QThread::msleep(1000);
+            QThread::msleep(100);
         }
     }
 

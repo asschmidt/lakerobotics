@@ -276,6 +276,37 @@ void CANMessage::setData(unsigned char data[MAX_CAN_MESSAGE_LENGTH])
 	std::memcpy(this->_data, data, MAX_CAN_MESSAGE_LENGTH);
 }
 
+/**
+ *
+ */
+unsigned char CANMessage::getData(int dataIdx)
+{
+   if (dataIdx >= 0 && dataIdx < MAX_CAN_MESSAGE_LENGTH)
+   {
+       return this->_data[dataIdx];
+   }
+   else
+   {
+       return 0;
+   }
+}
+
+/**
+ *
+ */
+void CANMessage::setReceiveTime(qint64 receiveTime)
+{
+    m_ElapsedTime = receiveTime;
+}
+
+/**
+ *
+ */
+qint64 CANMessage::getReceiveTime()
+{
+    return m_ElapsedTime;
+}
+
 /*
  Returns a String-representation of the CAN Message object
 */

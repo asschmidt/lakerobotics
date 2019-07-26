@@ -5,8 +5,8 @@
  *      Author: Andreas
  */
 
-#ifndef _CAN_UI_MODEL_H_
-#define _CAN_UI_MODEL_H_
+#ifndef _CAN_UI_BASE_MODEL_H_
+#define _CAN_UI_BASE_MODEL_H_
 
 // Qt includes
 #include <QtCore/QAbstractItemModel>
@@ -23,11 +23,11 @@
 
 #include "ICANModelConnector.h"
 
-class CANUIModel : public ICANModelConnector, public QAbstractItemModel
+class CANUIBaseModel : public ICANModelConnector, public QAbstractItemModel
 {
     public:
-        CANUIModel();
-        virtual ~CANUIModel();
+        CANUIBaseModel();
+        virtual ~CANUIBaseModel();
 
         void populateModel(QLinkedList<CANMessageObject*> canMessageList) override;
         void notifyModelChange(CANMessageObject* newMessageObj) override;
@@ -43,9 +43,29 @@ class CANUIModel : public ICANModelConnector, public QAbstractItemModel
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    private:
+        void setUsingHexDisplay(bool useHex);
+        bool isUsingHexDisplay();
+
+        void setUsingDeltaTDisplay(bool useDeltaT);
+        bool isUsingDeltaTDisplay();
+
+        void setUsingAutoScroll(bool useAutoscroll);
+        bool isUsingAutoScroll();
+
+    protected:
+        QVariant getMessageTime(CANMessageObject* pCANMessage) const;
+        QVariant getMessageCANID(CANMessageObject* pCANMessage) const;
+        QVariant getDLC(CANMessageObject* pCANMessage) const;
+        QVariant getData(CANMessageObject* pCANMessage) const;
+
+    protected:
+        bool m_UseHexDisplay;
+        bool m_UseDeltaTDisplay;
+        bool m_UseAutoScroll;
+
         QMutex m_ListMutex;
         QVector<CANMessageObject*> m_CANObjectList;
+
 };
 
 

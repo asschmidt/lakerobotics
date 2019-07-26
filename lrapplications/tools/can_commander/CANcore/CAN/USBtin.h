@@ -12,6 +12,7 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QQueue>
+#include <QtCore/QElapsedTimer>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
@@ -47,11 +48,14 @@ class CANCORE_EXPORT USBtin
         bool sendMessage(CANMessage* pMessage);
         int receiveMessages(QQueue<CANMessage*>& receiveQueue);
 
+        void initializeTimer();
+
     private:
         QString readResponse();
         QString transmitCommand(QString cmd);
 
     private:
+        QElapsedTimer m_Timer;
         QSerialPort* m_pPort;
 
         QString m_IncomingMessage;

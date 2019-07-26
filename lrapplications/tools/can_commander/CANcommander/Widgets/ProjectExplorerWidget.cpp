@@ -95,6 +95,9 @@ void ProjectExplorerWidget::customMenuRequested(QPoint pos)
     menu->popup(m_pTreeView->viewport()->mapToGlobal(pos));
 }
 
+/**
+ *
+ */
 void ProjectExplorerWidget::customHeaderMenuRequested(QPoint pos)
 {
     int column = m_pTreeView->header()->logicalIndexAt(pos);
@@ -116,5 +119,6 @@ void ProjectExplorerWidget::setProjectModel(ProjectModel* pModel)
     if (m_pTreeView != nullptr)
     {
         m_pTreeView->setModel(pModel);
+        m_pTreeView->expandAll();
     }
 }
