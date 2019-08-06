@@ -5,6 +5,9 @@
  *      Author: Andreas
  */
 
+// Standard includes
+#include <iostream>
+
 // Qt includes
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QVBoxLayout>
@@ -24,6 +27,8 @@ CANTraceWindow::CANTraceWindow(QWidget *parent) :
     ui(new Ui::CANTraceWindow)
 {
     ModelRepository::getInstance()->getCANModel()->registerCANModelConnector(&m_CANModel);
+    ModelRepository::getInstance()->getCANModel()->registerCANModelConnector(&m_SingleCANModel);
+
     connect(&m_CANModel, &CANUIBaseModel::rowsInserted, this, &CANTraceWindow::canModelChanged);
 
     ui->setupUi(this);
@@ -72,6 +77,12 @@ void CANTraceWindow::createActions()
     m_pShowHexAction->setCheckable(true);
     connect(m_pShowHexAction, SIGNAL(triggered()), this, SLOT(actShowHex()));
 
+    m_pShowSingleMessagesAction = new QAction(this);
+    QPixmap* m_pShowSingleMessagesIcon = new QPixmap(":/Images/view_scroll_mode.png");
+    m_pShowSingleMessagesAction->setIcon(*pShowScrollModeIcon);
+    m_pShowSingleMessagesAction->setCheckable(true);
+    connect(m_pShowSingleMessagesAction, SIGNAL(triggered()), this, SLOT(actShowSingleMessages()));
+
 }
 
 /**
@@ -85,6 +96,7 @@ QToolBar* CANTraceWindow::createToolbar()
     pToolbar->addAction(m_pShowDeltaTAction);
     pToolbar->addAction(m_pShowScrollModeAction);
     pToolbar->addAction(m_pShowHexAction);
+    pToolbar->addAction(m_pShowSingleMessagesAction);
 
     return pToolbar;
 }
@@ -136,6 +148,21 @@ void CANTraceWindow::actShowScrollMode()
 {
     m_CANModel.setUsingAutoScroll(m_pShowScrollModeAction->isChecked());
     m_CANModel.submit();
+}
+
+/**
+ *
+ */
+void CANTraceWindow::actShowSingleMessages()
+{
+    if (m_pShowSingleMessagesAction->isChecked())
+    {
+        m_pTreeView->setModel(&m_SingleCANModel);
+    }
+    else
+    {
+        m_pTreeView->setModel(&m_CANModel);
+    }
 }
 
 /**

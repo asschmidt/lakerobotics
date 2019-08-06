@@ -67,6 +67,7 @@ set(CANCOMMANDER_MODEL_SRCS
 	CANcommander/Model/Project/ProjectModelItem.cpp
 	CANcommander/Model/Project/ProjectModelFolderItem.cpp
 	CANcommander/Model/Project/ProjectModelHWInterface.cpp
+	CANcommander/Model/Project/ProjectModelTraceWindow.cpp
 	CANcommander/Model/AbstractUIModelItem.cpp
 	CANcommander/Model/ModelRepository.cpp)
 

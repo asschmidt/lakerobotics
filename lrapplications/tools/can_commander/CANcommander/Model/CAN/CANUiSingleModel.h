@@ -30,6 +30,13 @@ class CANUISingleModel : public CANUIBaseModel
     public:
         CANUISingleModel();
         virtual ~CANUISingleModel();
+
+        void populateModel(QLinkedList<CANMessageObject*> canMessageList) override;
+        void notifyModelChange(CANMessageObject* newMessageObj) override;
+
+    protected:
+        QMutex m_HashMutex;
+        QHash<int, int> m_CANIDHash;
 };
 
 #endif /* _CAN_UI_SINGLE_MODEL_H_ */

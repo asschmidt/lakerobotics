@@ -63,10 +63,8 @@ void CANProcessorThread::run()
         }
         else
         {
-            QThread::msleep(100);
+            QThread::msleep(10);
         }
     }
-
-    qDebug() << "CANProcessorThread stopped";
 }
 

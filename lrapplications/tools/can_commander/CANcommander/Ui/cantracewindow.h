@@ -19,6 +19,7 @@
 #include "Model/CAN/CANMessageObject.h"
 #include "Model/CAN/CANModel.h"
 #include "Model/CAN/CANUiBaseModel.h"
+#include "Model/CAN/CANUiSingleModel.h"
 #include "Model/ModelRepository.h"
 
 namespace Ui {
@@ -41,12 +42,13 @@ class CANTraceWindow : public QWidget
         QToolBar* createToolbar();
         void createLayout();
 
+    private slots:
         void canModelChanged(const QModelIndex &parent, int first, int last);
 
-    private slots:
         void actShowHex();
         void actShowDeltaT();
         void actShowScrollMode();
+        void actShowSingleMessages();
 
     private:
         Ui::CANTraceWindow *ui;
@@ -54,9 +56,12 @@ class CANTraceWindow : public QWidget
         QAction* m_pShowDeltaTAction;
         QAction* m_pShowScrollModeAction;
         QAction* m_pShowHexAction;
+        QAction* m_pShowSingleMessagesAction;
 
         QTreeView* m_pTreeView;
+
         CANUIBaseModel m_CANModel;
+        CANUISingleModel m_SingleCANModel;
 };
 
 /**

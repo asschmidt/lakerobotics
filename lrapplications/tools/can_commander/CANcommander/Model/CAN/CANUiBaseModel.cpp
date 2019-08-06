@@ -287,6 +287,9 @@ void CANUIBaseModel::setUsingAutoScroll(bool useAutoscroll)
     m_UseAutoScroll = useAutoscroll;
 }
 
+/**
+ *
+ */
 bool CANUIBaseModel::isUsingAutoScroll()
 {
     return m_UseAutoScroll;

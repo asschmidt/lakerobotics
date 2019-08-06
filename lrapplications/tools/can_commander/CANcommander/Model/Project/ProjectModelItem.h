@@ -21,7 +21,8 @@ enum ProjectModelItemType
 {
     GROUP_ITEM              = 1,
     HW_INTERFACE_ITEM       = 2,
-    DATA_DEF_FILE_ITEM      = 3
+    TRACE_WINDOW_ITEM       = 3,
+    DATA_DEF_FILE_ITEM      = 50
 };
 
 /**

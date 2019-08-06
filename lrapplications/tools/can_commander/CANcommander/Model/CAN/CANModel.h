@@ -36,7 +36,6 @@ class CANModel
         QMutex m_HashMutex;
 
         QLinkedList<CANMessageObject*> m_CANObjectList;
-        QHash<int, CANMessageObject*> m_CANObjectDict;
 
         QLinkedList<ICANModelConnector*> m_ModelConnectors;
 };

@@ -38,9 +38,7 @@ CANMessageObject* CANModel::addCANRawMessage(CANMessage* pRawMessage)
         pMsgObject = new CANMessageObject(pRawMessage);
 
         m_ListMutex.lock();
-
         m_CANObjectList.append(pMsgObject);
-
         m_ListMutex.unlock();
 
         this->notifyAllConnectors(pMsgObject);

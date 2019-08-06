@@ -92,7 +92,6 @@ void CANHandlerThread::run()
                 std::cout << "CANHandlerThread processed " << runCounter << " messages" << std::endl;
                 std::cout.flush();
 
-                //qDebug() << "CANHandlerThread processed " << numberOfMessages << " messages";
                 runCounter = 0;
             }
 
@@ -103,11 +102,9 @@ void CANHandlerThread::run()
         {
             std::cout << "[CANHandlerThread] - Interface " << m_InterfaceName.toStdString() << " waiting" << std::endl;
             std::cout.flush();
-            QThread::msleep(100);
+            QThread::msleep(10);
         }
     }
-
-    qDebug() << "CANHandlerThread stopped";
 }
 
 

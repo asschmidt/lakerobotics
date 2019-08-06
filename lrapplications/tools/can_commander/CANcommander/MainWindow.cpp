@@ -157,11 +157,12 @@ void MainWindow::actStartMeasurement()
         {
             // Get the HW interface object
             ProjectModelHWInterface* pItem = static_cast<ProjectModelHWInterface*>(pItemList->at(i));
-            std::cout << "Creating Thread for HW Interface: " << pItem->getName().toStdString() << " (" << pItem->getHWInterfaceData()->getInterfaceName().toStdString() << ")" << std::endl;
 
             // If it is enabled, then create a thread for it
             if (pItem->getHWInterfaceData()->isEnabled() == true)
             {
+                std::cout << "Creating Thread for HW Interface: " << pItem->getName().toStdString() << " (" << pItem->getHWInterfaceData()->getInterfaceName().toStdString() << ")" << std::endl;
+
                 QString interfacePort = pItem->getHWInterfaceData()->getPortName();
                 int interfaceBaudrate = pItem->getHWInterfaceData()->getInterfaceBaudrate();
                 QString interfaceName = pItem->getHWInterfaceData()->getInterfaceName();
