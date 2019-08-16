@@ -19,7 +19,7 @@
  * on the serial console instead of the OLED display. This only works if
  * USE_I2C_DISPLAY is not defined
  */
-#define SHOW_MEASUREMENT_SERIAL
+//#define SHOW_MEASUREMENT_SERIAL
 
 /**
  * If defined, Debug messages are displayed

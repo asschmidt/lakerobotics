@@ -8,8 +8,10 @@
 #include "common.h"
 #include "hwconfig.h"
 #include "remotectrl.h"
+#include "gen/Node_Pwr_CAN.h"
 
 #include "cbuffer/CircularBuffer.h"
+#include "queue/QueueArray.h"
 
 #include "cmdparser/CmdBuffer.hpp"
 #include "cmdparser/CmdCallback.hpp"
@@ -17,7 +19,7 @@
 
 #include "debounce/ButtonDebounce.h"
 
-static CircularBuffer<int16_t, 4> g_remoteCmdBuffer;
+static CircularBuffer<int16_t, 5> g_remoteCmdBuffer;
 
 static CmdCallback_P<3> cmdCallback;
 static CmdBuffer<32> cmdBuffer;
@@ -27,6 +29,8 @@ static ButtonDebounce mainButton;
 static ButtonDebounce activateButton1;
 static ButtonDebounce activateButton2;
 
+static RemoteCtrl_CAN_PowerControl g_PowerCtrlMsg;
+
 static void remoteCtrlProcessActivate(CmdParser* cmdParser);
 
 /**
@@ -34,6 +38,12 @@ static void remoteCtrlProcessActivate(CmdParser* cmdParser);
  */
 void remoteCtrlInitialize()
 {
+    g_PowerCtrlMsg.messageValid = false;
+    g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_1_Active = 0;
+    g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_2_Active = 0;
+    g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_3_Active = 0;
+    g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_4_Active = 0;
+
 	cmdCallback.addCmd(PSTR("ACT"), &remoteCtrlProcessActivate);
 
 	mainButton.initializeButton(BUTTON_MAIN_PIN, 100);
@@ -68,8 +78,33 @@ int16_t remoteCtrlProcessCommands()
 			}
 			cmdBuffer.clear();
 		}
+	}
+	else if (g_PowerCtrlMsg.messageValid == true)
+	{
+	    Serial.println("Got valid Power Control CAN Message");
 
-		return g_remoteCmdBuffer.available();
+	    if (g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_1_Active == 1)
+	    {
+	        g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E1);
+	    }
+
+	    if (g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_2_Active == 1)
+        {
+            g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E2);
+        }
+
+	    if (g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_3_Active == 1)
+        {
+            g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E3);
+        }
+
+	    if (g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_4_Active == 1)
+        {
+            g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E4);
+        }
+
+	    // Finally set the message object to invalid
+	    g_PowerCtrlMsg.messageValid = false;
 	}
 	else
 	{
@@ -86,9 +121,9 @@ int16_t remoteCtrlProcessCommands()
         {
             g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E_ALL);
         }
-
-		return g_remoteCmdBuffer.available();
 	}
+
+	return g_remoteCmdBuffer.available();
 }
 
 /**
@@ -107,6 +142,14 @@ int16_t remoteCtrlGetNextCommand()
 	}
 }
 
+/**
+ *
+ * @return
+ */
+RemoteCtrl_CAN_PowerControl* remoteCtrlGetMsgPowerControl()
+{
+    return &g_PowerCtrlMsg;
+}
 
 /**
  *
@@ -116,12 +159,7 @@ void remoteCtrlProcessActivate(CmdParser* cmdParser)
 {
 	Serial.println("Got Activate Command");
 
-	if (cmdParser->equalCmdParam_P(1, PSTR("MAIN")))
-	{
-		Serial.println("Activating Main");
-		g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER);
-	}
-	else if (cmdParser->equalCmdParam_P(1, PSTR("E1")))
+	if (cmdParser->equalCmdParam_P(1, PSTR("E1")))
 	{
 		Serial.println("Activating E1");
 		g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E1);

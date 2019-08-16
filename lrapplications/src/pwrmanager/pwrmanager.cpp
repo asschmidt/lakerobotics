@@ -83,6 +83,7 @@ void powerManagerHandlePowerStartMode(PWR_STATE_MACHINE* pPwrManager)
 			powerCtrlActivateElectronics(POWER_ELECTRONIC_CHANNEL1_PIN);
 			pPwrManager->pwrManagerOutputStates.stateElectronic1Power = 1;
 			pPwrManager->pwrManagerRemoteCommand = REMOTE_CTRL_CMD_UNKNOWN;
+			delay(POWER_STARTUP_STATE_DELAY);
 			break;
 
 		case REMOTE_CTRL_CMD_POWER_E2:
@@ -93,6 +94,7 @@ void powerManagerHandlePowerStartMode(PWR_STATE_MACHINE* pPwrManager)
 			powerCtrlActivateElectronics(POWER_ELECTRONIC_CHANNEL2_PIN);
 			pPwrManager->pwrManagerOutputStates.stateElectronic2Power = 1;
 			pPwrManager->pwrManagerRemoteCommand = REMOTE_CTRL_CMD_UNKNOWN;
+			delay(POWER_STARTUP_STATE_DELAY);
 			break;
 
 		case REMOTE_CTRL_CMD_POWER_E3:
@@ -103,7 +105,19 @@ void powerManagerHandlePowerStartMode(PWR_STATE_MACHINE* pPwrManager)
 			powerCtrlActivateElectronics(POWER_ELECTRONIC_CHANNEL3_PIN);
 			pPwrManager->pwrManagerOutputStates.stateElectronic3Power = 1;
 			pPwrManager->pwrManagerRemoteCommand = REMOTE_CTRL_CMD_UNKNOWN;
+			delay(POWER_STARTUP_STATE_DELAY);
 			break;
+
+		case REMOTE_CTRL_CMD_POWER_E4:
+            #ifdef PWRMGR_DEBUG
+                Serial.println(F("Activating E4"));
+            #endif
+
+            powerCtrlActivateElectronics(POWER_ELECTRONIC_CHANNEL4_PIN);
+            pPwrManager->pwrManagerOutputStates.stateElectronic4Power = 1;
+            pPwrManager->pwrManagerRemoteCommand = REMOTE_CTRL_CMD_UNKNOWN;
+            delay(POWER_STARTUP_STATE_DELAY);
+            break;
 
 		case REMOTE_CTRL_CMD_POWER_E_ALL:
 			#ifdef PWRMGR_DEBUG

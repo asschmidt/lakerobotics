@@ -150,7 +150,8 @@ void taskCANHandler()
 	}
 
 	// Handle CAN Receive
-	canHandlerProcessReceiveMessages();
+	RemoteCtrl_CAN_PowerControl* pCANRemoteControl = remoteCtrlGetMsgPowerControl();
+	canHandlerProcessReceiveMessages(pCANRemoteControl);
 
 #ifdef USE_DATA_HANDLER
 	uint32_t stopTime = stopRuntimeMeasurement();

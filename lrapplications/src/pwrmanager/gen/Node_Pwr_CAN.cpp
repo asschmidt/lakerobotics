@@ -7,6 +7,7 @@
  ***********************************************************
  * 
  **********************************************************/
+#include <Arduino.h>
 
 #include "Node_Pwr_CAN.h" 
 #include "mcp2515/can.h"
@@ -59,8 +60,8 @@
 	int8_t parseMsg_Power_Control(struct can_frame* pCANFrame, Msg_Power_Control* pMsg)
 	{
 		// Check CAN-ID
-		if ((pCANFrame->can_id & ~CAN_EFF_FLAG) != CAN_ID_Power_Control)
-			return -1;
+		//if ((pCANFrame->can_id & ~CAN_EFF_FLAG) != CAN_ID_Power_Control)
+		//	return -1;
 	
 		// Check DLC
 		if (pCANFrame->can_dlc != 4)
@@ -69,6 +70,8 @@
 		// Extract the data from CAN-Frame			
 				// Signal	: Power_Electronic_1_Active
 				// Start-Bit: 0 End-Bit: 7
+		            //Serial.print("Power E1: ");
+		            //Serial.println(pCANFrame->data[0]);
 					pMsg->Power_Electronic_1_Active = pCANFrame->data[0]; 					
 			
 				// Signal	: Power_Electronic_2_Active

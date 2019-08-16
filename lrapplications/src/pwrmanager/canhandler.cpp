@@ -9,6 +9,7 @@
 
 #include "canhandler.h"
 #include "display_ui.h"
+#include "remotectrl.h"
 
 #include "gen/Node_Pwr_CAN.h"
 
@@ -25,6 +26,7 @@ static volatile int16_t g_validFrame1;
 static volatile struct can_frame g_canRxBuffer1;
 
 static void canHandlerInterrupt();
+static void parsePowerControlMessage(RemoteCtrl_CAN_PowerControl* pCANRemoteControl, struct can_frame* pFrame);
 
 /**
  * Initialize the CAN Controller and needed data structures
@@ -64,6 +66,8 @@ void canHandlerInterrupt()
 	// Check if Interrupt Flag for first mailbox is set
 	if (irq & MCP2515::CANINTF_RX0IF)
 	{
+	    //Serial.println("Got CAN RX0 Interrupt");
+
 		// Try to read the message from the first mailbox into the global CAN RX Buffer 0
 		if (g_canController.readMessage(MCP2515::RXB0, (struct can_frame*)&g_canRxBuffer0) == MCP2515::ERROR_OK)
 		{
@@ -82,6 +86,8 @@ void canHandlerInterrupt()
 			g_validFrame1 = 1;
 		}
 	}
+
+	g_canController.clearInterrupts();
 }
 
 /**
@@ -136,7 +142,7 @@ int canHandlerTransmitMotorValues(int16_t voltageValue, int16_t currentValue)
  *
  * @return
  */
-int canHandlerProcessReceiveMessages()
+int canHandlerProcessReceiveMessages(RemoteCtrl_CAN_PowerControl* pCANRemoteControl)
 {
 	struct can_frame canRxBuffer0;
 	struct can_frame canRxBuffer1;
@@ -150,10 +156,7 @@ int canHandlerProcessReceiveMessages()
 		memcpy(&canRxBuffer0, (const void*)&g_canRxBuffer0, sizeof(can_frame));
 		g_validFrame0 = 0;
 	}
-	interrupts();
 
-
-	noInterrupts();
 	if (g_validFrame1 == 1)
 	{
 		memcpy(&canRxBuffer1, (const void*)&g_canRxBuffer1, sizeof(can_frame));
@@ -163,15 +166,32 @@ int canHandlerProcessReceiveMessages()
 
 	if (canRxBuffer0.can_id != 0)
 	{
-		//Serial.print(F("Got Rx0 Frame ID: "));
-		//Serial.println(canRxBuffer0.can_id, HEX);
+	    //Serial.println("Got CAN Message");
+		parsePowerControlMessage(pCANRemoteControl, &canRxBuffer0);
 	}
 
 	if (canRxBuffer1.can_id != 0)
 	{
-		//Serial.print(F("Got Rx1 Frame ID: "));
-		//Serial.println(canRxBuffer1.can_id, HEX);
+	    parsePowerControlMessage(pCANRemoteControl, &canRxBuffer1);
 	}
 
 	return 0;
+}
+
+/**
+ *
+ * @param pFrame
+ */
+void parsePowerControlMessage(RemoteCtrl_CAN_PowerControl* pCANRemoteControl, struct can_frame* pFrame)
+{
+    if (pFrame->can_id == CAN_ID_Power_Control)
+    {
+        Serial.println("Parsing Power Control Msg");
+        int8_t parseResult = parseMsg_Power_Control(pFrame, &(pCANRemoteControl->CAN_PowerControlMsg));
+
+        if (parseResult >= 0)
+        {
+            pCANRemoteControl->messageValid = true;
+        }
+    }
 }

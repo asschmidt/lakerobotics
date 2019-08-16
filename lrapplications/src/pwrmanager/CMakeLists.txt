@@ -42,7 +42,7 @@ set(LR_TARGET_CPU_CLOCK "16000000")
 set(LR_TARGET_BOARD "UNO")
 set(LR_TARGET_PROGRAMMER "AVRDUDE")
 set(LR_TARGET_PROGRAMMER_MODE "arduino")
-set(LR_TARGET_PROGRAMMER_HOST "COM3")
+set(LR_TARGET_PROGRAMMER_HOST "COM4")
 
 # After the target variables have been set, the other include files can be
 # loaded (some of the are target depend)
