@@ -87,11 +87,19 @@ int16_t remoteCtrlProcessCommands()
 	    {
 	        g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E1);
 	    }
+	    else
+	    {
+	        g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E1_OFF);
+	    }
 
 	    if (g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_2_Active == 1)
         {
             g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E2);
         }
+	    else
+	    {
+	        g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E2_OFF);
+	    }
 
 	    if (g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_3_Active == 1)
         {

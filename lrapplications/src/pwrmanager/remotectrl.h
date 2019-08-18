@@ -22,6 +22,11 @@
 #define REMOTE_CTRL_CMD_POWER_E4        5
 #define REMOTE_CTRL_CMD_POWER_E_ALL		6
 
+#define REMOTE_CTRL_CMD_POWER_E1_OFF    10
+#define REMOTE_CTRL_CMD_POWER_E2_OFF    11
+#define REMOTE_CTRL_CMD_POWER_E3_OFF    12
+#define REMOTE_CTRL_CMD_POWER_E4_OFF    13
+
 typedef struct _RemoteCtrl_CAN_PowerControl
 {
     bool messageValid;

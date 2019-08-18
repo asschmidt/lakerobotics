@@ -63,13 +63,20 @@ void canHandlerInterrupt()
 	// Get the Interrupt Mask from CAN Controller
 	uint8_t irq = g_canController.getInterrupts();
 
+	if (irq & MCP2515::CANINTF_ERRIF)
+    {
+        // TODO: Error Interrupt Handling
+        g_canController.clearRXnOVR();
+    }
+
 	// Check if Interrupt Flag for first mailbox is set
 	if (irq & MCP2515::CANINTF_RX0IF)
 	{
 	    //Serial.println("Got CAN RX0 Interrupt");
 
 		// Try to read the message from the first mailbox into the global CAN RX Buffer 0
-		if (g_canController.readMessage(MCP2515::RXB0, (struct can_frame*)&g_canRxBuffer0) == MCP2515::ERROR_OK)
+	    int readError = g_canController.readMessage(MCP2515::RXB0, (struct can_frame*)&g_canRxBuffer0);
+		if ( readError == MCP2515::ERROR_OK)
 		{
 			// If reading was successful, set the valid flag for CAN Frame Buffer 0
 			g_validFrame0 = 1;
@@ -80,14 +87,25 @@ void canHandlerInterrupt()
 	if (irq & MCP2515::CANINTF_RX1IF)
 	{
 		// Try to read the message from the second mailbox into the global CAN RX Buffer 1
-		if (g_canController.readMessage(MCP2515::RXB1, (struct can_frame*)&g_canRxBuffer1) == MCP2515::ERROR_OK)
+	    int readError = g_canController.readMessage(MCP2515::RXB1, (struct can_frame*)&g_canRxBuffer1);
+		if (readError == MCP2515::ERROR_OK)
 		{
 			// If reading was successful, set the valid flag for CAN Frame Buffer 1
 			g_validFrame1 = 1;
 		}
 	}
 
-	g_canController.clearInterrupts();
+	if (irq & MCP2515::CANINTF_ERRIF)
+	{
+	    // TODO: Error Interrupt Handling
+	    g_canController.clearMERR();
+	}
+
+	if (irq & MCP2515::CANINTF_MERRF)
+	{
+	    // TODO: Message Error Interrupt Handling
+	    g_canController.clearInterrupts();
+	}
 }
 
 /**

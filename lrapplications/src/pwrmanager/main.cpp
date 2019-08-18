@@ -71,7 +71,7 @@ void setup()
 	measurementInitialize();
 
 	Serial.println(F("Initializing CAN"));
-	canHandlerInitialize(CAN_125KBPS);
+	canHandlerInitialize(CAN_500KBPS);
 
 	Serial.println(F("Initializing GPIO for Relays"));
 	powerCtrlInitialize();
