@@ -77,3 +77,8 @@ endif(NOT TARGET upload)
 #    )
 
 #add_custom_target(size DEPENDS ${TARGET_SIZE})
+
+
+add_custom_command(TARGET binhex POST_BUILD
+  COMMAND avr-mem.sh ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${APPLICATION_OUTPUTNAME}.elf ${LR_COMPILER_MCU_NAME}
+  )
