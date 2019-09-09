@@ -70,12 +70,13 @@ endif(NOT DEFINED LR_TARGET_CPU_CLOCK)
 # This variable must be set by the main build files for the platform or the
 # application.
 # Following values are valid:
-#   UNO         - Arduino UNO Board
-#   NANO        - Arduino Nano Board
-#   MEGA        - Arduino Mega Board
-#   NUCLEO-F103 - STM32 Nucleo F103 Board
-#   RASP3A      - Raspberry PI 3A Board
-#   RASP3B      - Raspberry PI 3B Board
+#   UNO         		- Arduino UNO Board
+#   NANO        		- Arduino Nano Board
+#   MEGA        		- Arduino Mega Board
+#   NUCLEO-F103 		- STM32 Nucleo F103 Board
+#   NUCLEO-F103-CUBE 	- STM32 Nucleo F103 Board
+#   RASP3A      		- Raspberry PI 3A Board
+#   RASP3B      		- Raspberry PI 3B Board
 if(NOT DEFINED LR_TARGET_BOARD)
   set(LR_TARGET_BOARD "Unkown")
 endif(NOT DEFINED LR_TARGET_BOARD)
