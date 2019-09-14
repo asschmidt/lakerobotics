@@ -17,13 +17,14 @@ void initCustomBoard( void )
     //Initialize the HAL
     HAL_Init();
 
+    // Set Priority Grouping according FreeRTOS. If FreeRTOS is not used, remove this line
+    NVIC_SetPriorityGrouping(0U);
+
     // Configure the system clock
     SystemClock_Config();
 
     // Init the peripherals
-    MX_ADC1_Init();
-    MX_GPIO_Init();
-    MX_TIM1_Init();
+    MX_USART2_UART_Init();
 }
 
 #ifdef __cplusplus
