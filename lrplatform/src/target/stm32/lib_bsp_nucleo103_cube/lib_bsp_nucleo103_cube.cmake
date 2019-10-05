@@ -45,6 +45,7 @@ set(LIB_BSP_NUCLEO103_CUBE_GEN_CSRC
         hal/gpio.c
         hal/main.c
         hal/stm32f1xx_hal_msp.c
+        hal/stm32f1xx_hal_timebase_tim.c
         hal/stm32f1xx_it.c
         hal/system_stm32f1xx.c
         hal/tim.c
