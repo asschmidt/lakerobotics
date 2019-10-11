@@ -78,7 +78,7 @@ include(blink_cube.cmake)
 
 # Build a ELF binary
 add_executable(${APPLICATION_OUTPUTNAME} ${BLINK_CXXSRC})
-target_link_libraries(${APPLICATION_OUTPUTNAME} arm_cortexM3l_math -Wl,--start-group bsp_nucleo103_cube -Wl,-whole-archive core_cube -Wl,-no-whole-archive c -Wl,--end-group os m gcc stdc++ )
+target_link_libraries(${APPLICATION_OUTPUTNAME} arm_cortexM3l_math -Wl,-whole-archive bsp_nucleo103_cube core_cube -Wl,-no-whole-archive c os m gcc stdc++ )
 
 # Set target properties like output name
 set_target_properties(${APPLICATION_OUTPUTNAME} PROPERTIES SUFFIX ".elf")
