@@ -52,7 +52,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void SystemClock_Config(void);
 
 /* USER CODE BEGIN EFP */
 
@@ -62,18 +61,50 @@ void SystemClock_Config(void);
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
 #define B1_EXTI_IRQn EXTI15_10_IRQn
+#define ANA_M2_Pin GPIO_PIN_0
+#define ANA_M2_GPIO_Port GPIOC
+#define ANA_M1_Pin GPIO_PIN_1
+#define ANA_M1_GPIO_Port GPIOC
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+#define ENCA_M1_Pin GPIO_PIN_6
+#define ENCA_M1_GPIO_Port GPIOA
+#define ENCB_M1_Pin GPIO_PIN_7
+#define ENCB_M1_GPIO_Port GPIOA
+#define LED1_Pin GPIO_PIN_1
+#define LED1_GPIO_Port GPIOB
+#define LED2_Pin GPIO_PIN_2
+#define LED2_GPIO_Port GPIOB
+#define EN_M2_Pin GPIO_PIN_13
+#define EN_M2_GPIO_Port GPIOB
+#define INA_M2_Pin GPIO_PIN_14
+#define INA_M2_GPIO_Port GPIOB
+#define INB_M2_Pin GPIO_PIN_15
+#define INB_M2_GPIO_Port GPIOB
+#define EN_M1_Pin GPIO_PIN_6
+#define EN_M1_GPIO_Port GPIOC
+#define INB_M1_Pin GPIO_PIN_7
+#define INB_M1_GPIO_Port GPIOC
+#define INA_M1_Pin GPIO_PIN_8
+#define INA_M1_GPIO_Port GPIOC
+#define PWM_M1_Pin GPIO_PIN_8
+#define PWM_M1_GPIO_Port GPIOA
+#define PWM_M2_Pin GPIO_PIN_9
+#define PWM_M2_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+#define ENCA_M2_Pin GPIO_PIN_6
+#define ENCA_M2_GPIO_Port GPIOB
+#define ENCB_M2_Pin GPIO_PIN_7
+#define ENCB_M2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
