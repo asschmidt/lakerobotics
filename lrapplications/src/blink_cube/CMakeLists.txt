@@ -23,6 +23,7 @@ cmake_minimum_required(VERSION 3.11)
 
 # Set the debugging flag for the LR build system
 set(LR_CMAKE_DEBUG 1)
+set(CMAKE_COLOR_MAKEFILE OFF)
 
 # First, initialize the configuration variables
 set(APPLICATION_OUTPUTNAME "blink_cube")

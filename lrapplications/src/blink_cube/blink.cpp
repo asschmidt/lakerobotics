@@ -6,6 +6,7 @@
  */
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "hal/usart.h"
 #include "hal/tim.h"
@@ -23,11 +24,10 @@ void myTask3( void *pvParameters );
 
 void myTask1( void *pvParameters )
 {
-    volatile unsigned int i = 0;
-
     for (;;)
     {
-        char *msg = "HelloAA\n\r";
+        char msg[25];
+        sprintf(msg, "Hello from sprintf\n\r");
         HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFFFF);
         vTaskDelay(500);
     }
@@ -39,13 +39,10 @@ void myTask2( void *pvParameters )
 
     for (;;)
     {
-        char countStr[10];
         int16_t count = htim3.Instance->CNT;
-        itoa(count, countStr, 10);
 
-        HAL_UART_Transmit(&huart2, (uint8_t*)countStr, strlen(countStr), 0xFFFF);
-
-        char *msg = "\n\r";
+        char msg[25];
+        sprintf(msg, "Count: %d\n\r", count);
         HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFFFF);
 
         vTaskDelay(250);
@@ -93,9 +90,9 @@ int main(int argc, char* argv[])
 {
     initCustomBoard();
 
-    xTaskCreate( myTask1, "Task1", 50, NULL, 1, NULL);
-    xTaskCreate( myTask2, "Task2", 50, NULL, 1, NULL);
-    xTaskCreate( myTask3, "Task3", 50, NULL, 1, NULL);
+    xTaskCreate( myTask1, "Task1", 150, NULL, 1, NULL);
+    xTaskCreate( myTask2, "Task2", 150, NULL, 1, NULL);
+    xTaskCreate( myTask3, "Task3", 150, NULL, 1, NULL);
 
     vTaskStartScheduler();
 
