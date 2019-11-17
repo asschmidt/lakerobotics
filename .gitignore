@@ -16,3 +16,4 @@ lrplatform/out
 /lrapplications/tools/can_commander/x64/Debug
 /lrapplications/tools/can_commander/CAN_USBTin/x64/Debug
 /lrapplications/tools/can_commander/CANcore/x64/Debug
+lrapplications/tools/network_signals/.vscode/settings.json

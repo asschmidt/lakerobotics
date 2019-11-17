@@ -37,6 +37,8 @@ void myTask2( void *pvParameters )
 {
     HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 
+    uint32_t counter = 0;
+
     for (;;)
     {
         int16_t count = htim3.Instance->CNT;
@@ -68,17 +70,31 @@ void myTask3( void *pvParameters )
     unsigned int pwm = 0;
     int step = 0;
 
+    HAL_GPIO_WritePin(EN_M1_GPIO_Port, EN_M1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(INA_M1_GPIO_Port, INA_M1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(INB_M1_GPIO_Port, INB_M1_Pin, GPIO_PIN_RESET);
+
     for (;;)
     {
         HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+        HAL_GPIO_TogglePin(GPIOB, LED1_Pin);
+
         vTaskDelay(250);
+        HAL_GPIO_TogglePin(GPIOB, LED2_Pin);
+
+
 
         user_pwm_setvalue(pwm);
 
         if (pwm == 0)
+        {
             step = 100;
-        if (pwm == 2000)
+        }
+
+        if (pwm == 7200)
+        {
             step = -100;
+        }
 
         pwm = pwm + step;
 
