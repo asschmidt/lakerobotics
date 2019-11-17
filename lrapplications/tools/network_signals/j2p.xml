@@ -10,7 +10,7 @@
 		<!-- Power Manager ECU -->
 		<Node ID="Node_Pwr" Name="Power Manager Unit">
 			<Interfaces>
-				<Interface ID="Node_Pwr_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+				<Interface ID="Node_Pwr_CAN_1" NetworkID="0x1FF" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
 					<RxMessages>
 						<RxMessage RefID="Power_Control"></RxMessage>
 					</RxMessages>
@@ -26,7 +26,7 @@
 		<!-- Telematic ECU -->
 		<Node ID="Node_Tele" Name="Telematic Unit">
 			<Interfaces>
-				<Interface ID="Node_Tele_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+				<Interface ID="Node_Tele_CAN_1" NetworkID="0x3FE" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
 					<RxMessages>
 						
 					</RxMessages>
