@@ -358,7 +358,7 @@ class CANMessage(object):
 
     def get_data(self):
         """ Get CAN message payload data """
-        return self.data
+        return self._data
 
     def set_data(self, data):
         """Set CAN message payload data
@@ -366,7 +366,7 @@ class CANMessage(object):
            Keyword arguments:
            data -- Message data
         """
-        self.data = data
+        self._data = data
 
     def is_extended(self):
         """ Determine if CAN message id is extended """
