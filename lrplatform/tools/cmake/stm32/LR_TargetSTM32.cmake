@@ -53,6 +53,10 @@ macro(checkAndIncludeRealBSP)
         # Include the lib_bsp_nucleo103 exports.
         include(${LR_PLATFORM_SOURCE_ROOT}/target/${LR_TARGET_DIRECTORY_NAME}/lib_bsp_nucleo103/lib_bsp_nucleo103_exp.cmake)
         set(BSP_INCLUDE_DIR ${LIB_BSP_NUCLEO103_INC_DIR})
+      elseif(LR_TARGET_BOARD MATCHES "NUCLEO-F103-CUBE")
+        # Include the lib_bsp_nucleo103_cube exports.
+        include(${LR_PLATFORM_SOURCE_ROOT}/target/${LR_TARGET_DIRECTORY_NAME}/lib_bsp_nucleo103_cube/lib_bsp_nucleo103_cube_exp.cmake)
+        set(BSP_INCLUDE_DIR ${LIB_BSP_NUCLEO103_CUBE_INC_DIR})       
       endif(LR_TARGET_BOARD MATCHES "NUCLEO-F103")
   endif(DEFINED APPLICATION_OUTPUTNAME)
 endmacro()

@@ -21,16 +21,33 @@
 # CMake file to setup ARM compiler settings for target specifc setup
 
 # Set the GCC MCU Flag according the selected CPU
-if(LR_TARGET_CPU MATCHES "STM32F103")
+if(LR_TARGET_CPU STREQUAL "STM32F103")
     set(LR_COMPILER_MCU_NAME "cortex-m3")
     # These defines are needed for the STM32 HAL library
     set(LR_COMPILER_MCU_DEFINES "-DSTM32F103xB -DSTM32F1xx -DHAL_UART_MODULE_ENABLED")
-endif(LR_TARGET_CPU MATCHES "STM32F103")
+endif(LR_TARGET_CPU STREQUAL "STM32F103")
 
 # Set the STM32 Board name according the current target configuration
-if (LR_TARGET_BOARD MATCHES "NUCLEO-F103")
+if(LR_TARGET_BOARD STREQUAL "NUCLEO-F103")
+	message(STATUS "************************************************")
+    message(STATUS "Using STM32 Standard BSP")
+    message(STATUS "************************************************")
+    
     set(LR_COMPILER_BOARD_NAME "ARDUINO_NUCLEO_F103RB")
-endif(LR_TARGET_BOARD MATCHES "NUCLEO-F103")
+elseif(LR_TARGET_BOARD STREQUAL "NUCLEO-F103-CUBE")
+	message(STATUS "************************************************")
+    message(STATUS "Using STM32 Custom BSP")
+    message(STATUS "************************************************")
+    
+	# Use for Cube the same board
+    set(LR_COMPILER_BOARD_NAME "ARDUINO_NUCLEO_F103RB")
+    # Add the Define for using Custom boards
+    add_definitions(-DLR_USE_CUSTOM_BSP)
+else()
+	message(STATUS "************************************************")
+    message(STATUS "Invalid Target Board")
+    message(STATUS "************************************************")
+endif()
 
 # Set the CPU compiler option
 set(LR_COMPILER_MCU_FLAGS "-mcpu=${LR_COMPILER_MCU_NAME} -mthumb")
