@@ -133,7 +133,7 @@ void taskCANHandler()
 	int16_t voltageMotor = (int16_t)(pValues->voltageMotor * 1000);
 
 	int16_t sendError = 0;
-	sendError = canHandlerTransmitElectronicValues(currentElectronics, voltageElectronics);
+	sendError = canHandlerTransmitElectronicValues(voltageElectronics, currentElectronics);
 	if (sendError != 0)
 	{
 		#ifdef PWRMGR_DEBUG
@@ -141,7 +141,7 @@ void taskCANHandler()
 		#endif
 	}
 
-	sendError = canHandlerTransmitMotorValues(currentMotor, voltageMotor);
+	sendError = canHandlerTransmitMotorValues(voltageMotor, currentMotor);
 	if (sendError != 0)
 	{
 		#ifdef PWRMGR_DEBUG
