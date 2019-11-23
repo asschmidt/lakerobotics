@@ -14,3 +14,5 @@ class NodeGeneratorData:
 '''
 class MessageGeneratorData:
     CAN_ID      = "CAN_ID"
+    CAN_ID_HEX  = "CAN_ID_HEX"
+    CAN_DLC     = "CAN_DLC"

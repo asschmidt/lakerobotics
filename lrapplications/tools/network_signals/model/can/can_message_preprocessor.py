@@ -29,7 +29,7 @@ class CANMessagePreprocessor:
                     # Iterate over all Tx Messages of a Interface
                     for txMessage in interface.TxMessages.values():                                                
                         txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID] = interface.NetworkID + actualMsgNumber
-                        txMessage.Message.GeneratorData['CAN_ID_HEX'] = hex(txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID])
+                        txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID_HEX] = hex(txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID])
                         actualMsgNumber = actualMsgNumber + 1
                         
     

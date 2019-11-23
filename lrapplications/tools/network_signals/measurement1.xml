@@ -3,6 +3,8 @@
         <Signals>
             <Signal RefID="Power_Supply_Electronic_Voltage"/>
             <Signal RefID="Power_Supply_Electronic_Current"/>
+            <Signal RefID="Power_Supply_Motor_Voltage"/>
+            <Signal RefID="Power_Supply_Motor_Current"/>
         </Signals>
     </Measurement>
 </MeasurementDefinitions>

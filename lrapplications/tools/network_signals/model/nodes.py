@@ -10,6 +10,7 @@ class NodeInterfaceData:
         self.ID = "Unknown"                                 # Unique ID of the Node interface
         self.Name = "Unknown"
         self.NetworkID = "Unkown"                           # Used as a "node id" inside a specific network
+        self.NetworkController = "Default"                  # Network Controller e.g. MCP2515, STM32F103 etc.
         self.NetworkType = NetworkDataType.UNKNOWN
         self.Bandwidth = NetworkDataBandwith.SPEED_UNKNOWN
         self.ConnectTo = None
@@ -77,9 +78,10 @@ class NodeDataParser:
                 if interfaceChild.tag == "Interface":
                     nodeInterface = NodeInterfaceData()
                     
-                    # Get the Interface ID and Name
+                    # Get the Interface ID, Name and Network Controller
                     nodeInterface.ID = interfaceChild.get("ID")
                     nodeInterface.Name = interfaceChild.get("Name")
+                    nodeInterface.NetworkController = interfaceChild.get("NetworkController")
 
                     try:
                         convertBase = 10

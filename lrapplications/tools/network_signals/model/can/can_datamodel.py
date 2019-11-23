@@ -88,7 +88,8 @@ class CANDataExtractFunctions:
 
                 # Iterate over the byte array and build an integer value
                 for bytePos in range(startByte, endByte):
-                    intValue = intValue + (dataBytes[bytePos] << (bytePos * 8))
+                    shiftCount = (numberOfBytes - 1) - bytePos
+                    intValue = intValue + (dataBytes[bytePos] << (shiftCount * 8))
             else:
                 intValue = None
 

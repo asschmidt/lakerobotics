@@ -1,6 +1,9 @@
 import xml.etree.ElementTree as ET
 import threading
 import time
+import queue
+
+from pyusbtin.usbtin import USBtin
 
 from model.networks import *
 from model.signals import *
@@ -18,7 +21,6 @@ from model.can.can_data_subscriber import *
 
 from model.ui.wx_ui_model_connector import *
 
-import wx
 from data_interpreter_ui import *
 
 class CANSimulationThread(threading.Thread):
@@ -33,6 +35,34 @@ class CANSimulationThread(threading.Thread):
             self._canConnector.updateWithCANMessage(msg)
             counter = counter + 1
             time.sleep(1)
+
+
+class CANThread(threading.Thread):
+    def __init__(self, canConnector):
+        threading.Thread.__init__(self)
+        self._canConnector = canConnector
+        self._wantAbort = False
+        
+        self._usbtin = USBtin()
+        self._usbtin.add_message_listener(self._receiveFrame)
+        
+        self._canQueue = queue.Queue()
+
+    def _receiveFrame(self, msg):
+        #print(msg)
+        self._canQueue.put(msg)
+
+    def run(self):
+        self._usbtin.connect("COM4")
+        self._usbtin.open_can_channel(500000, USBtin.ACTIVE)
+        
+        while self._wantAbort != True:            
+            canMsg = self._canQueue.get()
+            self._canConnector.updateWithCANMessage(canMsg)
+                        
+        self._usbtin.close_can_channel()
+        self._usbtin.disconnect()
+            
 
 '''
 '''
@@ -111,17 +141,17 @@ dynamicModel.registerSubscriber(canSubscriber)
 #    canID = dataEntry.getDataDefRef().getMessage().getGeneratorData('CAN_ID_HEX')
 #    print("Data-ID: " + str(dataEntry.getDataID()) + "\tCAN: " + str(canID))
 
-rawData = [0xAB, 0x02, 0xCD, 0x01, 0x00, 0x00, 0x00, 0x00]
-dynamicModel.updateDataModelEntry("Power_Supply_Electronic_Voltage", rawData)
-dynamicModel.updateDataModelEntry("Power_Supply_Electronic_Current", rawData)
+#rawData = [0xAB, 0x02, 0xCD, 0x01, 0x00, 0x00, 0x00, 0x00]
+#dynamicModel.updateDataModelEntry("Power_Supply_Electronic_Voltage", rawData)
+#dynamicModel.updateDataModelEntry("Power_Supply_Electronic_Current", rawData)
 
 #print("Data-Value Power_Supply_Electronic_Voltage: " + str(hex(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Voltage").getData())))
 #print("Data-Value Power_Supply_Electronic_Current: " + str(hex(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Current").getData())))
 
 #msg = CANMessage(0x201, [0xED, 0x04, 0xFE, 0x05])
 dataConnect = CANDataConnector(dynamicModel)
-canSimThread = CANSimulationThread(dataConnect)
-canSimThread.start()
+canThread = CANThread(dataConnect)
+canThread.start()
 
 #print("Data-Value Power_Supply_Electronic_Voltage: " + str(hex(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Voltage").getData())))
 #print("Data-Value Power_Supply_Electronic_Current: " + str(hex(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Current").getData())))
@@ -129,4 +159,5 @@ canSimThread.start()
 ui.Show()
 app.MainLoop()
 
-canSimThread.join()
+canThread._wantAbort = True
+canThread.join()

@@ -12,6 +12,7 @@ class DataInterpreterFrame(wx.Frame):
 
         # Create a wxGrid object
         self.grid = wx.grid.Grid(self, -1)
+        self._rowSignalMap = {}
 
 
     def initUI(self, measurement):
@@ -26,6 +27,7 @@ class DataInterpreterFrame(wx.Frame):
             self.grid.SetRowLabelValue(rowCount, signal.SignalID)                    
             self.grid.SetCellValue(rowCount, 1, signal.SignalRef.PhysicalUnit)
             
+            self._rowSignalMap[signal.SignalID] = rowCount
             rowCount = rowCount + 1
 
         self.grid.SetRowLabelSize(300)
@@ -34,5 +36,10 @@ class DataInterpreterFrame(wx.Frame):
     '''
     def receiveDataForUI(self, data):
         if data != None:
-            self.grid.SetCellValue(0,0, str(data.getData()))
+            try:
+                signalID = data.getDataDefRef().getSignal().ID
+                row = self._rowSignalMap[signalID]
+                self.grid.SetCellValue(row,0, str(data.getData()))
+            except:
+                pass
 

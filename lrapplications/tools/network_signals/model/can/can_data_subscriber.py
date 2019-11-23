@@ -23,7 +23,7 @@ class CANDataSubscriber(Subscriber):
         if self._measurementInfo != None:
             pass
         
-        print("Got Notify for: " + dataEntry.getDataID())
+        #print("Got Notify for: " + dataEntry.getDataID())
 
         if self._uiConnector != None:
             self._uiConnector.provideDataToUI(dataEntry)

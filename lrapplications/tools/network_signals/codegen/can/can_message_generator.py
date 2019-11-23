@@ -9,6 +9,15 @@ from model.signals import *
 
 from codegen.base_generator import *
 
+'''
+'''
+class CANTemplateStruct:
+    '''
+    '''
+    def __init__(self, ctrlName, codeTpl, headerTpl):
+        self.ControllerName = ctrlName
+        self.CodeTemplate = codeTpl
+        self.HeaderTemplate = headerTpl
 
 '''
 '''
@@ -19,31 +28,46 @@ class CANMessageGenerator(BaseMessageGenerator):
         super().__init__(networkBuilder)
                 
         self._jinjaEnv = jinjaEnv
-        self._nodeCodeTemplate = self._jinjaEnv.get_template('node_code.j2')
-        self._nodeHeaderTemplate = self._jinjaEnv.get_template('node_header.j2')        
         
-        self._templateCtx = {}
+        self._templates = {}
+        self._templates['Default'] = CANTemplateStruct('Default', self._jinjaEnv.get_template('node_code.j2'), self._jinjaEnv.get_template('node_header.j2'))
+        self._templates['MCP2515'] = CANTemplateStruct('MCP2515', self._jinjaEnv.get_template('node_code.j2'), self._jinjaEnv.get_template('node_header.j2'))
+        self._templates['STM32F103'] = CANTemplateStruct('STM32F103', self._jinjaEnv.get_template('node_code.j2'), self._jinjaEnv.get_template('node_header.j2'))
+
+        #self._nodeCodeTemplate = self._jinjaEnv.get_template('node_code.j2')
+        #self._nodeHeaderTemplate = self._jinjaEnv.get_template('node_header.j2')        
+            
             
     '''
     '''
     def generateCANMessageCode(self):        
         for node in self._networkBuilder.getNodes():
-            self._templateCtx['nodeName'] = node.ID
-            self._templateCtx['nodeHeaderName'] = "_" + node.ID.upper() + "_CAN_H_"
-            
-            outputHeaderFile = open("output\\" + node.ID + "_CAN.h", "w")
-            outputCodeFile = open("output\\" + node.ID + "_CAN.cpp", "w")
-            
             # Iterate over all Interfaces of a node
             for interface in node.Interfaces.values():
-                self._templateCtx['networkVersion'] = self._networkBuilder.getNetworkVersion()
-                self._templateCtx['txMessages'] = interface.TxMessages.values()
-                self._templateCtx['rxMessages'] = interface.RxMessages.values()
+                templateCtx = {}                
+                templateCtx['nodeName'] = node.ID
+            
+                templateCtx['interfaceHeaderName'] = "_" + node.ID.upper() + "_CAN_" + interface.NetworkController + "_H_"                
+                templateCtx['interfaceName'] = interface.ID
+            
+                outputHeaderFile = open("output\\" + node.ID + "_CAN_" + interface.NetworkController + ".h", "w")
+                outputCodeFile = open("output\\" + node.ID + "_CAN_" + interface.NetworkController + ".cpp", "w")
 
-                templateContent = self._nodeHeaderTemplate.render(self._templateCtx)
+                try:
+                    headerTemplate = self._templates[interface.NetworkController].HeaderTemplate
+                    codeTemplate = self._templates[interface.NetworkController].CodeTemplate
+                except:
+                    headerTemplate = self._templates['Default'].HeaderTemplate
+                    codeTemplate = self._templates['Default'].CodeTemplate
+                
+                templateCtx['networkVersion'] = self._networkBuilder.getNetworkVersion()
+                templateCtx['txMessages'] = interface.TxMessages.values()
+                templateCtx['rxMessages'] = interface.RxMessages.values()
+
+                templateContent = headerTemplate.render(templateCtx)
                 outputHeaderFile.write(templateContent)
                 
-                templateContent = self._nodeCodeTemplate.render(self._templateCtx)
+                templateContent = codeTemplate.render(templateCtx)
                 outputCodeFile.write(templateContent)
                 
             outputHeaderFile.close()
