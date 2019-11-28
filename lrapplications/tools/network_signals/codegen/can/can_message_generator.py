@@ -30,9 +30,9 @@ class CANMessageGenerator(BaseMessageGenerator):
         self._jinjaEnv = jinjaEnv
         
         self._templates = {}
-        self._templates['Default'] = CANTemplateStruct('Default', self._jinjaEnv.get_template('node_code.j2'), self._jinjaEnv.get_template('node_header.j2'))
-        self._templates['MCP2515'] = CANTemplateStruct('MCP2515', self._jinjaEnv.get_template('node_code.j2'), self._jinjaEnv.get_template('node_header.j2'))
-        self._templates['STM32F103'] = CANTemplateStruct('STM32F103', self._jinjaEnv.get_template('node_code.j2'), self._jinjaEnv.get_template('node_header.j2'))
+        self._templates['Default'] = CANTemplateStruct('Default', self._jinjaEnv.get_template('node_code_mcp2515.j2'), self._jinjaEnv.get_template('node_header_mcp2515.j2'))
+        self._templates['MCP2515'] = CANTemplateStruct('MCP2515', self._jinjaEnv.get_template('node_code_mcp2515.j2'), self._jinjaEnv.get_template('node_header_mcp2515.j2'))
+        #self._templates['STM32F103'] = CANTemplateStruct('STM32F103', self._jinjaEnv.get_template('node_code.j2'), self._jinjaEnv.get_template('node_header.j2'))
 
         #self._nodeCodeTemplate = self._jinjaEnv.get_template('node_code.j2')
         #self._nodeHeaderTemplate = self._jinjaEnv.get_template('node_header.j2')        

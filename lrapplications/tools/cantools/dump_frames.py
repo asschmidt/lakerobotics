@@ -6,7 +6,7 @@ def log_data(msg):
     print(msg)
 
 usbtin = USBtin()
-usbtin.connect("COM3")
+usbtin.connect("COM4")
 print("Firmware: " + str(usbtin.get_firmware_version()))
 
 usbtin.add_message_listener(log_data)
