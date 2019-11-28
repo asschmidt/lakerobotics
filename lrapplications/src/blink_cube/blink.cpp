@@ -10,10 +10,12 @@
 
 #include "hal/usart.h"
 #include "hal/tim.h"
+#include "hal/can.h"
 
 #include "custom_board.h"
 
 #include <stm32f1xx_hal_uart.h>
+#include <stm32f1xx_hal_can.h>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -24,20 +26,42 @@ void myTask3( void *pvParameters );
 
 void myTask1( void *pvParameters )
 {
+    HAL_CAN_Start(&hcan);
+
     for (;;)
     {
+        uint8_t               TxData[8];
+        uint32_t              TxMailbox;
+        CAN_TxHeaderTypeDef   TxHeader;
+
+        /* Configure Transmission process */
+        TxHeader.StdId = 0x321;
+        TxHeader.ExtId = 0x01;
+        TxHeader.RTR = CAN_RTR_DATA;
+        TxHeader.IDE = CAN_ID_STD;
+        TxHeader.DLC = 2;
+        TxHeader.TransmitGlobalTime = DISABLE;
+
+        TxData[0] = 0x12;
+        TxData[1] = 0xAD;
+
+        if(HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+          {
+                /* Transmition Error */
+                 HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+                 vTaskDelay(250);
+          }
+
         char msg[25];
-        sprintf(msg, "Hello from sprintf\n\r");
+        sprintf(msg, "MaiBox: %d\n\r", TxMailbox);
         HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFFFF);
-        vTaskDelay(500);
+        vTaskDelay(50);
     }
 }
 
 void myTask2( void *pvParameters )
 {
     HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-
-    uint32_t counter = 0;
 
     for (;;)
     {
@@ -76,7 +100,7 @@ void myTask3( void *pvParameters )
 
     for (;;)
     {
-        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+        //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
         HAL_GPIO_TogglePin(GPIOB, LED1_Pin);
 
         vTaskDelay(250);
@@ -106,7 +130,7 @@ int main(int argc, char* argv[])
 {
     initCustomBoard();
 
-    xTaskCreate( myTask1, "Task1", 150, NULL, 1, NULL);
+    xTaskCreate( myTask1, "Task1", 250, NULL, 1, NULL);
     xTaskCreate( myTask2, "Task2", 150, NULL, 1, NULL);
     xTaskCreate( myTask3, "Task3", 150, NULL, 1, NULL);
 
