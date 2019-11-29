@@ -19,13 +19,13 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../lib_bsp_enginectrl_cube/hal/main.h"
+#include "main.h"
 
-#include "../../lib_bsp_enginectrl_cube/hal/adc.h"
-#include "../../lib_bsp_enginectrl_cube/hal/can.h"
-#include "../../lib_bsp_enginectrl_cube/hal/gpio.h"
-#include "../../lib_bsp_enginectrl_cube/hal/tim.h"
-#include "../../lib_bsp_enginectrl_cube/hal/usart.h"
+#include "adc.h"
+#include "can.h"
+#include "gpio.h"
+#include "tim.h"
+#include "usart.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */

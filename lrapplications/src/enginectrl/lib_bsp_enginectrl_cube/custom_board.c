@@ -1,13 +1,11 @@
+#include "custom_board.h"
+
+#include "hal/adc.h"
+#include "hal/can.h"
+#include "hal/gpio.h"
 #include "hal/main.h"
-
-#include "../lib_bsp_enginectrl_cube/custom_board.h"
-
-#include "../lib_bsp_enginectrl_cube/hal/adc.h"
-#include "../lib_bsp_enginectrl_cube/hal/can.h"
-#include "../lib_bsp_enginectrl_cube/hal/gpio.h"
-#include "../lib_bsp_enginectrl_cube/hal/main.h"
-#include "../lib_bsp_enginectrl_cube/hal/tim.h"
-#include "../lib_bsp_enginectrl_cube/hal/usart.h"
+#include "hal/tim.h"
+#include "hal/usart.h"
 
 #ifdef __cplusplus
 extern "C" {
