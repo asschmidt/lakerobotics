@@ -18,7 +18,9 @@
 #
 # Author: Andreas Schmidt
 #
-# CMake file as template for application builds
+# CMake call in output directory
+# cmake -G "MinGW Makefiles" ../../../../../src/blink2
+#
 cmake_minimum_required(VERSION 3.11)
 
 # Set the debugging flag for the LR build system
