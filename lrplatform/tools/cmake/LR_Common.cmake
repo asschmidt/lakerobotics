@@ -64,6 +64,26 @@ endfunction()
 # The application libraries are stored in the application root source folder
 # in a sub-folder "_libraries"
 #
+macro(add_local_application_library appname libname)
+  message(STATUS "Adding local application library ${ARGV1}")
+
+  # Include the exports.
+  include(${LR_APPLICATION_SOURCE_ROOT}/${ARGV0}/${ARGV1}/${ARGV1}_exp.cmake)
+
+  # Add dependencies
+  add_subdirectory(${LR_APPLICATION_SOURCE_ROOT}/${ARGV0}/${ARGV1}/ "${CMAKE_BINARY_DIR}/${ARGV1}")
+
+  # Add the include directories of this library
+  set(APPLICATION_LIB_INC_DIR "${ARGV1}_INC_DIR")
+  string(TOUPPER "${ARGV1}_INC_DIR" APPLICATION_LIB_INC_DIR)
+  include_directories(${${APPLICATION_LIB_INC_DIR}})
+endmacro()
+
+#
+# Macro to add an application libary (including the exports) to a CMake file
+# The application libraries are stored in the application root source folder
+# in a sub-folder "_libraries"
+#
 macro(add_application_library libname)
   message(STATUS "Adding application library ${ARGV0}")
 
