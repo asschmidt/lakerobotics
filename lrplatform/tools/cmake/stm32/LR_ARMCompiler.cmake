@@ -24,7 +24,10 @@
 if(LR_TARGET_CPU STREQUAL "STM32F103")
     set(LR_COMPILER_MCU_NAME "cortex-m3")
     # These defines are needed for the STM32 HAL library
-    set(LR_COMPILER_MCU_DEFINES "-DSTM32F103xB -DSTM32F1xx -DHAL_UART_MODULE_ENABLED")
+    #set(LR_COMPILER_MCU_DEFINES "-DSTM32F103xB -DSTM32F1xx -DHAL_UART_MODULE_ENABLED")
+    # Removed the UART define to avoid compiler warning because the UART module is typically enabled
+    # also in the HAL configuration
+    set(LR_COMPILER_MCU_DEFINES "-DSTM32F103xB -DSTM32F1xx")
 endif(LR_TARGET_CPU STREQUAL "STM32F103")
 
 # Set the STM32 Board name according the current target configuration
