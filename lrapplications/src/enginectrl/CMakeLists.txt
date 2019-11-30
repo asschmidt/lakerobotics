@@ -80,7 +80,7 @@ add_target_library(lib_os)
 include(enginectrl.cmake)
 
 # Build a ELF binary
-add_executable(${APPLICATION_OUTPUTNAME} ${ENGINECTRL_CXXSRC})
+add_executable(${APPLICATION_OUTPUTNAME} ${ENGINECTRL_SRC})
 target_link_libraries(${APPLICATION_OUTPUTNAME} arm_cortexM3l_math -Wl,-whole-archive bsp_enginectrl_cube core_cube -Wl,-no-whole-archive c os m gcc stdc++ )
 
 # Set target properties like output name

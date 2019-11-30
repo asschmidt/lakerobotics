@@ -33,15 +33,17 @@
 					
 					<TxMessages>
 						<TxMessage RefID="Power_Control"></TxMessage>
+						<TxMessage RefID="Engine_Speed_Front_Setpoint"></TxMessage>
 					</TxMessages>
 				</Interface>
 			</Interfaces>
 		</Node>				
 		
-		<!-- Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axix">
+		<Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axis">
 			<Interfaces>
-				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
+				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x5FE" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
+						<RxMessage RefID="Engine_Speed_Front_Setpoint"></RxMessage>
 					</RxMessages>
 					
 					<TxMessages>		
@@ -51,7 +53,7 @@
 			</Interfaces>
 		</Node>
 		
-		<Node ID="Node_ECU_Mid" Name="Engine Control Unit for Middle Axix">
+		<!-- Node ID="Node_ECU_Mid" Name="Engine Control Unit for Middle Axix">
 			<Interfaces>
 				<Interface ID="Node_ECU_Mid_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
 					<RxMessages>
@@ -92,6 +94,9 @@
 		
 		<Signal ID="Engine_Speed_F_L" Name="Engine Speed Front Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
 		<Signal ID="Engine_Speed_F_R" Name="Engine Speed Front Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_F_L_Setpoint" Name="Engine Speed Front Left Setpoint" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_F_R_Setpoint" Name="Engine Speed Front Right Setpoint" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		
 		<Signal ID="Engine_Speed_M_L" Name="Engine Speed Mid Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
 		<Signal ID="Engine_Speed_M_R" Name="Engine Speed Mid Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
 		<Signal ID="Engine_Speed_R_L" Name="Engine Speed Rear Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
@@ -127,6 +132,13 @@
 			<Signals>
 				<Signal RefID="Engine_Speed_F_L" Position="1"></Signal>
 				<Signal RefID="Engine_Speed_F_R" Position="2"></Signal>
+			</Signals>
+		</Message>
+		
+		<Message ID="Engine_Speed_Front_Setpoint" Name="Engine Speed Front Axis Setpoint" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Engine_Speed_F_L_Setpoint" Position="1"></Signal>
+				<Signal RefID="Engine_Speed_F_R_Setpoint" Position="2"></Signal>
 			</Signals>
 		</Message>
 		
