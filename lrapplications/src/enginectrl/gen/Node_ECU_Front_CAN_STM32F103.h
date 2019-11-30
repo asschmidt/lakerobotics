@@ -22,7 +22,11 @@
 */
 typedef struct _CAN_FRAME
 {
-	CAN_TxHeaderTypeDef header;		// CAN Header incl. ID, DLC and other options
+	union {
+	CAN_TxHeaderTypeDef txHeader;	// CAN Header used for TX message incl. ID, DLC and other options
+	CAN_RxHeaderTypeDef rxHeader;	// CAN Header used for RX messages
+	};
+	
 	uint8_t 			data[8];	// Raw payload of the CAN message
 } CAN_FRAME;
  

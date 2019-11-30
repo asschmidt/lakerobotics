@@ -23,15 +23,19 @@ int8_t createMsg_{{txMsg.Message.ID}}(CAN_FRAME* pCANFrame, Msg_{{txMsg.Message.
 {				
 	{% set msgCANID = txMsg.Message.GeneratorData['CAN_ID'] | int %}
 	{% if msgCANID <= 2047 %}
-	pCANFrame->header.StdId = CAN_ID_{{txMsg.Message.ID}};
-	pCANFrame->header.IDE   = CAN_ID_STD;
+	pCANFrame->txHeader.StdId = CAN_ID_{{txMsg.Message.ID}};
+	pCANFrame->txHeader.ExtId = 0;
+	pCANFrame->txHeader.IDE   = CAN_ID_STD;
 	{% else %}
-	pCANFrame->header.ExtId = CAN_ID_{{txMsg.Message.ID}};
-	pCANFrame->header.IDE   = CAN_ID_EXT;		
+	pCANFrame->txHeader.ExtId = CAN_ID_{{txMsg.Message.ID}};
+	pCANFrame->txHeader.StdId = 0;
+	pCANFrame->txHeader.IDE   = CAN_ID_EXT;		
 	{% endif %}
+		
+	pCANFrame->txHeader.RTR = CAN_RTR_DATA;
+	pCANFrame->txHeader.DLC = {{txMsg.Message.GeneratorData["DLC"]}};
+	pCANFrame->txHeader.TransmitGlobalTime = DISABLE;
 	
-	pCANFrame->header.RTR = CAN_RTR_DATA;
-	pCANFrame->header.DLC = {{txMsg.Message.GeneratorData["DLC"]}};
 	{% set signalBits = namespace(bitCount = 0) %}		
 	{%- for sig in txMsg.Message.Signals %}	
 		{%- if sig.Signal.Size == 1 %}					
@@ -75,17 +79,17 @@ int8_t parseMsg_{{rxMsg.Message.ID}}(CAN_FRAME* pCANFrame, Msg_{{rxMsg.Message.I
 	{% set msgCANID = rxMsg.Message.GeneratorData['CAN_ID'] | int %}
 	{%- if msgCANID > 2047 %}
 	// Check the Extended ID 
-	canID = pCANFrame->header.ExtID;
+	canID = pCANFrame->rxHeader.ExtID;
 	{%- else %}
 	// Check the Standard ID
-	canID = pCANFrame->header.StdId;
+	canID = pCANFrame->rxHeader.StdId;
 	{%- endif %}		
 	
 	if (canID != CAN_ID_{{rxMsg.Message.ID}})
 		return -1;
 
 	// Check DLC
-	if (pCANFrame->header.DLC != {{rxMsg.Message.GeneratorData["DLC"]}})
+	if (pCANFrame->rxHeader.DLC != {{rxMsg.Message.GeneratorData["DLC"]}})
 		return -1;
 				
 	// Extract the data from CAN-Frame

@@ -20,11 +20,14 @@
   */
 int8_t createMsg_Engine_Speed_Front(CAN_FRAME* pCANFrame, Msg_Engine_Speed_Front* pMsg)
 {				
-	pCANFrame->header.StdId = CAN_ID_Engine_Speed_Front;
-	pCANFrame->header.IDE   = CAN_ID_STD;
+	pCANFrame->txHeader.StdId = CAN_ID_Engine_Speed_Front;
+	pCANFrame->txHeader.ExtId = 0;
+	pCANFrame->txHeader.IDE   = CAN_ID_STD;
+		
+	pCANFrame->txHeader.RTR = CAN_RTR_DATA;
+	pCANFrame->txHeader.DLC = 4;
+	pCANFrame->txHeader.TransmitGlobalTime = DISABLE;
 	
-	pCANFrame->header.RTR = CAN_RTR_DATA;
-	pCANFrame->header.DLC = 4;
 							
 	// Signal	: Engine_Speed_F_L
 	// Start-Bit: 0 End-Bit: 15					
@@ -49,13 +52,13 @@ int8_t parseMsg_Engine_Speed_Front_Setpoint(CAN_FRAME* pCANFrame, Msg_Engine_Spe
 	uint32_t canID = 0;
 	
 	// Check the Standard ID
-	canID = pCANFrame->header.StdId;		
+	canID = pCANFrame->rxHeader.StdId;		
 	
 	if (canID != CAN_ID_Engine_Speed_Front_Setpoint)
 		return -1;
 
 	// Check DLC
-	if (pCANFrame->header.DLC != 4)
+	if (pCANFrame->rxHeader.DLC != 4)
 		return -1;
 				
 	// Extract the data from CAN-Frame			
