@@ -46,19 +46,34 @@ class CANThread(threading.Thread):
         self._usbtin = USBtin()
         self._usbtin.add_message_listener(self._receiveFrame)
         
-        self._canQueue = queue.Queue()
-
+        self._canRxQueue = queue.Queue()
+        self._canTxQueue = queue.Queue()
+        
     def _receiveFrame(self, msg):
         #print(msg)
-        self._canQueue.put(msg)
+        self._canRxQueue.put(msg)
+
+    def transmitFrame(self, msg):
+        self._canTxQueue.put(msg)
 
     def run(self):
         self._usbtin.connect("COM4")
         self._usbtin.open_can_channel(500000, USBtin.ACTIVE)
         
-        while self._wantAbort != True:            
-            canMsg = self._canQueue.get()
-            self._canConnector.updateWithCANMessage(canMsg)
+        while self._wantAbort != True:
+            try:
+                if self._canTxQueue.empty() == False:
+                    canTxMsg = self._canTxQueue.get(timeout=0.01)
+                    self._usbtin.send(canTxMsg)
+            except queue.Empty:
+                pass
+                                            
+            try:
+                canMsg = self._canRxQueue.get(timeout=0.01)
+                if canMsg != None:
+                    self._canConnector.updateWithCANMessage(canMsg)
+            except queue.Empty:
+                pass            
                         
         self._usbtin.close_can_channel()
         self._usbtin.disconnect()
@@ -150,7 +165,8 @@ dynamicModel.registerSubscriber(canSubscriber)
 
 #msg = CANMessage(0x201, [0xED, 0x04, 0xFE, 0x05])
 dataConnect = CANDataConnector(dynamicModel)
-canThread = CANThread(dataConnect)
+#canThread = CANThread(dataConnect)
+canThread = CANSimulationThread(dataConnect)
 canThread.start()
 
 #print("Data-Value Power_Supply_Electronic_Voltage: " + str(hex(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Voltage").getData())))
