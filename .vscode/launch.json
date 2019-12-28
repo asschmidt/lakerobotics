@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: DataInterpreter UI",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/lrapplications/tools/network_signals/data_interpreter.py",
+            "cwd": "${workspaceRoot}/lrapplications/tools/network_signals/",
+            "console": "integratedTerminal",
+            "env" : {
+                "PYTHONPATH": "${workspaceRoot}/lrapplications/tools/cantools"
+            }
+        },
+        {
+            "name": "Python: CAN Master UI",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/lrapplications/tools/network_signals/canmaster/canmaster.py",
+            "cwd": "${workspaceRoot}/lrapplications/tools/network_signals/canmaster/",
+            "console": "integratedTerminal",
+            "env" : {
+                "PYTHONPATH": "${workspaceRoot}/lrapplications/tools/network_signals;${workspaceRoot}/lrapplications/tools/cantools"
+            }
+        }
+    ]
+}

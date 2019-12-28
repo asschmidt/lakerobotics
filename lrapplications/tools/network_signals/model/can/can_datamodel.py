@@ -32,7 +32,7 @@ class CANDataDefinition:
 '''
 class CANDataExtractFunctions:
     '''
-    Extracts the data in form of an byte array out of the rawData parameter. The rawData parameter is assumed to 
+    Extracts the data in form of an byte array out of the rawData parameter. The rawData parameter is assumed to
     be the payload of a CAN message which is between 1 and 8 Byte at maximum
     '''
     @staticmethod
@@ -47,8 +47,8 @@ class CANDataExtractFunctions:
         for pos in range(0, signalPosition):
             startByte = startByte + int(dataDefRef.getMessage().Signals[pos].Signal.Size / 8)
 
-        # Calculate the end byte for the signal        
-        endByte = startByte + int(signalRef.Signal.Size / 8)                   
+        # Calculate the end byte for the signal
+        endByte = startByte + int(signalRef.Signal.Size / 8)
 
         data = rawData[startByte:endByte]
         return data

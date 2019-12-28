@@ -3,8 +3,6 @@ import threading
 import time
 import queue
 
-from pyusbtin.usbtin import USBtin
-
 from model.networks import *
 from model.signals import *
 from model.messages import *
@@ -18,66 +16,11 @@ from model.can.can_message_preprocessor import *
 from model.can.can_datamodel import *
 from model.can.can_data_connector import *
 from model.can.can_data_subscriber import *
-
+from model.can.can_thread import *
 from model.ui.wx_ui_model_connector import *
 
 from data_interpreter_ui import *
 
-class CANSimulationThread(threading.Thread):
-    def __init__(self, canConnector):
-        threading.Thread.__init__(self)
-        self._canConnector = canConnector
-
-    def run(self):
-        counter = 0
-        while counter < 10:            
-            msg = CANMessage(0x201, [counter, 0, counter, 0])
-            self._canConnector.updateWithCANMessage(msg)
-            counter = counter + 1
-            time.sleep(1)
-
-
-class CANThread(threading.Thread):
-    def __init__(self, canConnector):
-        threading.Thread.__init__(self)
-        self._canConnector = canConnector
-        self._wantAbort = False
-        
-        self._usbtin = USBtin()
-        self._usbtin.add_message_listener(self._receiveFrame)
-        
-        self._canRxQueue = queue.Queue()
-        self._canTxQueue = queue.Queue()
-        
-    def _receiveFrame(self, msg):
-        #print(msg)
-        self._canRxQueue.put(msg)
-
-    def transmitFrame(self, msg):
-        self._canTxQueue.put(msg)
-
-    def run(self):
-        self._usbtin.connect("COM4")
-        self._usbtin.open_can_channel(500000, USBtin.ACTIVE)
-        
-        while self._wantAbort != True:
-            try:
-                if self._canTxQueue.empty() == False:
-                    canTxMsg = self._canTxQueue.get(timeout=0.01)
-                    self._usbtin.send(canTxMsg)
-            except queue.Empty:
-                pass
-                                            
-            try:
-                canMsg = self._canRxQueue.get(timeout=0.01)
-                if canMsg != None:
-                    self._canConnector.updateWithCANMessage(canMsg)
-            except queue.Empty:
-                pass            
-                        
-        self._usbtin.close_can_channel()
-        self._usbtin.disconnect()
-            
 
 '''
 '''
@@ -85,28 +28,28 @@ def loadNetworkData(fileName):
     # Create the XML Parser object
     tree = ET.parse(fileName)
     root = tree.getroot()
-    
+
     networkVersion = root.get("Version")
-    
+
     # Create the parser for the <Network> elements
     networkParser = NetworkDataParser(root.find("Networks"))
     # Create the parser for the <Signal> elements
     signalParser = SignalDataParser(root.find("Signals"))
-    
+
     # Parse networks and signals
     networks = networkParser.parse()
     signals = signalParser.parse()
-    
+
     # Create the parser for the <Message> elements
     messageParser = MessageDataParser(networks, signals, root.find("Messages"))
     # Parse the messages
     messages = messageParser.parse()
-    
+
     # Create the parser for the <Node> elements
     nodeParser = NodeDataParser(networks, messages, root.find("Nodes"))
     # Parse the node elements
     nodes = nodeParser.parse()
-    
+
     # Create a NetworkBuilder object and return it
     networkBuilder = NetworkBuilder(networkVersion, networks, nodes, messages, signals)
 
@@ -120,7 +63,7 @@ def loadMeasurementData(fileName, networkBuilder):
     # Create the XML Parser object
     tree = ET.parse(fileName)
     root = tree.getroot()
-            
+
     # Create the parser for the <Measurement> elements
     measurementParser = MeasurementDataParser(root, networkBuilder)
     measurements = measurementParser.parse()
@@ -149,7 +92,7 @@ ui.initUI(list(measurements.values())[0])
 uiConnector = WxUIModelConnector(ui)
 
 # Create and regsiter a CAN subscriber for the dynamic model
-canSubscriber = CANDataSubscriber(uiConnector, measurements)
+canSubscriber = CANDataUISubscriber(uiConnector, measurements)
 dynamicModel.registerSubscriber(canSubscriber)
 
 #for dataEntry in dynamicModel.getDataModelEntryIterator():
@@ -164,9 +107,12 @@ dynamicModel.registerSubscriber(canSubscriber)
 #print("Data-Value Power_Supply_Electronic_Current: " + str(hex(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Current").getData())))
 
 #msg = CANMessage(0x201, [0xED, 0x04, 0xFE, 0x05])
+canInterface = CANUSBtinInterface()
+canInterface.setInterfaceParameter("COM4", 500000)
+
 dataConnect = CANDataConnector(dynamicModel)
-#canThread = CANThread(dataConnect)
-canThread = CANSimulationThread(dataConnect)
+canThread = CANInterfaceThread(canInterface, dataConnect)
+#canThread = CANSimulationThread(dataConnect)
 canThread.start()
 
 #print("Data-Value Power_Supply_Electronic_Voltage: " + str(hex(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Voltage").getData())))
@@ -175,5 +121,5 @@ canThread.start()
 ui.Show()
 app.MainLoop()
 
-canThread._wantAbort = True
+canThread.stop()
 canThread.join()

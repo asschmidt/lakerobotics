@@ -38,24 +38,24 @@ class CANDataConnector:
                 try:
                     # Check if we already have that CAN-ID
                     existingMsg = self._canLookUp[canID]
-                except:                    
+                except:
                     # If not, add it to the dictionary
-                    self._canLookUp[canID] = msgObj                
+                    self._canLookUp[canID] = msgObj
 
     '''
     '''
-    def updateWithCANMessage(self, canMessage): 
+    def updateWithCANMessage(self, canMessage):
         msgObj = None
 
         try:
-            # At first, get the message object in the data container 
+            # At first, get the message object in the data container
             msgObj = self._canLookUp[canMessage.mid]
         except:
             pass
 
         if msgObj != None:
             # Iterate over all signals in the message
-            for signalRef in msgObj.Signals:         
+            for signalRef in msgObj.Signals:
                 # Convert the data to a byte array
                 dataArray = list(pack('<Q', canMessage.get_data()))
-                self._dataModel.updateDataModelEntry(signalRef.Signal.ID, dataArray)        
+                self._dataModel.updateDataModelEntry(signalRef.Signal.ID, dataArray)

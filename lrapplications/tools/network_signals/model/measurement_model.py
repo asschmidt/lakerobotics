@@ -6,6 +6,13 @@ Created on 05.11.2019
 
 '''
 '''
+class MeasurementSignalDataDirection:
+    RX = 1
+    TX = 2
+
+
+'''
+'''
 class MeasurementData:
     '''
     '''
@@ -22,6 +29,7 @@ class MeasurementSignalData:
     def __init__(self):
         self.SignalID = "Unkown"
         self.SignalRef = None
+        self.Direction = MeasurementSignalDataDirection.RX
 
 '''
 '''
@@ -34,7 +42,7 @@ class MeasurementDataParser:
 
     def parse(self):
         measurementDict = {}
-        
+
         # Iterate over all <Measurement> elements under the root <MeasurementDefinitions>
         for measurementElement in self._measurementRoot:
             measurementObj = MeasurementData()
@@ -53,35 +61,44 @@ class MeasurementDataParser:
 
 '''
 Class for parsing the <Signal> elements under the root of the <Measurement>
-''' 
+'''
 class MeasurementSignalDataParser:
     '''
     '''
     def __init__(self, signalsRoot, signalsDict):
         self._signalsRoot = signalsRoot
         self._signalsRefDict = signalsDict
-    
+
     '''
     Parse the <Signal> elements under the root of <Measurement> and returns a dictionary with
     all Signal objects
     '''
     def parse(self):
         signalDict = {}
-        
+
         # Iterate over all <Signal> elemens under the root <Measurement>
         for signalElement in self._signalsRoot:
             signal = MeasurementSignalData()
-            
+
             # Get the ID of the signal
             signal.SignalID = signalElement.get("RefID")
-            
+
             try:
                 signalObj = self._signalsRefDict[signal.SignalID]
                 signal.SignalRef = signalObj
             except:
                 print("Signal " + signal.SignalID + " not found in the dictionary")
 
+            # Get the signal direction
+            signalDirectionStr = signalElement.get("Direction")
+            if signalDirectionStr == "Rx":
+                signal.Direcion = MeasurementSignalDataDirection.RX
+            elif signalDirectionStr == "Tx":
+                signal.Direction = MeasurementSignalDataDirection.TX
+            else:
+                signal.Direction = MeasurementSignalDataDirection.RX
+
             # Add the signal to the dictionary with the Signal ID as key
             signalDict[signal.SignalID] = signal
-                
+
         return signalDict

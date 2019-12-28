@@ -16,7 +16,7 @@ class DataInterpreterFrame(wx.Frame):
 
 
     def initUI(self, measurement):
-        # Then we call CreateGrid to set the dimensions of the grid        
+        # Then we call CreateGrid to set the dimensions of the grid
         self.grid.CreateGrid(len(measurement.Signals), 3)
 
         self.grid.SetColLabelValue(0, "Value")
@@ -24,9 +24,9 @@ class DataInterpreterFrame(wx.Frame):
 
         rowCount = 0
         for signal in measurement.Signals.values():
-            self.grid.SetRowLabelValue(rowCount, signal.SignalID)                    
+            self.grid.SetRowLabelValue(rowCount, signal.SignalID)
             self.grid.SetCellValue(rowCount, 1, signal.SignalRef.PhysicalUnit)
-            
+
             self._rowSignalMap[signal.SignalID] = rowCount
             rowCount = rowCount + 1
 

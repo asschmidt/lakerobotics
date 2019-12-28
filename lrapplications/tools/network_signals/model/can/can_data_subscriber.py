@@ -6,23 +6,21 @@ Created on 05.11.2019
 
 from model.model_subscriber import *
 
-'''
-'''
-class CANDataSubscriber(Subscriber):
+class CANDataUISubscriber(Subscriber):
+    '''
+    Subscriber for CAN messages. Connects a model change to an UI
 
+    DynamicDataModel --> notifySubscriber() --> Subscriber --> notify() --> UI Connector --> provideDataToUI()
     '''
-    '''
-    def __init__(self, uiConnector, measurementInfo = None):
+
+    def __init__(self, uiConnector):
+        '''
+        '''
         self._uiConnector = uiConnector
-        self._measurementInfo = measurementInfo
 
-    '''
-    '''
     def notify(self, dataEntry):
-        # Check if dataEntry is part of measurement
-        if self._measurementInfo != None:
-            pass
-        
+        '''
+        '''
         #print("Got Notify for: " + dataEntry.getDataID())
 
         if self._uiConnector != None:
