@@ -15,9 +15,12 @@ from ui.base_panel import *
 
 from can_global import *
 
-class PwrManagerPanel(BasePanel):
+class PowerManagerMonitorPanel(BasePanel):
     '''
+    Panel to show the CAN values of the Power Manager ECU
     '''
+
+    # Signal IDs of the Power Manager ECU which should be shown in the List Control
     PWR_SUPPLY_ELEC_VOLTAGE = "Power_Supply_Electronic_Voltage"
     PWR_SUPPLY_ELEC_CURRENT = "Power_Supply_Electronic_Current"
     PWR_SUPPLY_MOTOR_VOLTAGE = "Power_Supply_Motor_Voltage"
@@ -25,6 +28,7 @@ class PwrManagerPanel(BasePanel):
 
     def __init__(self, parent):
         '''
+        Initializes the UI panel including the UI Connector and the Subscriber
         '''
         super().__init__(parent)
         self._initializeData()
@@ -36,6 +40,7 @@ class PwrManagerPanel(BasePanel):
 
     def _initializeData(self):
         '''
+        Adds the CAN signals to the internal list
         '''
         self._addSignalToList(self.PWR_SUPPLY_ELEC_VOLTAGE)
         self._addSignalToList(self.PWR_SUPPLY_ELEC_CURRENT)

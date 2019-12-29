@@ -1,3 +1,6 @@
+'''
+Global object (Singleton) to access the CAN related objects and functions
+'''
 import xml.etree.ElementTree as ET
 import threading
 import time
@@ -17,14 +20,18 @@ from model.can.can_datamodel import *
 from model.can.can_data_connector import *
 from model.can.can_data_subscriber import *
 from model.can.can_thread import *
+from model.can.can_usbtin_interface import *
+from model.can.can_virtual_interface import *
 
 class CANGlobal:
     '''
+    Singleton to encapsulate the CAN objects and their handling
     '''
     __instance = None
 
     def __init__(self):
         '''
+        Private constructor to initialize the Singleton instance
         '''
         if CANGlobal.__instance != None:
             raise Exception("CAN Global is Singleton.")
@@ -39,6 +46,7 @@ class CANGlobal:
     @staticmethod
     def getInstance():
         '''
+        Returns the Singleton instance
         '''
         if CANGlobal.__instance == None:
             CANGlobal()
@@ -47,6 +55,9 @@ class CANGlobal:
 
     def _initializeNetworkData(self, fileName):
         '''
+        Loads the network data out of the provided XML file.
+
+        This date includes the Signals, Messages, Nodes and Networks for the complete CAN system
         '''
         # Create the XML Parser object
         tree = ET.parse(fileName)
@@ -84,6 +95,7 @@ class CANGlobal:
 
     def _initializeDynamicModel(self):
         '''
+        Initializeses the dynamic data model used to handle the CAN signals and messages
         '''
         # Create the dynamic model object
         self._dynamicModel = DynamicDataModel()
@@ -98,22 +110,33 @@ class CANGlobal:
 
     def _initializeCANInterface(self, comPort, canBaudrate):
         '''
+        Initializes the CAN interface used to connect to a CAN bus
         '''
-        self._canInterface = CANUSBtinInterface()
-        self._canInterface.setInterfaceParameter(comPort, canBaudrate)
+        if comPort == 'Virtual':
+            self._canInterface = CANVirtualInterface()
+        else:
+            # Create an instance of the CAN USBtin interface. Later this should be configurable
+            self._canInterface = CANUSBtinInterface()
+            self._canInterface.setInterfaceParameter(comPort, canBaudrate)
 
     def _initializeCANThread(self):
         '''
+        Initializes and start the CAN thread which handles the RX and TX of CAN messages
         '''
+        # Check whether the CAN interface is already initialized
         if self._canInterface != None:
+            # Create the CAN data connector and bind it to the dynamic model instance
             dataConnect = CANDataConnector(self._dynamicModel)
+            # Create the thread and connect it with the interface and the data connector
             self._canThread = CANInterfaceThread(self._canInterface, dataConnect)
+            # Start the thread
             self._canThread.start()
         else:
             raise Exception("No CAN Interface initialized")
 
     def initializeCAN(self, networkFileName, comPort, canBaudrate):
         '''
+        Initializes the complete CAN system incl. the XML data, Dynamic Model, CAN Interface and CAN Thread
         '''
         self._initializeNetworkData(networkFileName)
         self._initializeDynamicModel()
@@ -122,11 +145,25 @@ class CANGlobal:
 
     def finalizeCAN(self):
         '''
+        Stops the CAN thread and waits for the thread to finish
+
+        Remark: There is no timeout for waiting to finish the CAN thread. If this blocks, the system might hang
         '''
+        print("Stopping CAN Thread")
         self._canThread.stop()
         self._canThread.join()
 
     def getDynamicModel(self):
         '''
+        Returns the internal instance of the dynamic data model
         '''
         return self._dynamicModel
+
+    def isCANInitialize(self):
+        '''
+        Returns True, if the CAN thread is running and the CAN interface is connected
+        '''
+        canThreadOK = self._canThread != None and self._canThread.is_alive()
+        canInterfaceOK = self._canThread != None and self._canInterface.isOpen()
+
+        return  canThreadOK and canInterfaceOK

@@ -35,7 +35,7 @@ class BasePanel(wx.Panel):
 
         If the panel does not need a list control, this method can return None
         '''
-        listCtrl = wx.ListCtrl(self, wx.NewIdRef(), size=(300,400), style=wx.LC_REPORT | wx.BORDER_SUNKEN)
+        listCtrl = wx.ListCtrl(self, wx.NewIdRef(), size=(400,400), style=wx.LC_REPORT | wx.BORDER_SUNKEN)
         listCtrl.InsertColumn(0, 'Signal', width=240)
         listCtrl.InsertColumn(1, 'Value', width=100)
         listCtrl.InsertColumn(2, 'Unit', width=80)
@@ -44,6 +44,7 @@ class BasePanel(wx.Panel):
 
     def _addSignalToList(self, signalID):
         '''
+        Helper function to add a Signal to the ListCtrl and also register it in the internal Signal-Row-Map
         '''
         lastIndex = self._mainListCtrl.GetItemCount()
         newIndex = -1

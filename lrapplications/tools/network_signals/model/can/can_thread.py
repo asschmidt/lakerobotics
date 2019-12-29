@@ -13,20 +13,6 @@ from pyusbtin.usbtin import CANMessage, USBtin
 from model.can.can_interface import *
 from model.can.can_usbtin_interface import *
 
-class CANSimulationThread(threading.Thread):
-    def __init__(self, canConnector):
-        threading.Thread.__init__(self)
-        self._canConnector = canConnector
-
-    def run(self):
-        counter = 0
-        while counter < 10:
-            msg = CANMessage(0x201, [counter, 0, counter, 0])
-            self._canConnector.updateWithCANMessage(msg)
-            counter = counter + 1
-            time.sleep(1)
-
-
 class CANInterfaceThread(threading.Thread):
     '''
     Thread to handle CAN frame transmission and receiption via a provided CAN Interface object.
@@ -66,6 +52,11 @@ class CANInterfaceThread(threading.Thread):
 
     def run(self):
         '''
+        Main Loop of the CAN thread.
+
+        The main loop of the CAN thread handles the CAN-TX and CAN-RX message in the same loop. At first
+        it checks for TX messages and if there are TX messages in the queue, it sends the first one. After that
+        the threads checks for RX messages and reads the first one
         '''
         self._canInterface.initializeInterface()
 

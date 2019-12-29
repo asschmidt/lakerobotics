@@ -63,3 +63,8 @@ class CANUSBtinInterface(CANInterface):
     '''
     def sendFrame(self, frame):
         self._usbtin.send(frame)
+
+    def isOpen(self):
+        '''
+        '''
+        return self._usbtin.is_connected()

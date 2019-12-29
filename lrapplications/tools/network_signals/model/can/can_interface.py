@@ -55,3 +55,8 @@ class CANInterface:
     '''
     def sendFrame(self, frame):
         raise NotImplementedError
+
+    def isOpen(self):
+        '''
+        '''
+        raise NotImplementedError

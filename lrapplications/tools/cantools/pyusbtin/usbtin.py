@@ -76,6 +76,9 @@ class USBtin(object):
         """ get serial number that was acquired during connect()"""
         return self.serial_number
 
+    def is_connected(self):
+        return self.serial_port != None and self.serial_port.is_open
+
     def connect(self, port):
         """Connect to USBtin on given port.
            Opens the serial port, clears pending characters and send close command
