@@ -8,7 +8,7 @@
 #include "common.h"
 #include "hwconfig.h"
 #include "remotectrl.h"
-#include "gen/Node_Pwr_CAN.h"
+#include "gen/Node_Pwr_CAN_MCP2515.h"
 
 #include "cbuffer/CircularBuffer.h"
 #include "queue/QueueArray.h"
@@ -105,10 +105,18 @@ int16_t remoteCtrlProcessCommands()
         {
             g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E3);
         }
+	    else
+        {
+            g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E3_OFF);
+        }
 
 	    if (g_PowerCtrlMsg.CAN_PowerControlMsg.Power_Electronic_4_Active == 1)
         {
             g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E4);
+        }
+	    else
+        {
+            g_remoteCmdBuffer.push(REMOTE_CTRL_CMD_POWER_E4_OFF);
         }
 
 	    // Finally set the message object to invalid

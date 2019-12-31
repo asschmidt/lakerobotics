@@ -8,7 +8,7 @@
 #ifndef SRC_APP_PWRMANAGER_REMOTECTRL_H_
 #define SRC_APP_PWRMANAGER_REMOTECTRL_H_
 
-#include "gen/Node_Pwr_CAN.h"
+#include "gen/Node_Pwr_CAN_MCP2515.h"
 
 /*
  * IR Remote Commands evaluated by the power manager

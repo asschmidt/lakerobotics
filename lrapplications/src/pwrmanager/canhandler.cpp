@@ -11,7 +11,7 @@
 #include "display_ui.h"
 #include "remotectrl.h"
 
-#include "gen/Node_Pwr_CAN.h"
+#include "gen/Node_Pwr_CAN_MCP2515.h"
 
 #include "spi/SPI.h"
 #include "mcp2515/mcp2515.h"
