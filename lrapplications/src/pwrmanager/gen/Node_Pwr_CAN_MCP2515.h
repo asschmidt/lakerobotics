@@ -2,14 +2,15 @@
  * Generated CAN Header File for Node
  ***********************************************************
  * Node: Node_Pwr
+ * Interface: Node_Pwr_CAN_1
  * Network Version: 1.0
  *
  ***********************************************************
  * 
  **********************************************************/
  
- #ifndef _NODE_PWR_CAN_H_
- #define _NODE_PWR_CAN_H_
+ #ifndef _NODE_PWR_CAN_MCP2515_H_
+ #define _NODE_PWR_CAN_MCP2515_H_
  
  #include "mcp2515/can.h"
  
@@ -53,7 +54,7 @@
   * Defines for RX CAN Messages
   *
  */
- 	#define CAN_ID_Power_Control			0x3ff
+ 	#define CAN_ID_Power_Control			0x1ff
 
  /*
   * Declare data type structures for CAN RX Messages

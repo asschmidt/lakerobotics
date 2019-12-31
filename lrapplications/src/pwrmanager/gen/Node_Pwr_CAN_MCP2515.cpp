@@ -8,7 +8,7 @@
  * 
  **********************************************************/
 
-#include "Node_Pwr_CAN.h" 
+#include "Node_Pwr_CAN_MCP2515.h"
 #include "mcp2515/can.h"
  
  /*
