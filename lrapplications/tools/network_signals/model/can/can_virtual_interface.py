@@ -73,7 +73,7 @@ class CANVirtualInterface(CANInterface):
     def sendFrame(self, frame):
         '''
         '''
-        print("Sending frame from virtual interface")
+        print("Sending frame from virtual interface: " + str(frame))
 
     def isOpen(self):
         '''

@@ -11,11 +11,11 @@ from model.can.can_data_connector import *
 from model.can.can_data_subscriber import *
 from model.ui.wx_ui_model_connector import *
 
-from ui.base_panel import *
+from ui.base_monitor_panel import *
 
 from can_global import *
 
-class PowerManagerMonitorPanel(BasePanel):
+class PowerManagerMonitorPanel(BaseMonitorPanel):
     '''
     Panel to show the CAN values of the Power Manager ECU
     '''

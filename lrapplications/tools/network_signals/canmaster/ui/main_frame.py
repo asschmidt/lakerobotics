@@ -10,6 +10,7 @@ from can_global import *
 
 from ui.dialogs.hw_interface_dlg import *
 from ui.frames.pwr_manager_monitor_frame import *
+from ui.frames.pwr_manager_control_frame import *
 
 
 class MainFrame(wx.Frame):
@@ -169,7 +170,8 @@ class MainFrame(wx.Frame):
     def _onOpenPwrManagerControl(self, event):
         '''
         '''
-        pass
+        pwrManagerControlFrame = PowerManagerControlFrame(self)
+        pwrManagerControlFrame.Show()
 
     def _onExitApplication(self, event):
         '''

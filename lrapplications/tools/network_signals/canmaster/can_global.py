@@ -159,6 +159,18 @@ class CANGlobal:
         '''
         return self._dynamicModel
 
+    def getNetworkBuilder(self):
+        '''
+        Returns the internal instance of the network builder
+        '''
+        return self._networkBuilder
+
+    def getCANThread(self):
+        '''
+        Returns the internal instance of the CAN thread
+        '''
+        return self._canThread
+
     def isCANInitialize(self):
         '''
         Returns True, if the CAN thread is running and the CAN interface is connected

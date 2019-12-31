@@ -8,9 +8,9 @@ import wx
 
 from can_global import *
 
-class BasePanel(wx.Panel):
+class BaseMonitorPanel(wx.Panel):
     '''
-    Base panel for CAN connected panels
+    Base panel for CAN connected monitoring panels
     '''
 
     def __init__(self, parent):
