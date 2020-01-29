@@ -8,6 +8,8 @@ import wx
 
 from can_global import *
 
+from ui.frames.dynamic_plot_frame import *
+
 class BaseMonitorPanel(wx.Panel):
     '''
     Base panel for CAN connected monitoring panels
@@ -21,8 +23,10 @@ class BaseMonitorPanel(wx.Panel):
 
         # Dictionary to hold the signal IDs and the row-index mapping for the data
         self._signalToRowMap = {}
+        self._rowToSignalMap = {}
 
         self._mainListCtrl = self._createListControl()
+        self._createContextMenu()
 
         # Initialize the sizer component for this panel
         self._mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -41,6 +45,14 @@ class BaseMonitorPanel(wx.Panel):
         listCtrl.InsertColumn(2, 'Unit', width=80)
 
         return listCtrl
+
+    def _createContextMenu(self):
+        '''
+        '''
+        self._contextMenu = wx.Menu()
+        plotItem = self._contextMenu.Append(wx.ID_ANY, "Plot Signal")
+        self.Bind(wx.EVT_MENU, self.onPlotSignal, plotItem)
+        self._mainListCtrl.Bind(wx.EVT_CONTEXT_MENU, self.onShowContext)
 
     def _addSignalToList(self, signalID):
         '''
@@ -62,7 +74,13 @@ class BaseMonitorPanel(wx.Panel):
 
             # Add the signal ID and the newIndex to the internal signal-Id-to-row-map
             self._signalToRowMap[signalEntry.getDataDefRef().getSignal().ID] = newIndex
+            self._rowToSignalMap[newIndex] = signalEntry.getDataDefRef().getSignal().ID
         return newIndex
+
+    def addSignalToPlot(self, signalID):
+        '''
+        '''
+        return self._addSignalToList(signalID)
 
     def receiveDataForUI(self, data):
         '''
@@ -78,3 +96,23 @@ class BaseMonitorPanel(wx.Panel):
                 self._mainListCtrl.SetItem(row, 1, str(data.getData()))
             except:
                 pass
+
+    def onShowContext(self, event):
+        '''
+        '''
+        pos = event.GetPosition()
+        pos = self._mainListCtrl.ScreenToClient(pos)
+        self._mainListCtrl.PopupMenu(self._contextMenu, pos)
+
+    def onPlotSignal(self, event):
+        '''
+        '''
+        selectedIndex = self._mainListCtrl.GetFirstSelected()
+        if selectedIndex >= 0:
+            try:
+                signalID = self._rowToSignalMap[selectedIndex]
+                pltFrame = DynamicPlotFrame(self, signalID)
+                pltFrame.addSignalToPlot(signalID)
+                pltFrame.Show()
+            except Exception as e:
+                print(e)

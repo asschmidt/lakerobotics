@@ -20,6 +20,8 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include "gen/Node_ECU_Front_CAN_STM32F103.h"
+
 void myTask1( void *pvParameters );
 void myTask2( void *pvParameters );
 void myTask3( void *pvParameters );
@@ -27,15 +29,19 @@ void myTask3( void *pvParameters );
 void myTask1( void *pvParameters )
 {
     HAL_CAN_Start(&hcan);
+    HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 
     for (;;)
     {
-        uint8_t               TxData[8];
+        int16_t count = htim3.Instance->CNT;
+
+       /* uint8_t               TxData[8];
+        CAN_TxHeaderTypeDef   TxHeader;*/
+
         uint32_t              TxMailbox;
-        CAN_TxHeaderTypeDef   TxHeader;
 
         /* Configure Transmission process */
-        TxHeader.StdId = 0x321;
+        /*TxHeader.StdId = 0x321;
         TxHeader.ExtId = 0x01;
         TxHeader.RTR = CAN_RTR_DATA;
         TxHeader.IDE = CAN_ID_STD;
@@ -43,9 +49,16 @@ void myTask1( void *pvParameters )
         TxHeader.TransmitGlobalTime = DISABLE;
 
         TxData[0] = 0x12;
-        TxData[1] = 0xAD;
+        TxData[1] = 0xAD;*/
 
-        if(HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+        CAN_FRAME myFrame;
+        Msg_Engine_Speed_Front msgEngineSpeed;
+        msgEngineSpeed.Engine_Speed_F_L = count;
+        msgEngineSpeed.Engine_Speed_F_R = count;
+
+        createMsg_Engine_Speed_Front(&myFrame, &msgEngineSpeed);
+
+        if(HAL_CAN_AddTxMessage(&hcan, &myFrame.txHeader, myFrame.data, &TxMailbox) != HAL_OK)
           {
                 /* Transmition Error */
                  HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
