@@ -18,16 +18,11 @@
 #
 # Author: Andreas Schmidt
 #
-# CMake file for lib_control library
+# CMake file for lib_control library submodule FastPID
 
-# Source Root Directory for lib_control
-set(LIB_CONTROL_SRC_DIR
-    ${LR_PLATFORM_SOURCE_ROOT}/libraries/lib_control)
+# Source Root Directory for lib_control submodule FastPID
+set(LIB_CONTROL_FASTPID_SRC_DIR ${LR_PLATFORM_SOURCE_ROOT}/libraries/lib_control/fastpid)
 
-include(${CMAKE_CURRENT_LIST_DIR}/autopid/lib_autopid_exp.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/fastpid/lib_fastpid_exp.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/pid/lib_pid_exp.cmake)
-
-# Include Directory List for lib_control (Exported public API)
-set(LIB_CONTROL_INC_DIR
-    ${LIB_CONTROL_SRC_DIR})
+# Include Directory List for lib_control submodule FastPID
+set(LIB_CONTROL_FASTPID_INC_DIR
+    ${LIB_CONTROL_FASTPID_SRC_DIR})

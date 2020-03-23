@@ -65,6 +65,7 @@ include(lib_control_exp.cmake)
 # Include the source list
 #include(arduinostl/lib_arduinostl.cmake)
 include(autopid/lib_autopid.cmake)
+include(fastpid/lib_fastpid.cmake)
 include(pid/lib_pid.cmake)
 
 # Add the lib_bsp_uno additional include directories
@@ -73,4 +74,5 @@ include_directories(${BSP_INCLUDE_DIR})
 # Build a static library
 add_library(${LIBRARY_NAME}
     ${LIB_CONTROL_AUTOPID_SRC}
+    ${LIB_CONTROL_FASTPID_SRC}
   	${LIB_CONTROL_PID_SRC})
