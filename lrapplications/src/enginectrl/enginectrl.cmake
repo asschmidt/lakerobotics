@@ -7,7 +7,14 @@
 #
 
 # Set the sources
-SET(ENGINECTRL_CXXSRC 
+SET(ENGINECTRL_CXXSRC
+		FreeRTOS-openocd.cpp 
+		globalobjects.cpp
+		processmodel.cpp
+		parametermodel.cpp
+		hbridge.cpp
+		encoder.cpp
+		debughelper.cpp
         main.cpp)
 
 SET(ENGINECTRL_GEN_CXXSRC
