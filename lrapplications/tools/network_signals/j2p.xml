@@ -28,7 +28,7 @@
 			<Interfaces>
 				<Interface ID="Node_Tele_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x1FE" NetworkController="Default" ConnectedTo="MainCAN">
 					<RxMessages>
-
+						<RxMessage RefID="Engine_Speed_Front"></RxMessage>
 					</RxMessages>
 
 					<TxMessages>
@@ -105,7 +105,7 @@
 
 	<!-- Message Definitions -->
 	<Messages>
-		<Message ID="Power_Control" Name="Power Control Bits" NetworkType="CAN">
+		<Message ID="Power_Control" Name="Power Control Bits" NetworkType="CAN" Cycle="250ms">
 			<Signals>
 				<Signal RefID="Power_Electronic_1_Active" Position="1"></Signal>
 				<Signal RefID="Power_Electronic_2_Active" Position="2"></Signal>
@@ -128,7 +128,7 @@
 			</Signals>
 		</Message>
 
-		<Message ID="Engine_Speed_Front" Name="Engine Speed Front Axis" NetworkType="CAN">
+		<Message ID="Engine_Speed_Front" Name="Engine Speed Front Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
 				<Signal RefID="Engine_Speed_F_L" Position="1"></Signal>
 				<Signal RefID="Engine_Speed_F_R" Position="2"></Signal>

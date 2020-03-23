@@ -26,6 +26,7 @@ class MessageData:
         self.ID = "Unknown"
         self.Name = "Unknown"
         self.NetworkType = NetworkDataType.UNKNOWN
+        self.Cycle = 1000
         self.Signals = []
 
         self.GeneratorData = {}
@@ -79,6 +80,18 @@ class MessageDataParser:
             # Get the ID and the name of the message
             message.ID = messageElement.get("ID")
             message.Name = messageElement.get("Name")
+
+            # Get the cycle value for the message
+            try:
+                cycleValueStr = messageElement.get("Cycle")
+                if cycleValueStr.endswith("ms"):
+                    cycleValue = int(cycleValueStr[:-2])
+                else:
+                    cycleValue = int(cycleValueStr)
+            except:
+                cycleValue = 1000
+
+            message.Cycle = cycleValue
 
             # Find the <Signals> child element inside the message element
             signalsRoot = messageElement.find("Signals")
