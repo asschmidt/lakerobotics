@@ -14,6 +14,7 @@ SET(ENGINECTRL_CXXSRC
 		parametermodel.cpp
 		hbridge.cpp
 		encoder.cpp
+		measurement.cpp
 		debughelper.cpp
         main.cpp)
 

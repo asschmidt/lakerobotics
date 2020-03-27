@@ -41,6 +41,7 @@ set(LIB_BSP_ENGINECTRL_CUBE_COMMON_CPPSRC
 # Set the cube sources
 set(LIB_BSP_ENGINECTRL_CUBE_GEN_CSRC
 		hal/adc.c
+		hal/dma.c
         hal/can.c
         hal/gpio.c
         hal/main.c

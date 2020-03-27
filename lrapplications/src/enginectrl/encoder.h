@@ -10,6 +10,11 @@
 
 #include <stdint.h>
 
+#define ENC_QUADRANT_I          1
+#define ENC_QUADRANT_II         2
+#define ENC_QUADRANT_III        3
+#define ENC_QUADRANT_VI         4
+
 typedef struct _Encoder_Model
 {
         uint16_t currentValueM1;

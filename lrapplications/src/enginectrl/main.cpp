@@ -15,9 +15,11 @@
 
 #include "parametermodel.h"
 #include "processmodel.h"
-#include "encoder.h"
 
+#include "encoder.h"
 #include "hbridge.h"
+#include "measurement.h"
+
 #include "debughelper.h"
 
 #include "globalobjects.h"
@@ -25,6 +27,7 @@
 
 void taskPWMMotorTest(void *pvParameters);
 void taskEncoderTest(void *pvParameters);
+void taskAnalogTest(void *pvParameters);
 
 void taskPWMMotorTest( void *pvParameters )
 {
@@ -68,19 +71,19 @@ void taskEncoderTest( void *pvParameters )
     debugPrint("Initialize Bridge\r\n");
     bridgeInitialize();
 
-    debugPrint("Start Reading M1\r\n");
-    debugPrint("Forward Mode for Left Engine\r\n");
+    debugPrint("Start Reading M2\r\n");
+    debugPrint("Forward Mode for Right Engine\r\n");
 
     EncoderModel* pEncModel = encoderGetModel();
 
     for (;;)
     {
-        debugPrint("Forward Mode for Left Engine\r\n");
+        debugPrint("Forward Mode for Right Engine\r\n");
 
-        bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_FORWARD);
-        bridgeSetPWMValue(H_BRIDGE_LEFT, 200);
+        bridgeSetDirection(H_BRIDGE_RIGHT, H_BRIDGE_FORWARD);
+        bridgeSetPWMValue(H_BRIDGE_RIGHT, 250);
 
-        for (int i=0; i<500; i++)
+        for (int i=0; i<1500; i++)
         {
             uint16_t encValueM1 = 0;
             uint16_t encValueM2 = 0;
@@ -92,21 +95,29 @@ void taskEncoderTest( void *pvParameters )
             int16_t encDiffM2 = 0;
             encoderCalculateDiff(pEncModel, &encDiffM1, &encDiffM2);
 
-            debugPrint("Enc: %d - Diff: %d - Quad: %d\r\n", pEncModel->currentValueM1, encDiffM1, quadrantM1);
+            EngineCtrlProcessModel* pProcessModel = processModelGetModel();
+            processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
+
+            debugPrint("%d, %d,", pProcessModel->enginespeed.engineSpeedRight, pProcessModel->wheelspeed.wheelSpeedRight);
+            debugPrint("%d, %d\r\n", pProcessModel->enginespeed.engineAngleSpeedRight, pProcessModel->enginespeed.engineAccelerationRight);
+
+            //debugPrint("vEng: %d - vWheel: %d    ", pProcessModel->engineSpeedLeft, pProcessModel->wheelSpeedLeft);
+            //debugPrint("wEng: %d - aEng: %d\r\n", pProcessModel->engineAngleSpeedLeft / 1000, pProcessModel->engineAccelerationLeft / 1000);
+            //debugPrint("Enc: %d - Diff: %d - Quad: %d\r\n", pEncModel->currentValueM1, encDiffM1, quadrantM1);
 
             vTaskDelay(10);
         }
 
-        bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_STOP);
-        bridgeSetPWMValue(H_BRIDGE_LEFT, 0);
+        bridgeSetDirection(H_BRIDGE_RIGHT, H_BRIDGE_STOP);
+        bridgeSetPWMValue(H_BRIDGE_RIGHT, 0);
         vTaskDelay(1000);
 
-        debugPrint("Backward Mode for Left Engine\r\n");
+        debugPrint("Backward Mode for Right Engine\r\n");
 
-        bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_BACKWARD);
-        bridgeSetPWMValue(H_BRIDGE_LEFT, 200);
+        bridgeSetDirection(H_BRIDGE_RIGHT, H_BRIDGE_BACKWARD);
+        bridgeSetPWMValue(H_BRIDGE_RIGHT, 250);
 
-        for (int i=0; i<500; i++)
+        for (int i=0; i<1500; i++)
         {
             uint16_t encValueM1 = 0;
             uint16_t encValueM2 = 0;
@@ -118,10 +129,40 @@ void taskEncoderTest( void *pvParameters )
             int16_t encDiffM2 = 0;
             encoderCalculateDiff(pEncModel, &encDiffM1, &encDiffM2);
 
-            debugPrint("Enc: %d - Diff: %d - Quad: %d\r\n", pEncModel->currentValueM1, encDiffM1, quadrantM1);
+            EngineCtrlProcessModel* pProcessModel = processModelGetModel();
+            processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
+
+            debugPrint("%d, %d,", pProcessModel->enginespeed.engineSpeedRight, pProcessModel->wheelspeed.wheelSpeedRight);
+            debugPrint("%d, %d\r\n", pProcessModel->enginespeed.engineAngleSpeedRight, pProcessModel->enginespeed.engineAccelerationRight);
+
+            //debugPrint("vEng: %d - vWheel: %d    ", pProcessModel->engineSpeedLeft, pProcessModel->wheelSpeedLeft);
+            //debugPrint("wEng: %d - aEng: %d\r\n", pProcessModel->engineAngleSpeedLeft / 1000, pProcessModel->engineAccelerationLeft / 1000);
+            //debugPrint("Enc: %d - Diff: %d - Quad: %d\r\n", pEncModel->currentValueM1, encDiffM1, quadrantM1);
 
             vTaskDelay(10);
         }
+
+        vTaskDelay(1000);
+    }
+}
+
+void taskAnalogTest( void *pvParameters )
+{
+    debugPrint("Initialize ADC\r\n");
+    measurementInitializeADC();
+
+    for (;;)
+    {
+        ADCRawValues adcValues;
+        measurementReadADCValues(&adcValues);
+
+        int32_t tempValue = measurementGetInternalTemperature(&adcValues);
+
+        //float temp = get_temp(adcValues.analogTempSens);
+        debugPrint("ADC Voltages %d  %d  %d  %d\r\n", adcValues.voltageM1, adcValues.voltageM2, adcValues.voltageIN1, adcValues.voltageIN2);
+        debugPrint("ADC Temp: %d\r\n", tempValue);
+
+        vTaskDelay(50);
     }
 }
 
@@ -139,7 +180,8 @@ int main(int argc, char* argv[])
 
     // Create the tasks
     //xTaskCreate( taskPWMMotorTest, "PWMMotorTest", 1024, NULL, 1, NULL);
-    xTaskCreate( taskEncoderTest, "EncoderTest", 1024, NULL, 1, NULL);
+    //xTaskCreate( taskEncoderTest, "EncoderTest", 1024, NULL, 1, NULL);
+    xTaskCreate( taskAnalogTest, "AnalogTest", 1024, NULL, 1, NULL);
 
     // Start the tasks
     vTaskStartScheduler();

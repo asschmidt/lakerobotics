@@ -110,9 +110,11 @@ int32_t encoderCalculateDiff(EncoderModel* pEncoderModel, int16_t* diffEncM1, in
        encoderCounts = pParamModel->encoderCounts;
     }
 
+    // Get the quadrants for M1
     int8_t quadrantM1Last = encoderGetQuadrant(pEncoderModel, pEncoderModel->lastValueM1);
     int8_t quadrantM1Curr = encoderGetQuadrant(pEncoderModel, pEncoderModel->currentValueM1);
 
+    // Get the quadrants for M2
     int8_t quadrantM2Last = encoderGetQuadrant(pEncoderModel, pEncoderModel->lastValueM2);
     int8_t quadrantM2Curr = encoderGetQuadrant(pEncoderModel, pEncoderModel->currentValueM2);
 
@@ -120,6 +122,7 @@ int32_t encoderCalculateDiff(EncoderModel* pEncoderModel, int16_t* diffEncM1, in
     if ((quadrantM1Last == 4 && quadrantM1Curr == 1) ||
         (quadrantM1Last == 1 && quadrantM1Curr == 4))
     {
+        // TODO: Check for lastValue > currentValue in case of a change of the direction
         *diffEncM1 = encoderCounts - pEncoderModel->lastValueM1 + pEncoderModel->currentValueM1;
     }
     else
@@ -131,6 +134,7 @@ int32_t encoderCalculateDiff(EncoderModel* pEncoderModel, int16_t* diffEncM1, in
     if ((quadrantM2Last == 4 && quadrantM2Curr == 1) ||
         (quadrantM2Last == 1 && quadrantM2Curr == 4))
     {
+        // TODO: Check for lastValue > currentValue in case of a change of the direction
         *diffEncM2 = encoderCounts - pEncoderModel->lastValueM2 + pEncoderModel->currentValueM2;
     }
     else
@@ -165,6 +169,8 @@ int8_t encoderGetQuadrant(EncoderModel* pEncoderModel, uint16_t encValue)
        quadarantSize = pEncoderModel->quadrantMotorSide;
    }
 
+   // Calculate the correction value if the current encoder value is exactly the upper limit
+   // of the quadrant
    int8_t correctionValue = (encValue % quadarantSize) != 0 ? 1 : 0;
 
    int8_t quadrantNo = (encValue / quadarantSize) + correctionValue;
@@ -197,17 +203,21 @@ bool encoderCheckForQuadrant(EncoderModel* pEncoderModel, int8_t quadrantNo, uin
     // Check which quadrant we want to check
     switch( quadrantNo)
     {
-        case 1:
+        // Quadrant No 1:
+        case ENC_QUADRANT_I:
         {
             return encoderCount >= 0 && encoderCount <= quadarantSize;
         }
+        break;
 
-        case 2:
-        case 3:
-        case 4:
+        // Quadrant No 2 to 4
+        case ENC_QUADRANT_II:
+        case ENC_QUADRANT_III:
+        case ENC_QUADRANT_VI:
         {
             return encoderCount >= ((quadrantNo - 1) * quadarantSize) + 1 && encoderCount <= (quadrantNo * quadarantSize);
         }
+        break;
 
         default:
             return false;
