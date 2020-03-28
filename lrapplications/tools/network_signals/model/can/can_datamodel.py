@@ -53,6 +53,13 @@ class CANDataExtractFunctions:
         data = rawData[startByte:endByte]
         return data
 
+    @staticmethod
+    def _getSignedNumber(number, bitLength):
+        mask = (2 ** bitLength) - 1
+        if number & (1 << (bitLength - 1)):
+            return number | ~mask
+        else:
+            return number & mask
 
     '''
     '''
@@ -90,6 +97,8 @@ class CANDataExtractFunctions:
                 for bytePos in range(startByte, endByte):
                     shiftCount = (numberOfBytes - 1) - bytePos
                     intValue = intValue + (dataBytes[bytePos] << (shiftCount * 8))
+                
+                intValue = CANDataExtractFunctions._getSignedNumber(intValue, 16)
             else:
                 intValue = None
 

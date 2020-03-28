@@ -44,6 +44,17 @@
             "env": {
                 "PYTHONPATH": "${workspaceRoot}/lrapplications/tools/network_signals;${workspaceRoot}/lrapplications/tools/cantools"
             }
+        },
+        {
+            "name": "Python: CAN Console",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/lrapplications/tools/network_signals/data_console_test.py",
+            "cwd": "${workspaceRoot}/lrapplications/tools/network_signals/",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceRoot}/lrapplications/tools/network_signals;${workspaceRoot}/lrapplications/tools/cantools"
+            }
         }
     ]
 }

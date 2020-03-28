@@ -21,8 +21,8 @@ class DataModelEntry:
         self._dataID = dataID
         self._dataDefRef = dataDefRef   # Reference to a data definition (e.g. CAN signal definition)
 
-        self._data = None               # Actual data value (can be of different type like int, float etc)
-        self._prevData = None           # Previous data
+        self._data = 0               # Actual data value (can be of different type like int, float etc)
+        self._prevData = 0           # Previous data
         self._dataChangedTimeStamp = 0  # Timestamp of last data change
         self._dataChangedTimeDelta = 0  # Delta value of milliseconds since last data change
 

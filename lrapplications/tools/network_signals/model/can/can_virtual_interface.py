@@ -30,13 +30,13 @@ class CANVirtualInterface(CANInterface):
         '''
         '''
         while self._stopRxThread == False:
-            canID = random.randrange(0x200, 0x210)
+            canID = random.randrange(0x5FF, 0x610)
             val1 = random.randrange(0x0, 0xFF)
             val2 = random.randrange(0x0, 0xFF)
             msg = CANMessage(canID, [val1, 0, val2, 0])
 
             self._receiveFrame(msg)
-            time.sleep(0.5)
+            time.sleep(0.1)
 
     '''
     '''

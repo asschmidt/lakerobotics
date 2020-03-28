@@ -26,7 +26,7 @@ class CANUSBtinInterface(CANInterface):
     '''
     '''
     def _receiveFrame(self, msg):
-        print("Got Frame: " + str(msg))
+        #print("Got Frame: " + str(msg))
         self._canRxQueue.put(msg)
 
     '''

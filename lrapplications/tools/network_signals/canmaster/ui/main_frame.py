@@ -11,7 +11,7 @@ from can_global import *
 from ui.dialogs.hw_interface_dlg import *
 from ui.frames.pwr_manager_monitor_frame import *
 from ui.frames.pwr_manager_control_frame import *
-
+from ui.frames.eng_ctrl_front_monitor_frame import *
 
 class MainFrame(wx.Frame):
     '''
@@ -102,8 +102,8 @@ class MainFrame(wx.Frame):
         self._frontEngineECUMonitorMenuItem = frontEngineECU.Append(wx.ID_ANY, 'Monitor Front Axle Engine ECU', '')
         self._frontEngineECUMControlMenuItem = frontEngineECU.Append(wx.ID_ANY, 'Control Front Axle Engine ECU', '')
 
-        #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUMonitor, source=self._frontEngineECUMonitorMenuItem)
-        #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUControl, source=self._frontEngineECUMControlMenuItem)
+        self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineFrontECUMonitor, source=self._frontEngineECUMonitorMenuItem)
+        #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineFrontECUMonitor, source=self._frontEngineECUMControlMenuItem)
 
         parentMenu.Append(wx.ID_ANY, 'Front Axle Engine ECU', frontEngineECU)
 
@@ -166,6 +166,13 @@ class MainFrame(wx.Frame):
         '''
         pwrManagerMonitorFrame = PowerManagerMonitorFrame(self)
         pwrManagerMonitorFrame.Show()
+
+    def _onOpenEngineFrontECUMonitor(self, event):
+        '''
+        Event Handler to open the "Engine Control Front Monitor" UI Panel
+        '''
+        engCtrlFrontMonitorFrame = EngCtrlFrontMonitorFrame(self)
+        engCtrlFrontMonitorFrame.Show()
 
     def _onOpenPwrManagerControl(self, event):
         '''
