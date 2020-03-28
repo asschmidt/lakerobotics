@@ -34,8 +34,14 @@ typedef struct _CAN_FRAME
  * Defines for TX CAN Messages
  *
 */
-#define CAN_ID_Engine_Speed_Front			0x5ff
+#define CAN_ID_EngineCtrlFront_Alive			0x600
+#define CYCLE_EngineCtrlFront_Alive			1000
+
+#define CAN_ID_Engine_Speed_Front			0x601
 #define CYCLE_Engine_Speed_Front			100
+
+#define CAN_ID_Wheel_Speed_Front			0x602
+#define CYCLE_Wheel_Speed_Front			100
 
 
 
@@ -43,6 +49,12 @@ typedef struct _CAN_FRAME
  * Declare data type structures for CAN TX Messages
  *
 */
+typedef struct _Msg_EngineCtrlFront_Alive
+{
+	// Signal-ID: EngineCtrlFront_Alive Signal-Type: 2 Signal-Size: 16
+	int16_t EngineCtrlFront_Alive;
+} Msg_EngineCtrlFront_Alive;
+
 typedef struct _Msg_Engine_Speed_Front
 {
 	// Signal-ID: Engine_Speed_F_L Signal-Type: 2 Signal-Size: 16
@@ -51,18 +63,29 @@ typedef struct _Msg_Engine_Speed_Front
 	int16_t Engine_Speed_F_R;
 } Msg_Engine_Speed_Front;
 
+typedef struct _Msg_Wheel_Speed_Front
+{
+	// Signal-ID: Wheel_Speed_F_L Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_F_L;
+	// Signal-ID: Wheel_Speed_F_R Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_F_R;
+} Msg_Wheel_Speed_Front;
+
 
 /*
  * Declare function prototypes for CAN Tx Message creation
  *
  */
+extern int8_t createMsg_EngineCtrlFront_Alive(CAN_FRAME* pCANFrame, Msg_EngineCtrlFront_Alive* pMsg);
 extern int8_t createMsg_Engine_Speed_Front(CAN_FRAME* pCANFrame, Msg_Engine_Speed_Front* pMsg);
+extern int8_t createMsg_Wheel_Speed_Front(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_Front* pMsg);
 
 /*
  * Defines for RX CAN Messages
  *
  */
-#define CAN_ID_Engine_Speed_Front_Setpoint			0x200
+#define CAN_ID_Engine_Speed_Front_Setpoint			0x301
+#define CAN_ID_Wheel_Speed_Front_Setpoint			0x302
 
 /*
  * Declare data type structures for CAN RX Messages
@@ -76,6 +99,14 @@ typedef struct _Msg_Engine_Speed_Front_Setpoint
 	int16_t Engine_Speed_F_R_Setpoint;
 } Msg_Engine_Speed_Front_Setpoint;
 
+typedef struct _Msg_Wheel_Speed_Front_Setpoint
+{
+	// Signal-ID: Wheel_Speed_F_L_Setpoint Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_F_L_Setpoint;
+	// Signal-ID: Wheel_Speed_F_R_Setpoint Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_F_R_Setpoint;
+} Msg_Wheel_Speed_Front_Setpoint;
+
 
 
 /*
@@ -83,5 +114,6 @@ typedef struct _Msg_Engine_Speed_Front_Setpoint
  *
  */
 extern int8_t parseMsg_Engine_Speed_Front_Setpoint(CAN_FRAME* pCANFrame, Msg_Engine_Speed_Front_Setpoint* pMsg);
+extern int8_t parseMsg_Wheel_Speed_Front_Setpoint(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_Front_Setpoint* pMsg);
 
 #endif

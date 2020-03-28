@@ -14,4 +14,4 @@ EngineCtrlParameterModel gParameterModel;
 EngineCtrlProcessModel gProcessModel;
 EncoderModel gEncoderModel;
 
-
+CANHandler gCANHandler;

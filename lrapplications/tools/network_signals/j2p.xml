@@ -16,6 +16,7 @@
 					</RxMessages>
 
 					<TxMessages>
+						<TxMessage RefID="PowerManager_Alive"></TxMessage>
 						<TxMessage RefID="Power_Supply_Motor"></TxMessage>
 						<TxMessage RefID="Power_Supply_Electronic"></TxMessage>
 					</TxMessages>
@@ -26,7 +27,7 @@
 		<!-- Telematic ECU -->
 		<Node ID="Node_Tele" Name="Telematic Unit">
 			<Interfaces>
-				<Interface ID="Node_Tele_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x1FE" NetworkController="Default" ConnectedTo="MainCAN">
+				<Interface ID="Node_Tele_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x2FF" NetworkController="Default" ConnectedTo="MainCAN">
 					<RxMessages>
 						<RxMessage RefID="Engine_Speed_Front"></RxMessage>
 					</RxMessages>
@@ -34,6 +35,7 @@
 					<TxMessages>
 						<TxMessage RefID="Power_Control"></TxMessage>
 						<TxMessage RefID="Engine_Speed_Front_Setpoint"></TxMessage>
+						<TxMessage RefID="Wheel_Speed_Front_Setpoint"></TxMessage>
 					</TxMessages>
 				</Interface>
 			</Interfaces>
@@ -41,13 +43,16 @@
 
 		<Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axis">
 			<Interfaces>
-				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x5FE" NetworkController="STM32F103" ConnectedTo="MainCAN">
+				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x5FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
 						<RxMessage RefID="Engine_Speed_Front_Setpoint"></RxMessage>
+						<RxMessage RefID="Wheel_Speed_Front_Setpoint"></RxMessage>
 					</RxMessages>
 
 					<TxMessages>
+						<TxMessage RefID="EngineCtrlFront_Alive"></TxMessage>
 						<TxMessage RefID="Engine_Speed_Front"></TxMessage>
+						<TxMessage RefID="Wheel_Speed_Front"></TxMessage>
 					</TxMessages>
 				</Interface>
 			</Interfaces>
@@ -82,29 +87,54 @@
 
 	<!-- Signal Definitions -->
 	<Signals>
-		<Signal ID="Power_Electronic_1_Active" Name="Activate Power Elect. 1" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
-		<Signal ID="Power_Electronic_2_Active" Name="Activate Power Elect. 2" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
-		<Signal ID="Power_Electronic_3_Active" Name="Activate Power Elect. 3" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
-		<Signal ID="Power_Electronic_4_Active" Name="Activate Power Elect. 4" Size="1" Type="Integer" Endian="Little" PhysicalUnit=""></Signal>
+		<!-- Power Manager Signals -->
+		<Signal ID="Power_Electronic_1_Active" Name="Activate Power Elect. 1" Size="1" Type="Integer" Endian="Big" PhysicalUnit=""></Signal>
+		<Signal ID="Power_Electronic_2_Active" Name="Activate Power Elect. 2" Size="1" Type="Integer" Endian="Big" PhysicalUnit=""></Signal>
+		<Signal ID="Power_Electronic_3_Active" Name="Activate Power Elect. 3" Size="1" Type="Integer" Endian="Big" PhysicalUnit=""></Signal>
+		<Signal ID="Power_Electronic_4_Active" Name="Activate Power Elect. 4" Size="1" Type="Integer" Endian="Big" PhysicalUnit=""></Signal>
 
 		<Signal ID="Power_Supply_Motor_Voltage" Name="Voltage of Motor Power Supply" Size="16" Type="Integer" Endian="Big" PhysicalUnit="mV"></Signal>
 		<Signal ID="Power_Supply_Motor_Current" Name="Current of Motor Power Supply" Size="16" Type="Integer" Endian="Big" PhysicalUnit="mA"></Signal>
 		<Signal ID="Power_Supply_Electronic_Voltage" Name="Voltage of Electronic Power Supply" Size="16" Type="Integer" Endian="Big" PhysicalUnit="mV"></Signal>
 		<Signal ID="Power_Supply_Electronic_Current" Name="Current of Electronic Power Supply" Size="16" Type="Integer" Endian="Big" PhysicalUnit="mA"></Signal>
 
-		<Signal ID="Engine_Speed_F_L" Name="Engine Speed Front Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
-		<Signal ID="Engine_Speed_F_R" Name="Engine Speed Front Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
-		<Signal ID="Engine_Speed_F_L_Setpoint" Name="Engine Speed Front Left Setpoint" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
-		<Signal ID="Engine_Speed_F_R_Setpoint" Name="Engine Speed Front Right Setpoint" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<!-- Engine Control Signals -->
+		<Signal ID="Engine_Speed_F_L" Name="Engine Speed Front Left" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_F_R" Name="Engine Speed Front Right" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_F_L_Setpoint" Name="Engine Speed Front Left Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_F_R_Setpoint" Name="Engine Speed Front Right Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
 
-		<Signal ID="Engine_Speed_M_L" Name="Engine Speed Mid Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
-		<Signal ID="Engine_Speed_M_R" Name="Engine Speed Mid Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
-		<Signal ID="Engine_Speed_R_L" Name="Engine Speed Rear Left" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
-		<Signal ID="Engine_Speed_R_R" Name="Engine Speed Rear Right" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Wheel_Speed_F_L" Name="Wheel Speed Front Left" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Wheel_Speed_F_R" Name="Wheel Speed Front Right" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Wheel_Speed_F_L_Setpoint" Name="Wheel Speed Front Left Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Wheel_Speed_F_R_Setpoint" Name="Wheel Speed Front Right Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+
+		<Signal ID="Engine_Speed_M_L" Name="Engine Speed Mid Left" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_M_R" Name="Engine Speed Mid Right" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_M_L_Setpoint" Name="Engine Speed Mid Left Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_M_R_Setpoint" Name="Engine Speed Mid Right Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+
+		<Signal ID="Engine_Speed_R_L" Name="Engine Speed Rear Left" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_R_R" Name="Engine Speed Rear Right" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_R_L_Setpoint" Name="Engine Speed Rear Left Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+		<Signal ID="Engine_Speed_R_R_Setpoint" Name="Engine Speed Rear Right Setpoint" Size="16" Type="Integer" Endian="Big" PhysicalUnit="rpm"></Signal>
+
+		<!-- Alive Signals -->
+		<Signal ID="PowerManager_Alive" Name="Power Manager Alive" Size="16" Type="Integer" Endian="Big" PhysicalUnit="digit"></Signal>
+
+		<Signal ID="EngineCtrlFront_Alive" Name="Engine Control Front Axis Alive" Size="16" Type="Integer" Endian="Big" PhysicalUnit="digit"></Signal>
+		<Signal ID="EngineCtrlMid_Alive" Name="Engine Control Mid Axis Alive" Size="16" Type="Integer" Endian="Big" PhysicalUnit="digit"></Signal>
+		<Signal ID="EngineCtrlRear_Alive" Name="Engine Control Rear Alive" Size="16" Type="Integer" Endian="Big" PhysicalUnit="digit"></Signal>
 	</Signals>
 
 	<!-- Message Definitions -->
 	<Messages>
+		<Message ID="PowerManager_Alive" Name="Power Manager Alive" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="PowerManager_Alive" Position="1"></Signal>
+			</Signals>
+		</Message>
+
 		<Message ID="Power_Control" Name="Power Control Bits" NetworkType="CAN" Cycle="250ms">
 			<Signals>
 				<Signal RefID="Power_Electronic_1_Active" Position="1"></Signal>
@@ -128,6 +158,13 @@
 			</Signals>
 		</Message>
 
+		<Message ID="Wheel_Speed_Front" Name="Wheel Speed Front Axis" NetworkType="CAN" Cycle="100ms">
+			<Signals>
+				<Signal RefID="Wheel_Speed_F_L" Position="1"></Signal>
+				<Signal RefID="Wheel_Speed_F_R" Position="2"></Signal>
+			</Signals>
+		</Message>
+
 		<Message ID="Engine_Speed_Front" Name="Engine Speed Front Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
 				<Signal RefID="Engine_Speed_F_L" Position="1"></Signal>
@@ -142,6 +179,13 @@
 			</Signals>
 		</Message>
 
+		<Message ID="Wheel_Speed_Front_Setpoint" Name="Wheel Speed Front Axis Setpoint" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="Wheel_Speed_F_L_Setpoint" Position="1"></Signal>
+				<Signal RefID="Wheel_Speed_F_R_Setpoint" Position="2"></Signal>
+			</Signals>
+		</Message>
+
 		<Message ID="Engine_Speed_Mid" Name="Engine Speed Middle Axis" NetworkType="CAN">
 			<Signals>
 				<Signal RefID="Engine_Speed_M_L" Position="1"></Signal>
@@ -153,6 +197,24 @@
 			<Signals>
 				<Signal RefID="Engine_Speed_R_L" Position="1"></Signal>
 				<Signal RefID="Engine_Speed_R_R" Position="2"></Signal>
+			</Signals>
+		</Message>
+
+		<Message ID="EngineCtrlFront_Alive" Name="Engine Control Alive" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="EngineCtrlFront_Alive" Position="1"></Signal>
+			</Signals>
+		</Message>
+
+		<Message ID="EngineCtrlMid_Alive" Name="Engine Control Alive" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="EngineCtrlMid_Alive" Position="1"></Signal>
+			</Signals>
+		</Message>
+
+		<Message ID="EngineCtrlRear_Alive" Name="Engine Control Alive" NetworkType="CAN">
+			<Signals>
+				<Signal RefID="EngineCtrlRear_Alive" Position="1"></Signal>
 			</Signals>
 		</Message>
 	</Messages>

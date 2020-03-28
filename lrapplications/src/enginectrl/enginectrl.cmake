@@ -6,16 +6,24 @@
 # app_ecu2_hwshell Source and Include Control File
 #
 
+SET(ENGINECTRL_CSRC
+		circular_buffer.c)
+		
 # Set the sources
 SET(ENGINECTRL_CXXSRC
 		FreeRTOS-openocd.cpp 
 		globalobjects.cpp
+		canhandler.cpp
+		cantable.cpp
 		processmodel.cpp
 		parametermodel.cpp
 		hbridge.cpp
 		encoder.cpp
 		measurement.cpp
 		debughelper.cpp
+		fast_pid.cpp
+		hwtest_tasks.cpp
+		main_tasks.cpp
         main.cpp)
 
 SET(ENGINECTRL_GEN_CXXSRC
@@ -23,6 +31,7 @@ SET(ENGINECTRL_GEN_CXXSRC
         
         
 SET(ENGINECTRL_SRC
+	${ENGINECTRL_CSRC}
 	${ENGINECTRL_CXXSRC}
 	${ENGINECTRL_GEN_CXXSRC})
 	
