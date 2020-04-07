@@ -12,6 +12,7 @@
 #include "processmodel.h"
 #include "encoder.h"
 #include "canhandler.h"
+#include "motorcontrol.h"
 
 extern EngineCtrlParameterModel gParameterModel;
 extern EngineCtrlProcessModel gProcessModel;
@@ -21,5 +22,7 @@ extern CANTransmissionTableEntry gCANTransmissionTable[];
 extern int16_t gCANTableEntryCount;
 
 extern CANHandler gCANHandler;
+
+extern MotorControl gMotorControl;
 
 #endif /* LRAPPLICATIONS_SRC_ENGINECTRL_GLOBALOBJECTS_H_ */

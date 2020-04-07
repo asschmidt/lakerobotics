@@ -15,3 +15,5 @@ EngineCtrlProcessModel gProcessModel;
 EncoderModel gEncoderModel;
 
 CANHandler gCANHandler;
+
+MotorControl gMotorControl;

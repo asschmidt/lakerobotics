@@ -91,18 +91,29 @@ void taskMotorControl(void *pvParameters)
     debugPrint("Starting Motor Control\r\n");
 
     bridgeInitialize();
-    EncoderModel* pEncModel = encoderGetModel();
 
     // Configure the PID Controller for the Left Engine
-    FastPID leftPID;
-    leftPID.configure(120.0, 8.0, 0.0, 100, 16, true);
-    leftPID.setOutputRange(-1000, 1000);
+    //FastPID leftPID;
+    //bool configOK = leftPID.configure(180.0, 70.0, 0.0, 100, 16, true);
 
     for (;;)
     {
+#ifndef PID_FIND_PARAMETER
         uint32_t tickCountStart = xTaskGetTickCount();
 
-        uint16_t encValueM1 = 0;
+        motorControlRun(&gMotorControl);
+
+        uint32_t runTime = xTaskGetTickCount() - tickCountStart;
+        if (runTime < CYCLE_TIME_MOTOR_CONTROL_TASK)
+        {
+            vTaskDelay(CYCLE_TIME_MOTOR_CONTROL_TASK - runTime);
+        }
+#else
+        //motorControlFindParameter(&gMotorControl);
+        motorControlGetStepResponse(&gMotorControl);
+#endif
+
+        /*uint16_t encValueM1 = 0;
         uint16_t encValueM2 = 0;
 
         encoderGetCounterValues(pEncModel, &encValueM1, &encValueM2);
@@ -125,12 +136,6 @@ void taskMotorControl(void *pvParameters)
             outputLeft = outputLeft * -1;
         }
 
-        bridgeSetPWMValue(H_BRIDGE_LEFT, outputLeft);
-
-        uint32_t runTime = xTaskGetTickCount() - tickCountStart;
-        if (runTime < CYCLE_TIME_MOTOR_CONTROL_TASK)
-        {
-            vTaskDelay(CYCLE_TIME_MOTOR_CONTROL_TASK - runTime);
-        }
+        bridgeSetPWMValue(H_BRIDGE_LEFT, outputLeft);*/
     }
 }

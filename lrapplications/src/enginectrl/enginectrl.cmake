@@ -20,6 +20,7 @@ SET(ENGINECTRL_CXXSRC
 		hbridge.cpp
 		encoder.cpp
 		measurement.cpp
+		motorcontrol.cpp
 		debughelper.cpp
 		fast_pid.cpp
 		hwtest_tasks.cpp

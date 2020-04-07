@@ -44,6 +44,8 @@ int main(int argc, char* argv[])
 
     canHandlerInitialize(&gCANHandler, &gCANTransmissionTable[0], gCANTableEntryCount, &gProcessModel);
 
+    motorControlInitialize(&gMotorControl);
+
     // Create the tasks
     //xTaskCreate( taskPWMMotorTest, "PWMMotorTest", 1024, NULL, 1, NULL);
     //xTaskCreate( taskEncoderTest, "EncoderTest", 1024, NULL, 1, NULL);

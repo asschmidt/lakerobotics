@@ -90,48 +90,52 @@ canThread = CANInterfaceThread(canInterface, dataConnect)
 #canThread = CANSimulationThread(dataConnect)
 canThread.start()
 
-logFile = open('logrun1.csv', "w")
+logFile = open('logrun_26.csv', "w")
 
 while True:
     try:
-        sendSetSpeed(networkBuilder, canThread, 0)
+        sendSetSpeed(networkBuilder, canThread, 30)
+
+        logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
+        print(logString)
+        logFile.write(logString + "\n")
 
         # Wait 1 Seconds
-        for x in range(0, 100):
-            logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
-            print(logString)
-            logFile.write(logString + "\n")
-            time.sleep(0.01)
+        # for x in range(0, 100):
+        #     logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
+        #     print(logString)
+        #     logFile.write(logString + "\n")
+        #     time.sleep(0.01)
 
-        sendSetSpeed(networkBuilder, canThread, 20)
+        # sendSetSpeed(networkBuilder, canThread, 20)
 
-        # Wait 5 Seconds
-        for x in range(0, 500):
-            logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
-            print(logString)
-            logFile.write(logString + "\n")
-            time.sleep(0.01)
+        # # Wait 5 Seconds
+        # for x in range(0, 500):
+        #     logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
+        #     print(logString)
+        #     logFile.write(logString + "\n")
+        #     time.sleep(0.01)
 
-        sendSetSpeed(networkBuilder, canThread, 50)
+        # sendSetSpeed(networkBuilder, canThread, 50)
 
-        # Wait 5 Seconds
-        for x in range(0, 500):
-            logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
-            print(logString)
-            logFile.write(logString + "\n")
-            time.sleep(0.01)
+        # # Wait 5 Seconds
+        # for x in range(0, 500):
+        #     logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
+        #     print(logString)
+        #     logFile.write(logString + "\n")
+        #     time.sleep(0.01)
 
-        sendSetSpeed(networkBuilder, canThread, 1)
+        # sendSetSpeed(networkBuilder, canThread, 1)
 
-        # Wait 5 Seconds
-        for x in range(0, 500):
-            logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
-            print(logString)
-            logFile.write(logString + "\n")
-            time.sleep(0.01)
+        # # Wait 5 Seconds
+        # for x in range(0, 500):
+        #     logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
+        #     print(logString)
+        #     logFile.write(logString + "\n")
+        #     time.sleep(0.01)
 
-        sendSetSpeed(networkBuilder, canThread, 1)
-        time.sleep(4)
+        # sendSetSpeed(networkBuilder, canThread, 1)
+        time.sleep(0.01)
 
     except KeyboardInterrupt:
         break

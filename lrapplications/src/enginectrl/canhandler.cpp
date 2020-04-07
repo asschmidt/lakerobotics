@@ -117,10 +117,10 @@ int32_t canHandlerProcessReceiveBuffer(CANHandler* pHandler)
         CAN_FRAME canFrame;
         circular_buf_get(gReceiveBufferHandle, &canFrame);
 
-        if (canFrame.rxHeader.DLC > 1)
+        /*if (canFrame.rxHeader.DLC > 1)
         {
             HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-        }
+        }*/
 
         if (canFrame.rxHeader.StdId == CAN_ID_Wheel_Speed_Front_Setpoint)
         {

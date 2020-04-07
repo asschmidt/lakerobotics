@@ -80,8 +80,8 @@ void taskEncoderTest(void *pvParameters)
     {
         debugPrint("Forward Mode for Right Engine\r\n");
 
-        bridgeSetDirection(H_BRIDGE_RIGHT, H_BRIDGE_FORWARD);
-        bridgeSetPWMValue(H_BRIDGE_RIGHT, 250);
+        bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_FORWARD);
+        bridgeSetPWMValue(H_BRIDGE_LEFT, 250);
 
         for (int i=0; i<1500; i++)
         {
@@ -98,24 +98,24 @@ void taskEncoderTest(void *pvParameters)
             EngineCtrlProcessModel* pProcessModel = processModelGetModel();
             processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
 
-            debugPrint("%d, %d,", pProcessModel->enginespeed.engineSpeedRight, pProcessModel->wheelspeed.wheelSpeedRight);
-            debugPrint("%d, %d\r\n", pProcessModel->enginespeed.engineAngleSpeedRight, pProcessModel->enginespeed.engineAccelerationRight);
+            //debugPrint("%d, %d,", pProcessModel->enginespeed.engineSpeedRight, pProcessModel->wheelspeed.wheelSpeedRight);
+            //debugPrint("%d, %d\r\n", pProcessModel->enginespeed.engineAngleSpeedRight, pProcessModel->enginespeed.engineAccelerationRight);
 
-            //debugPrint("vEng: %d - vWheel: %d    ", pProcessModel->engineSpeedLeft, pProcessModel->wheelSpeedLeft);
-            //debugPrint("wEng: %d - aEng: %d\r\n", pProcessModel->engineAngleSpeedLeft / 1000, pProcessModel->engineAccelerationLeft / 1000);
+            debugPrint("vEng: %d - vWheel: %d    ", pProcessModel->enginespeed.engineSpeedLeft, pProcessModel->wheelspeed.wheelSpeedLeft);
+            debugPrint("wEng: %d - aEng: %d\r\n", pProcessModel->enginespeed.engineAngleSpeedLeft, pProcessModel->enginespeed.engineAccelerationLeft);
             //debugPrint("Enc: %d - Diff: %d - Quad: %d\r\n", pEncModel->currentValueM1, encDiffM1, quadrantM1);
 
             vTaskDelay(10);
         }
 
-        bridgeSetDirection(H_BRIDGE_RIGHT, H_BRIDGE_STOP);
-        bridgeSetPWMValue(H_BRIDGE_RIGHT, 0);
+        bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_STOP);
+        bridgeSetPWMValue(H_BRIDGE_LEFT, 0);
         vTaskDelay(1000);
 
         debugPrint("Backward Mode for Right Engine\r\n");
 
-        bridgeSetDirection(H_BRIDGE_RIGHT, H_BRIDGE_BACKWARD);
-        bridgeSetPWMValue(H_BRIDGE_RIGHT, 250);
+        bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_BACKWARD);
+        bridgeSetPWMValue(H_BRIDGE_LEFT, 250);
 
         for (int i=0; i<1500; i++)
         {
