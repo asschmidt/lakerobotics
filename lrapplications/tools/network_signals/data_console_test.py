@@ -90,15 +90,33 @@ canThread = CANInterfaceThread(canInterface, dataConnect)
 #canThread = CANSimulationThread(dataConnect)
 canThread.start()
 
-logFile = open('logrun_26.csv', "w")
+logFile = open('logrun_1.csv', "w")
+
+waitTime = 0.01
+targetSpeed = 30
+rampValue = 10 / (1 / waitTime)
+currentTargetSpeed = 0
 
 while True:
     try:
-        sendSetSpeed(networkBuilder, canThread, 30)
+        currentTargetSpeed = currentTargetSpeed + rampValue
+
+        if (currentTargetSpeed >= 30.0):
+            currentTargetSpeed = 30.0
+            rampValue = rampValue * -1
+        elif (currentTargetSpeed < 0.0):
+            currentTargetSpeed = 0.0
+            rampValue = rampValue * -1
+
+        sendSetSpeed(networkBuilder, canThread, int(currentTargetSpeed))
 
         logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
         print(logString)
         logFile.write(logString + "\n")
+
+        if currentTargetSpeed == 30.0 or currentTargetSpeed == 0.0:
+            time.sleep(2)
+
 
         # Wait 1 Seconds
         # for x in range(0, 100):
@@ -135,7 +153,7 @@ while True:
         #     time.sleep(0.01)
 
         # sendSetSpeed(networkBuilder, canThread, 1)
-        time.sleep(0.01)
+        time.sleep(waitTime)
 
     except KeyboardInterrupt:
         break
