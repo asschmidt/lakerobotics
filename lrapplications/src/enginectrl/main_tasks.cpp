@@ -111,6 +111,8 @@ void taskMotorControl(void *pvParameters)
 #else
         //motorControlFindParameter(&gMotorControl);
         motorControlGetStepResponse(&gMotorControl);
+        //motorControlGetURpmData(&gMotorControl);
+        //motorControlGetURpmData2(&gMotorControl);
 #endif
 
         /*uint16_t encValueM1 = 0;

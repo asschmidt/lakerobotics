@@ -37,5 +37,7 @@ extern int32_t motorControlRun(MotorControl* pControl);
 
 extern int32_t motorControlFindParameter(MotorControl* pControl);
 extern int32_t motorControlGetStepResponse(MotorControl* pControl);
+extern int32_t motorControlGetURpmData(MotorControl* pControl);
+extern int32_t motorControlGetURpmData2(MotorControl* pControl);
 
 #endif /* LRAPPLICATIONS_SRC_ENGINECTRL_MOTORCONTROL_H_ */

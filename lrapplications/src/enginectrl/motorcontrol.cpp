@@ -14,6 +14,7 @@
 #include <freertos/task.h>
 
 #include "fast_pid.h"
+#include "fast_pid2.h"
 
 #include "errorcodes.h"
 #include "parametermodel.h"
@@ -28,19 +29,17 @@
 
 #include "motorcontrol.h"
 
-static FastPID gLeftPID;
+static FastPID2 gLeftPID;
 static FastPID gRightPID;
 
-static void motorControlRunLeftEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel);
-static void motorControlRunRightEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel);
+static int16_t motorControlRunLeftEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel);
+static int16_t motorControlRunRightEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel);
 
 int32_t motorControlInitialize(MotorControl* pControl)
 {
-    pControl->kpLeftEngine = 0.2338 * 100;
-    pControl->kiLeftEngine = 2.7450 * 30;
-    //pControl->kpLeftEngine = 230;
-    //pControl->kiLeftEngine = 50;
-    pControl->kdLeftEngine = 0.0;
+    pControl->kpLeftEngine = 0.050000 * 200;
+    pControl->kiLeftEngine = 0.005555 * 50;
+    pControl->kdLeftEngine = 1.0;
 
     pControl->kpRightEngine = 0.0;
     pControl->kiRightEngine = 0.0;
@@ -74,6 +73,8 @@ int32_t motorControlInitialize(MotorControl* pControl)
 
 int32_t motorControlRun(MotorControl* pControl)
 {
+    uint32_t tickCount = xTaskGetTickCount();
+
     uint16_t encValueM1 = 0;
     uint16_t encValueM2 = 0;
 
@@ -87,8 +88,10 @@ int32_t motorControlRun(MotorControl* pControl)
     EngineCtrlProcessModel* pProcessModel = processModelGetModel();
     processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
 
-    motorControlRunLeftEngine(pControl, pProcessModel);
-    motorControlRunRightEngine(pControl, pProcessModel);
+    int16_t pwmLeft = motorControlRunLeftEngine(pControl, pProcessModel);
+    int16_t pwmRight = motorControlRunRightEngine(pControl, pProcessModel);
+
+    debugPrint("%d, %d, %d, %d, %d, %d\r\n", tickCount, pProcessModel->wheelspeed.wheelSetpointSpeedLeft, pwmLeft, encDiffM1, pProcessModel->wheelspeed.wheelSpeedLeft, pProcessModel->enginespeed.engineSpeedLeft);
 
     return ERR_OK;
 }
@@ -168,7 +171,7 @@ int32_t motorControlGetStepResponse(MotorControl* pControl)
 {
     EngineCtrlProcessModel* pProcessModel = processModelGetModel();
     EncoderModel* pEncModel = encoderGetModel();
-    paramModelGetModel()->sampleTime = 1;
+    paramModelGetModel()->sampleTime = 3;
 
     // Stop the motor and wait two seconds
     bridgeSetPWMValue(H_BRIDGE_LEFT, 0);
@@ -198,9 +201,109 @@ int32_t motorControlGetStepResponse(MotorControl* pControl)
 
         processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
 
-        debugPrint("%d, %d, %d\r\n", tickCount, pProcessModel->wheelspeed.wheelSpeedLeft, pProcessModel->enginespeed.engineSpeedLeft);
+        debugPrint("%d, %d, %d, %d\r\n", tickCount, encDiffM1, pProcessModel->wheelspeed.wheelSpeedLeft, pProcessModel->enginespeed.engineSpeedLeft);
 
-        //vTaskDelay(1);
+        uint32_t deltaTick = xTaskGetTickCount() - tickCount;
+        if ( deltaTick < 3)
+            vTaskDelay(3 - deltaTick);
+    }
+}
+
+/**
+ *
+ * @param pControl
+ * @return
+ */
+int32_t motorControlGetURpmData(MotorControl* pControl)
+{
+    EngineCtrlProcessModel* pProcessModel = processModelGetModel();
+    EncoderModel* pEncModel = encoderGetModel();
+    paramModelGetModel()->sampleTime = 100;
+
+    // Stop the motor and wait two seconds
+    bridgeSetPWMValue(H_BRIDGE_LEFT, 0);
+    bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_STOP);
+
+    processModelSetSpeedValues(pProcessModel, 0, 0);
+
+    vTaskDelay(2000);
+
+    bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_FORWARD);
+
+    uint16_t pwmValue = 50;
+
+    while(1)
+    {
+        bridgeSetPWMValue(H_BRIDGE_LEFT, pwmValue);
+
+        for (int i=0; i<50; i++)
+        {
+            uint32_t tickCount = xTaskGetTickCount();
+
+            uint16_t encValueM1 = 0;
+            uint16_t encValueM2 = 0;
+
+            encoderGetCounterValues(pEncModel, &encValueM1, &encValueM2);
+
+            int16_t encDiffM1 = 0;
+            int16_t encDiffM2 = 0;
+            encoderCalculateDiff(pEncModel, &encDiffM1, &encDiffM2);
+
+            processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
+
+            debugPrint("%d, %d, %d, %d\r\n", tickCount, pwmValue, pProcessModel->wheelspeed.wheelSpeedLeft, pProcessModel->enginespeed.engineSpeedLeft);
+
+            uint32_t deltaTick = xTaskGetTickCount() - tickCount;
+            if ( deltaTick < 100)
+                vTaskDelay(100 - deltaTick);
+        }
+
+        pwmValue += 50;
+    }
+}
+
+/**
+ *
+ * @param pControl
+ * @return
+ */
+int32_t motorControlGetURpmData2(MotorControl* pControl)
+{
+    EngineCtrlProcessModel* pProcessModel = processModelGetModel();
+    EncoderModel* pEncModel = encoderGetModel();
+    paramModelGetModel()->sampleTime = 100;
+
+    // Stop the motor and wait two seconds
+    bridgeSetPWMValue(H_BRIDGE_LEFT, 0);
+    bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_STOP);
+
+    processModelSetSpeedValues(pProcessModel, 0, 0);
+
+    vTaskDelay(2000);
+
+    bridgeSetDirection(H_BRIDGE_LEFT, H_BRIDGE_FORWARD);
+    bridgeSetPWMValue(H_BRIDGE_LEFT, 1000);
+
+    while(1)
+    {
+        uint32_t tickCount = xTaskGetTickCount();
+
+        uint16_t encValueM1 = 0;
+        uint16_t encValueM2 = 0;
+
+        encoderGetCounterValues(pEncModel, &encValueM1, &encValueM2);
+
+        int16_t encDiffM1 = 0;
+        int16_t encDiffM2 = 0;
+        encoderCalculateDiff(pEncModel, &encDiffM1, &encDiffM2);
+
+        processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
+
+        debugPrint("%d, %d, %d, %d\r\n", tickCount, encDiffM1, pProcessModel->wheelspeed.wheelSpeedLeft, pProcessModel->enginespeed.engineSpeedLeft);
+
+        uint32_t deltaTick = xTaskGetTickCount() - tickCount;
+        if ( deltaTick < 100)
+            vTaskDelay(100 - deltaTick);
     }
 }
 
@@ -208,7 +311,7 @@ int32_t motorControlGetStepResponse(MotorControl* pControl)
  *
  * @param pProcessModel
  */
-void motorControlRunLeftEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel)
+int16_t motorControlRunLeftEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel)
 {
     int16_t outputLeft = gLeftPID.step(pProcessModel->wheelspeed.wheelSetpointSpeedLeft, pProcessModel->wheelspeed.wheelSpeedLeft);
 
@@ -223,13 +326,15 @@ void motorControlRunLeftEngine(MotorControl* pControl, EngineCtrlProcessModel* p
     }
 
     bridgeSetPWMValue(H_BRIDGE_LEFT, outputLeft);
+
+    return outputLeft;
 }
 
 /**
  *
  * @param pProcessModel
  */
-void motorControlRunRightEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel)
+int16_t motorControlRunRightEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel)
 {
     int16_t outputRight = gRightPID.step(pProcessModel->wheelspeed.wheelSetpointSpeedRight, pProcessModel->wheelspeed.wheelSpeedRight);
 
@@ -244,4 +349,6 @@ void motorControlRunRightEngine(MotorControl* pControl, EngineCtrlProcessModel* 
     }
 
     bridgeSetPWMValue(H_BRIDGE_RIGHT, outputRight);
+
+    return outputRight;
 }

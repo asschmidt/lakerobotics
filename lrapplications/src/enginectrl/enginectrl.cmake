@@ -23,6 +23,7 @@ SET(ENGINECTRL_CXXSRC
 		motorcontrol.cpp
 		debughelper.cpp
 		fast_pid.cpp
+		fast_pid2.cpp
 		hwtest_tasks.cpp
 		main_tasks.cpp
         main.cpp)
