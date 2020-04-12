@@ -5,9 +5,9 @@ Frame for the monitoring of the CAN Signals for the Power Manager ECU
 '''
 import wx
 
-from ui.ecu.enginectrl.enginectrl_front_monitor_panel import *
+from ui.ecu.enginectrl.enginectrl_monitor_panel import *
 
-class EngCtrlFrontMonitorFrame(wx.Frame):
+class EngCtrlMonitorFrame(wx.Frame):
     '''
     Frame for the Engine Control Front ECU monitoring
     '''
@@ -19,4 +19,4 @@ class EngCtrlFrontMonitorFrame(wx.Frame):
         super().__init__(parent, title='Engine Control Front ECU Monitor', size=(500, 200))
 
         # Create the PowerManagerPanel
-        self._mainPanel = EngCtrlFrontMonitorPanel(self)
+        self._mainPanel = EngCtrlMonitorPanel(self)

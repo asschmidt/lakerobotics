@@ -11,7 +11,7 @@ from network.can.can_global import *
 from ui.dialogs.hw_interface_dlg import *
 from ui.ecu.pwrmanager.pwrmanager_monitor_frame import *
 from ui.ecu.pwrmanager.pwrmanager_control_frame import *
-from ui.ecu.enginectrl.enginectrl_front_monitor_frame import *
+from ui.ecu.enginectrl.enginectrl_monitor_frame import *
 
 class MainFrame(wx.Frame):
     '''
@@ -98,32 +98,14 @@ class MainFrame(wx.Frame):
         Creates the sub-menu for the "Engine Control ECUs" and adds it as sub-menu to the
         provided parent menu.
         '''
-        frontEngineECU = wx.Menu()
-        self._frontEngineECUMonitorMenuItem = frontEngineECU.Append(wx.ID_ANY, 'Monitor Front Axle Engine ECU', '')
-        self._frontEngineECUMControlMenuItem = frontEngineECU.Append(wx.ID_ANY, 'Control Front Axle Engine ECU', '')
+        engineECU = wx.Menu()
+        self._engineECUMonitorMenuItem = engineECU.Append(wx.ID_ANY, 'Monitor Engine ECU', '')
+        self._engineECUMControlMenuItem = engineECU.Append(wx.ID_ANY, 'Control Engine ECU', '')
 
-        self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineFrontECUMonitor, source=self._frontEngineECUMonitorMenuItem)
+        self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUMonitor, source=self._engineECUMonitorMenuItem)
         #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineFrontECUMonitor, source=self._frontEngineECUMControlMenuItem)
 
-        parentMenu.Append(wx.ID_ANY, 'Front Axle Engine ECU', frontEngineECU)
-
-        middleEngineECU = wx.Menu()
-        self._middleEngineECUMonitorMenuItem = middleEngineECU.Append(wx.ID_ANY, 'Monitor Middle Axle Engine ECU', '')
-        self._middleEngineECUMControlMenuItem = middleEngineECU.Append(wx.ID_ANY, 'Control Middle Axle Engine ECU', '')
-
-        #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUMonitor, source=self._middleEngineECUMonitorMenuItem)
-        #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUControl, source=self._middleEngineECUMControlMenuItem)
-
-        parentMenu.Append(wx.ID_ANY, 'Middle Axle Engine ECU', middleEngineECU)
-
-        rearEngineECU = wx.Menu()
-        self._rearEngineECUMonitorMenuItem = rearEngineECU.Append(wx.ID_ANY, 'Monitor Rear Axle Engine ECU', '')
-        self._rearEngineECUMControlMenuItem = rearEngineECU.Append(wx.ID_ANY, 'Control Rear Axle Engine ECU', '')
-
-        #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUMonitor, source=self._rearEngineECUMonitorMenuItem)
-        #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUControl, source=self._rearEngineECUMControlMenuItem)
-
-        parentMenu.Append(wx.ID_ANY, 'Rear Axle Engine ECU', rearEngineECU)
+        parentMenu.Append(wx.ID_ANY, 'Engine ECU', engineECU)
 
     def _createStatusBar(self):
         '''
@@ -167,12 +149,12 @@ class MainFrame(wx.Frame):
         pwrManagerMonitorFrame = PowerManagerMonitorFrame(self)
         pwrManagerMonitorFrame.Show()
 
-    def _onOpenEngineFrontECUMonitor(self, event):
+    def _onOpenEngineECUMonitor(self, event):
         '''
         Event Handler to open the "Engine Control Front Monitor" UI Panel
         '''
-        engCtrlFrontMonitorFrame = EngCtrlFrontMonitorFrame(self)
-        engCtrlFrontMonitorFrame.Show()
+        engCtrlMonitorFrame = EngCtrlMonitorFrame(self)
+        engCtrlMonitorFrame.Show()
 
     def _onOpenPwrManagerControl(self, event):
         '''

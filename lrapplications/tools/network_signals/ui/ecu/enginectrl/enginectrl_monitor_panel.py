@@ -15,7 +15,7 @@ from ui.panels.base_monitor_panel import *
 
 from network.can.can_global import *
 
-class EngCtrlFrontMonitorPanel(BaseMonitorPanel):
+class EngCtrlMonitorPanel(BaseMonitorPanel):
     '''
     Panel to show the CAN values of the Engine Control Front ECU
     '''
