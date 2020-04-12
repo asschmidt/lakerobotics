@@ -27,19 +27,19 @@
             "name": "Python: CAN Master UI",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/lrapplications/tools/network_signals/canmaster/canmaster.py",
-            "cwd": "${workspaceRoot}/lrapplications/tools/network_signals/canmaster/",
+            "program": "${workspaceRoot}/lrapplications/tools/network_signals/canmaster_ui.py",
+            "cwd": "${workspaceRoot}/lrapplications/tools/network_signals/",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceRoot}/lrapplications/tools/network_signals;${workspaceRoot}/lrapplications/tools/cantools"
             }
         },
         {
-            "name": "Python: CAN Generate Network",
+            "name": "Python: CAN Generate Code",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/lrapplications/tools/network_signals/codegen/generate_network.py",
-            "cwd": "${workspaceRoot}/lrapplications/tools/network_signals/codegen/",
+            "program": "${workspaceRoot}/lrapplications/tools/network_signals/canmaster_generate_code_cli.py",
+            "cwd": "${workspaceRoot}/lrapplications/tools/network_signals/",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceRoot}/lrapplications/tools/network_signals;${workspaceRoot}/lrapplications/tools/cantools"

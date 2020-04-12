@@ -4,8 +4,8 @@ Created on 16.05.2019
 @author: Andreas
 '''
 
-from model.messages import *
-from model.signals import *
+from model.static.messages import *
+from model.static.signals import *
 
 from codegen.base_generator import *
 
@@ -51,8 +51,8 @@ class CANMessageGenerator(BaseMessageGenerator):
                 templateCtx['interfaceName'] = interface.ID
                 templateCtx['interfaceController'] = interface.NetworkController
 
-                outputHeaderFile = open("output\\" + node.ID + "_CAN_" + interface.NetworkController + ".h", "w")
-                outputCodeFile = open("output\\" + node.ID + "_CAN_" + interface.NetworkController + ".cpp", "w")
+                outputHeaderFile = open("_output\\" + node.ID + "_CAN_" + interface.NetworkController + ".h", "w")
+                outputCodeFile = open("_output\\" + node.ID + "_CAN_" + interface.NetworkController + ".cpp", "w")
 
                 try:
                     headerTemplate = self._templates[interface.NetworkController].HeaderTemplate
