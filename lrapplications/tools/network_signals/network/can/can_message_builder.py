@@ -13,7 +13,7 @@ from model.static.network_builder import *
 from model.dynamic.dynamic_datamodel import *
 from model.dynamic.model_subscriber import *
 
-from network.can.can_datamodel import *
+from network.can.can_data_extract import *
 
 from pyusbtin.usbtin import CANMessage
 

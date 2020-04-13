@@ -2,12 +2,14 @@ from model.static.messages import *
 from model.static.signals import *
 
 class CANDataExtractFunctions:
-    '''
-    Extracts the data in form of an byte array out of the rawData parameter. The rawData parameter is assumed to
-    be the payload of a CAN message which is between 1 and 8 Byte at maximum
-    '''
+
     @staticmethod
     def extractDataBytes(dataDefRef, rawData):
+        '''
+        Extracts the data in form of an byte array out of the rawData parameter. The rawData parameter is assumed to
+        be the payload of a CAN message which is between 1 and 8 Byte at maximum
+        '''
+
         # Get the signal reference object inside the CAN message and get the signal position
         signalRef = dataDefRef.getMessage().findSignalReferenceByID(dataDefRef.getSignal().ID)
         # Adapt the position to a zero based index for the Signals array
@@ -26,16 +28,24 @@ class CANDataExtractFunctions:
 
     @staticmethod
     def _getSignedNumber(number, bitLength):
+        '''
+        Private function to get a signed integer from the supplied number parameter which
+        should have a length of "bitLength" bits
+        '''
         mask = (2 ** bitLength) - 1
         if number & (1 << (bitLength - 1)):
             return number | ~mask
         else:
             return number & mask
 
-    '''
-    '''
     @staticmethod
     def extractInteger(dataDefRef, rawData):
+        '''
+        Extracts a singed integer out of the rawData parameter. The rawData parameter
+        must be a byte array of the CAN-Message paylod. The extraction is based on the
+        definition of the CAN Message and the correspinding signals which is provided via
+        the dataDefRef parameter. Endianess is considered
+        '''
         intValue = None
 
         # Get the data bytes as an array
@@ -68,7 +78,7 @@ class CANDataExtractFunctions:
                 for bytePos in range(startByte, endByte):
                     shiftCount = (numberOfBytes - 1) - bytePos
                     intValue = intValue + (dataBytes[bytePos] << (shiftCount * 8))
-                
+
                 intValue = CANDataExtractFunctions._getSignedNumber(intValue, 16)
             else:
                 intValue = None

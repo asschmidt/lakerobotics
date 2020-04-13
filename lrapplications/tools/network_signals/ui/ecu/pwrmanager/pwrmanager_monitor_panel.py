@@ -6,7 +6,7 @@ Panel to show the data and interact with the PowerManager ECU
 
 import wx
 
-from network.can.can_datamodel import *
+from network.can.can_data_extract import *
 from network.can.can_data_connector import *
 from network.can.can_data_subscriber import *
 

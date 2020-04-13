@@ -5,7 +5,7 @@ from model.static.messages import *
 from model.static.signals import *
 from model.additional_model_data import *
 
-from network.can.can_datamodel import *
+from network.can.can_data_extract import *
 
 
 class CANDataConnector:
