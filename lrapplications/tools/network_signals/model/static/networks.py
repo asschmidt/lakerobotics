@@ -1,9 +1,9 @@
 
 
-'''
-Definition for different network types
-'''
 class NetworkDataType:
+    '''
+    Definition for different network types
+    '''
     UNKNOWN     = 0
     CAN         = 1
     ETHERNET    = 2
@@ -12,11 +12,11 @@ class NetworkDataType:
     RF433       = 6
     SERIAL      = 7
 
-    '''
-    Parse the attribute value string and returns the corresponding networkdatatype
-    '''
     @classmethod
     def parseNetworkType(self, netTypeAttribValue):
+        '''
+        Parse the attribute value string and returns the corresponding networkdatatype
+        '''
         if netTypeAttribValue.upper() == "CAN":
             return NetworkDataType.CAN
         elif netTypeAttribValue.upper() == "ETHERNET":
@@ -32,11 +32,11 @@ class NetworkDataType:
         else:
             return NetworkDataType.UNKNOWN
 
-'''
-Definitions for network bandwiths
-Specified in kbps
-'''
 class NetworkDataBandwith:
+    '''
+    Definitions for network bandwiths
+    Specified in kbps
+    '''
     SPEED_UNKNOWN   = 0
     SPEED_100kbps   = 100
     SPEED_250kbps   = 250
@@ -44,11 +44,11 @@ class NetworkDataBandwith:
     SPEED_10Mbps    = 10000
     SPEED_100Mbps   = 100000
 
-    '''
-    Parse the bandwith attribute string and returns a corresponding networkbandwith
-    '''
     @classmethod
     def parseNetworkBandwidth(self, netBandwidthAttribValue):
+        '''
+        Parse the bandwith attribute string and returns a corresponding networkbandwith
+        '''
         if netBandwidthAttribValue == None:
             return NetworkDataBandwith.SPEED_UNKNOWN
 
@@ -65,32 +65,44 @@ class NetworkDataBandwith:
         else:
             return NetworkDataBandwith.SPEED_UNKNOWN
 
-'''
-Class to hold the definition of a "Network"
-'''
 class NetworkData:
+    '''
+    Class to hold the definition of a "Network"
+    '''
+
     def __init__(self):
+        '''
+        Initializes the network data object with default values
+        '''
         self.ID = "ID"
         self.Name = "No Network Name"
         self.Type = NetworkDataType.UNKNOWN
         self.Bandwith = NetworkDataBandwith.SPEED_UNKNOWN
 
     def __repr__(self):
+        '''
+        Returns the string representation of the NetworkData object
+        '''
         return "Network: " + self.Name + " Type: " + str(self.Type) + " (" + str(self.Bandwith) + ")"
 
-'''
-Class to parse the XML data of the network definitions and create a internal representation
-of the network data.
-'''
 class NetworkDataParser:
+    '''
+    Class to parse the XML data of the network definitions and create a internal representation
+    of the network data.
+    '''
+
     def __init__(self, networkRoot):
+        '''
+        Initializes the network data parser with the provided networkRoot. The networkRoot is the
+        lxml Element for <Networks>
+        '''
         self._networkRoot = networkRoot
 
-    '''
-    Parses the <Network> elements under the <Networks> root and returns a dictionary with all
-    Network objects
-    '''
     def parse(self):
+        '''
+        Parses the <Network> elements under the <Networks> root and returns a dictionary with all
+        Network objects
+        '''
         networkDict = {}
 
         # Iterate over all <Network> elements from the <Networks> root element

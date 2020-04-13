@@ -33,6 +33,8 @@ class MessageData:
 
     def getGeneratorData(self, dataKey):
         '''
+        Returns the generator data with the provided dataKey. If the key was not
+        found, None is returned
         '''
         genData = None
 
@@ -45,6 +47,8 @@ class MessageData:
 
     def findSignalReferenceByID(self, signalID):
         '''
+        Returns a signal reference object with the provided signal ID. If no 
+        signal reference was found, None is returned
         '''
         for signalRef in self.Signals:
             if signalRef.Signal.ID == signalID:
@@ -59,7 +63,8 @@ class MessageDataParser:
     '''
 
     def __init__(self, networkDict, signalDict, messagesRoot):
-        ''''
+        '''
+        Initializes the Message Data Parser objecte
         '''
         self._networkDict = networkDict
         self._signalDict = signalDict

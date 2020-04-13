@@ -1,18 +1,18 @@
 
-'''
-Defines the data types of a signal
-'''
 class SignalType:
+    '''
+    Defines the data types of a signal
+    '''
     SIGNAL_UNKNOWN  = 0 # Unknown signal data type
     SIGNAL_BOOL     = 1 # Boolean data type - True/False
     SIGNAL_INT      = 2 # Integer data type
     SIGNAL_FLOAT    = 3 # Floating data type
 
-    '''
-    Parses the signal type attribute string and returns a corresponding signal type
-    '''
     @classmethod
     def parseSignalType(self, signalTypeAttribValue):
+        '''
+        Parses the signal type attribute string and returns a corresponding signal type
+        '''
         if signalTypeAttribValue.upper() == "BOOL":
             return SignalType.SIGNAL_BOOL
         elif signalTypeAttribValue.upper() == "INTEGER":
@@ -22,19 +22,19 @@ class SignalType:
         else:
             return SignalType.SIGNAL_UNKNOWN
 
-'''
-Defines the endianess of a signal
-'''
 class SignalEndianess:
+    '''
+    Defines the endianess of a signal
+    '''
     ENDIAN_UNKNOWN  = 0 # Unknown endianess
     ENDIAN_LITTLE   = 1 # Little Endian LSB first
     ENDIAN_BIG      = 2 # Big Endian MSB first
 
-    '''
-    Parses the signal endianess attribute string and returns a corresponding signal endianess
-    '''
     @classmethod
     def parseSignalEndianess(self, signalEndianessAttribValue):
+        '''
+        Parses the signal endianess attribute string and returns a corresponding signal endianess
+        '''
         if signalEndianessAttribValue.upper() == "LITTLE":
             return SignalEndianess.ENDIAN_LITTLE
         elif signalEndianessAttribValue.upper() == "BIG":
@@ -42,11 +42,15 @@ class SignalEndianess:
         else:
             return SignalEndianess.ENDIAN_UNKNOWN
 
-'''
-Class representing a signal
-'''
 class SignalData:
+    '''
+    Class representing a signal
+    '''
+
     def __init__(self):
+        '''
+        Initializes the signal data object with default values
+        '''
         self.ID = "Undefined"
         self.Name = "Unknown"
         self.Size = 0
@@ -55,22 +59,27 @@ class SignalData:
         self.PhysicalUnit = "Unknown"
 
     def __repr__(self):
+        '''
+        Returns the string representation of the signal data object
+        '''
         return "Signal: " + self.ID
 
-'''
-Class for parsing the <Signal> elements under the root of the <Signals>
-'''
 class SignalDataParser:
     '''
+    Class for parsing the <Signal> elements under the root of the <Signals>
     '''
+
     def __init__(self, signalsRoot):
+        '''
+        Initializes the signal data parser with the provided signals root element
+        '''
         self._signalsRoot = signalsRoot
 
-    '''
-    Parse the <Signal> elements under the root of <Signals> and returns a dictionary with
-    all Signal objects
-    '''
     def parse(self):
+        '''
+        Parse the <Signal> elements under the root of <Signals> and returns a dictionary with
+        all Signal objects
+        '''
         signalDict = {}
 
         # Iterate over all <Signal> elemens under the root <Signals>

@@ -1,12 +1,17 @@
 
-from model.static.networks import *
+from model.static.networks import NetworkDataBandwith, NetworkDataType
 
-'''
-Represents the network interface of a node. Including also dictionaries with all RX and TX
-messages related to this node respectivly interface
-'''
+
 class NodeInterfaceData:
+    '''
+    Represents the network interface of a node. Including also dictionaries with all RX and TX
+    messages related to this node respectivly interface
+    '''
+
     def __init__(self):
+        '''
+        Initializes the NodeInterface data object with default values
+        '''
         self.ID = "Unknown"                                 # Unique ID of the Node interface
         self.Name = "Unknown"
         self.NetworkID = "Unkown"                           # Used as a "node id" inside a specific network
@@ -18,28 +23,31 @@ class NodeInterfaceData:
         self.RxMessages = {}
         self.TxMessages = {}
 
-'''
-Represents a RX or TX message of the interface. Just a container class for the MessageData object
-'''
 class NodeInterfaceMessage:
+    '''
+    Represents a RX or TX message of the interface. Just a container class for the MessageData object
+    '''
     def __init__(self):
+        '''
+        Initializes the NodeInterface Message object with default values
+        '''
         self.Message = None
         self.Node = None
 
-'''
-Represents a Node in the network including a dictionary of all network interfaces of this node
-'''
 class NodeData:
+    '''
+    Represents a Node in the network including a dictionary of all network interfaces of this node
+    '''
     def __init__(self):
+        '''
+        Initializes the node data object with default values
+        '''
         self.ID = "Unknown"
         self.Name = "Unknown"
         self.Interfaces = {}
 
         self.GeneratorData = {}
 
-'''
-Class to parse all <Node> elements under <Nodes> root element
-'''
 class NodeDataParser:
     '''
     The NodeDataParser needs a dictionary with the Network objects and also a dictionary of the Messages
@@ -50,15 +58,20 @@ class NodeDataParser:
     The message dictionary is used to get object references to the TX-Messages and RX-Messages of a specific
     network interface inside a node
     '''
+
     def __init__(self, networkDict, messageDict, nodeRoot):
+        '''
+        Initializes the node data parser with the provided network and message dictionary
+        and also with the root element of the Nodes
+        '''
         self._networkDict = networkDict
         self._messageDict = messageDict
         self._nodeRoot = nodeRoot
 
-    '''
-    Parses all <Node> elements under <Nodes> root element and returns a dictionary of all nodes
-    '''
     def parse(self):
+        '''
+        Parses all <Node> elements under <Nodes> root element and returns a dictionary of all nodes
+        '''
         nodeDict = {}
 
         # Iterate over the <Node> elements under <Nodes> root
