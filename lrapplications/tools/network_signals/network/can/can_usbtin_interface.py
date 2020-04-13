@@ -9,8 +9,8 @@ import queue
 from pyusbtin.usbtin import CANMessage, USBtin
 
 from util.logger import LoggerEntryType
-from util.logger_global import *
-from network.can.can_interface import *
+from util.logger_global import defaultLog
+from network.can.can_interface import CANInterface
 
 '''
 '''

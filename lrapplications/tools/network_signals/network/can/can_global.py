@@ -6,23 +6,23 @@ import threading
 import time
 import queue
 
-from model.static.networks import *
-from model.static.signals import *
-from model.static.messages import *
-from model.static.nodes import *
-from model.static.network_builder import *
-from model.static.can.can_message_preprocessor import *
+from model.static.networks import NetworkDataParser
+from model.static.signals import SignalDataParser
+from model.static.messages import MessageDataParser
+from model.static.nodes import NodeDataParser
+from model.static.network_builder import NetworkBuilder
+from model.static.can.can_message_preprocessor import CANMessagePreprocessor
 
-from model.dynamic.dynamic_datamodel import *
-from model.dynamic.model_subscriber import *
+from model.dynamic.dynamic_datamodel import DataModelEntry, DynamicDataModel
+from model.dynamic.model_subscriber import Subscriber
 
-from network.can.can_data_definition import *
-from network.can.can_data_extract import *
-from network.can.can_data_connector import *
-from network.can.can_data_subscriber import *
-from network.can.can_thread import *
-from network.can.can_usbtin_interface import *
-from network.can.can_virtual_interface import *
+from network.can.can_data_definition import CANDataDefinition
+from network.can.can_data_extract import CANDataExtractFunctions
+from network.can.can_data_connector import CANDataConnector
+from network.can.can_data_subscriber import CANDataUISubscriber
+from network.can.can_thread import CANInterfaceThread
+from network.can.can_usbtin_interface import CANUSBtinInterface
+from network.can.can_virtual_interface import CANVirtualInterface
 
 class CANGlobal:
     '''

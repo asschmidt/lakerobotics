@@ -1,6 +1,4 @@
 
-
-
 class CANDataDefinition:
     '''
     Class which represents a combination of a CAN Message and the signal in that message

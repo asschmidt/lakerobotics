@@ -1,11 +1,8 @@
 from struct import pack, unpack
 from pyusbtin import CANMessage
 
-from model.static.messages import *
-from model.static.signals import *
-from model.additional_model_data import *
 
-from network.can.can_data_extract import *
+from model.additional_model_data import MessageGeneratorData
 
 
 class CANDataConnector:
@@ -15,7 +12,6 @@ class CANDataConnector:
     is decoded and added to the dynamic data model. For this, the CAN-ID is used as
     search key to find the definition of the CAN Message structure
     '''
-
 
     def __init__(self, dynamicDataModel):
         '''

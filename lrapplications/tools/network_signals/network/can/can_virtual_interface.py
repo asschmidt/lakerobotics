@@ -16,8 +16,6 @@ from util.logger_global import defaultLog
 
 from network.can.can_interface import CANInterface
 
-'''
-'''
 class CANVirtualInterface(CANInterface):
     '''
     Represents a virtual CAN interface used for simulation purposes without a real

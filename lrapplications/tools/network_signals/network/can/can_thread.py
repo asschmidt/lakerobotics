@@ -10,9 +10,6 @@ import queue
 
 from pyusbtin.usbtin import CANMessage, USBtin
 
-from network.can.can_interface import *
-from network.can.can_usbtin_interface import *
-
 class CANInterfaceThread(threading.Thread):
     '''
     Thread to handle CAN frame transmission and receiption via a provided CAN Interface object.

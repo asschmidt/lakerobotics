@@ -1,5 +1,4 @@
-from model.static.messages import *
-from model.static.signals import *
+from model.static.signals import SignalEndianess
 
 class CANDataExtractFunctions:
 
