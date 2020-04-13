@@ -12,3 +12,9 @@ class MessageGeneratorData:
     CAN_ID      = "CAN_ID"
     CAN_ID_HEX  = "CAN_ID_HEX"
     CAN_DLC     = "CAN_DLC"
+
+class ParameterGeneratorData:
+    '''
+    Class which provides constants for the Generator for Parameter
+    '''
+    PARAM_ID    = 'PARAM_ID'

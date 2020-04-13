@@ -1,3 +1,4 @@
+from util.logger_global import defaultLog
 
 from model.static.networks import NetworkDataBandwith, NetworkDataType
 
@@ -34,6 +35,48 @@ class NodeInterfaceMessage:
         self.Message = None
         self.Node = None
 
+class ParameterType:
+    '''
+    Defines constants for different parameter types
+    '''
+    PARAM_UNKNOWN       = 0
+    PARAM_BOOL          = 1
+    PARAM_INT           = 2
+    PARAM_FLOAT         = 3
+
+    @classmethod
+    def parseSignalType(self, paramTypeAttribValue):
+        '''
+        Parses the parameter type attribute string and returns a corresponding parameter type
+        '''
+        if paramTypeAttribValue.upper() == "BOOL":
+            return ParameterType.PARAM_BOOL
+        elif paramTypeAttribValue.upper() == "INTEGER":
+            return ParameterType.PARAM_INT
+        elif paramTypeAttribValue.upper() == "FLOAT":
+            return ParameterType.PARAM_FLOAT
+        else:
+            return ParameterType.PARAM_UNKNOWN
+
+class NodeParameterData:
+    '''
+    Represents a Parameter for a node
+    '''
+
+    def __init__(self):
+        '''
+        Initializes the node parameter object with default values
+        '''
+        self.ID = "Unkown"
+        self.Name = "Unknown"
+        self.Type = ParameterType.PARAM_UNKNOWN
+        self.MinValue = 0
+        self.MaxValue = 0
+        self.DefaultValue = 0
+
+        self.Node = None
+        self.GeneratorData = {}
+
 class NodeData:
     '''
     Represents a Node in the network including a dictionary of all network interfaces of this node
@@ -45,6 +88,7 @@ class NodeData:
         self.ID = "Unknown"
         self.Name = "Unknown"
         self.Interfaces = {}
+        self.Parameters = {}
 
         self.GeneratorData = {}
 
@@ -169,6 +213,39 @@ class NodeDataParser:
                     # Add the interface to the dictionary of the node interfaces
                     # Finished <Interface> element
                     nodeData.Interfaces[nodeInterface.ID] = nodeInterface
+
+            # Find the <Parameters> element inside the actual Node element
+            parametersRoot = nodeElement.find("Parameters")
+
+            if parametersRoot is None:
+                parametersRoot = []
+
+            # Iterate over the parameters of the node
+            for parameterChild in parametersRoot:
+                # Check if the parameter child element is a <Parameter> element
+                if parameterChild.tag == "Parameter":
+                    parameterData = NodeParameterData()
+
+                    # Get the Interface ID, Name and Network Controller
+                    parameterData.ID = parameterChild.get("ID")
+                    parameterData.Name = parameterChild.get("Name")
+
+                    try:
+                        minValue = parameterChild.get("MinValue")
+                        maxValue = parameterChild.get("MaxValue")
+                        defaultValue = parameterChild.get("DefaultValue")
+
+                        parameterData.MinValue = int(minValue)
+                        parameterData.MaxValue = int(maxValue)
+                        parameterData.DefaultValue = int(defaultValue)
+                    except:
+                        defaultLog("Parameter {0} has invalud min/max/default value".format(parameterData.ID))
+                        parameterData.MinValue = 0
+                        parameterData.MaxValue = 0
+                        parameterData.DefaultValue = 0
+
+                    parameterData.Node = nodeData
+                    nodeData.Parameters[parameterData.ID] = parameterData
 
             # Add the node object to the dictionary of the nodes
             # Finished <Node> element

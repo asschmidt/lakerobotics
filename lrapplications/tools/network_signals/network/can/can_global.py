@@ -12,6 +12,7 @@ from model.static.messages import MessageDataParser
 from model.static.nodes import NodeDataParser
 from model.static.network_builder import NetworkBuilder
 from model.static.can.can_message_preprocessor import CANMessagePreprocessor
+from model.static.parameter.parameter_preprocessor import ParameterPreprocessor
 
 from model.dynamic.dynamic_datamodel import DataModelEntry, DynamicDataModel
 from model.dynamic.model_subscriber import Subscriber
@@ -91,6 +92,9 @@ class CANGlobal:
         # Perform the CAN-ID calculations
         canMsgPreproc = CANMessagePreprocessor(self._networkBuilder)
         canMsgPreproc.prepareCANMessageDatabase()
+
+        paramMsgPreProc = ParameterPreprocessor(self._networkBuilder)
+        paramMsgPreProc.prepareParameterDatabase()
 
         return self._networkBuilder
 

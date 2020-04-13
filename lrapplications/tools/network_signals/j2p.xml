@@ -22,6 +22,10 @@
 					</TxMessages>
 				</Interface>
 			</Interfaces>
+
+			<Parameters>
+				<Parameter ID="MinimumElectronicVoltage" Name="Minimum Voltage for Eletronics" Type="Integer" MinValue="0" MaxValue="24000" Unit="mV" DefaultValue="9000"/>
+			</Parameters>
 		</Node>
 
 		<!-- Telematic ECU -->
