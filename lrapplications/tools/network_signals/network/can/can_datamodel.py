@@ -1,35 +1,6 @@
-'''
-Created on 05.11.2019
-
-@author: Andreas
-'''
-
 from model.static.messages import *
 from model.static.signals import *
 
-'''
-'''
-class CANDataDefinition:
-    '''
-    '''
-    def __init__(self, message, signalInMessage):
-        self._message = message
-        self._signal = signalInMessage
-
-    '''
-    '''
-    def getMessage(self):
-        return self._message
-
-    '''
-    '''
-    def getSignal(self):
-        # We need to return the "Signal" member, because the _signal is a MessageSignalRef object
-        return self._signal.Signal
-
-
-'''
-'''
 class CANDataExtractFunctions:
     '''
     Extracts the data in form of an byte array out of the rawData parameter. The rawData parameter is assumed to
