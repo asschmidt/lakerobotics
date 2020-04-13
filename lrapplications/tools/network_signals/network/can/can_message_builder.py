@@ -67,11 +67,14 @@ class CANMessageBuilder:
 
     def _makeByteValue(self, value):
         '''
+        Returns a Byte array with one byte content
         '''
         return [int(value & 0xFF)]
 
     def _makeWordValue(self, value, endianess):
         '''
+        Returns a byte array with two items (low-byte, high-byte) of a 16 Bit 
+        integeger. The endianess is considered
         '''
         valueA = int(value & 0x00FF)
         valueB = int((value & 0xFF00) >> 8)
