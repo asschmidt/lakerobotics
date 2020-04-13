@@ -5,16 +5,7 @@ and the values for the signals provided via parameter
 @author Andreas Schmidt
 '''
 
-from model.static.networks import *
-from model.static.signals import *
-from model.static.messages import *
-from model.static.nodes import *
-from model.static.network_builder import *
-from model.dynamic.dynamic_datamodel import *
-from model.dynamic.model_subscriber import *
-
-from network.can.can_data_extract import *
-
+from model.static.signals import SignalEndianess
 from pyusbtin.usbtin import CANMessage
 
 
