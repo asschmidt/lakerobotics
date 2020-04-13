@@ -11,6 +11,9 @@ import time
 
 from pyusbtin.usbtin import CANMessage
 
+from util.logger import LoggerEntryType
+from util.logger_global import *
+
 from network.can.can_interface import *
 
 '''
@@ -41,7 +44,8 @@ class CANVirtualInterface(CANInterface):
     '''
     '''
     def _receiveFrame(self, msg):
-        print("Got Frame: " + str(msg))
+        #print("Got Frame: " + str(msg))
+        defaultLog(str(msg), LoggerEntryType.LOG_ACTIVITY)
         self._canRxQueue.put(msg)
 
     '''

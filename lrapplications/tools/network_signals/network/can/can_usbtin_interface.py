@@ -8,6 +8,8 @@ import queue
 
 from pyusbtin.usbtin import CANMessage, USBtin
 
+from util.logger import LoggerEntryType
+from util.logger_global import *
 from network.can.can_interface import *
 
 '''
@@ -27,6 +29,7 @@ class CANUSBtinInterface(CANInterface):
     '''
     def _receiveFrame(self, msg):
         #print("Got Frame: " + str(msg))
+        defaultLog(str(msg), LoggerEntryType.LOG_ACTIVITY)
         self._canRxQueue.put(msg)
 
     '''

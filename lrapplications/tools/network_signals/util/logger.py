@@ -3,10 +3,10 @@ import datetime
 import threading
 
 class LoggerEntryType:
-    LOG_INFO = 0x01
-    LOG_ERROR = 0x02
-    LOG_DEBUG = 0x04
-    LOG_ACTIVITY = 0x08
+    LOG_INFO        = 0x01
+    LOG_ERROR       = 0x02
+    LOG_DEBUG       = 0x04
+    LOG_ACTIVITY    = 0x08
 
 class LoggerEntry:
     '''
@@ -85,6 +85,16 @@ class LoggerBackend(object):
             self._lock.acquire()
             logLine = self._logLines[logLineIdx]
             self._lock.release()
+
+        return logLine
+
+    def getLastLogLine(self):
+        '''
+        '''
+        logLine = "INVALID"
+        self._lock.acquire()
+        logLine = self._logLines[len(self._logLines) - 1]
+        self._lock.release()
 
         return logLine
 
