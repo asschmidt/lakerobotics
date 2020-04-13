@@ -17,6 +17,7 @@ class DataModelEntry:
 
     def __init__(self, dataID, dataDefRef = None):
         '''
+        Initializes the dynamic data model entry with default values
         '''
         self._dataID = dataID
         self._dataDefRef = dataDefRef   # Reference to a data definition (e.g. CAN signal definition)
@@ -30,36 +31,49 @@ class DataModelEntry:
 
     def getDataID(self):
         '''
+        Returns the data ID of the Entry. This is typically a Signal ID from
+        the static model
         '''
         return self._dataID
 
     def getDataDefRef(self):
         '''
+        Returns the data reference object of the entry
         '''
         return self._dataDefRef
 
     def setDataDefRef(self, dataDefRef):
         '''
+        Sets the data reference object for the entry
         '''
         self._dataDefRef = dataDefRef
 
     def getData(self):
         '''
+        Returns the data value/object of the entry
         '''
         return self._data
 
     def getPreviousData(self):
         '''
+        Returns the previous data value/object of the entry. The previous data is stored
+        as soon as a new data value is assigned
         '''
         return self._prevData
 
     def setData(self, data):
         '''
+        Sets the actual data value/object of the data entry. It also sets the timestaps
+        accordingly and handles the previous data value and also the change flag.
+
+        The functions returns true, if the data has changed since the last call of 
+        setData otherwise false
         '''
         # timestamp calculation for this data entry
         newTime = datetime.datetime.now()
         if self._dataChangedTimeStamp != 0:
             self._dataChangedTimeDelta = newTime - self._dataChangedTimeStamp
+
         self._dataChangedTimeStamp = newTime
 
         # If there is an extract function available, use that to extract the data
@@ -78,6 +92,7 @@ class DataModelEntry:
 
     def setExtractFunction(self, func):
         '''
+        Sets the function to be used to extract data (e.g. out of the CAN payload)
         '''
         self._funcExtractData = func
 
@@ -154,6 +169,8 @@ class DynamicDataModel:
 
     def getDataModelEntryIterator(self):
         '''
+        Returns a data model iterator/generator to iterate over the value of the 
+        internal data dictionary
         '''
         for entry in self._dataDict.values():
             yield entry
@@ -166,11 +183,14 @@ class DynamicDataModel:
 
     def unregisterSubscriber(self, sub):
         '''
+        Unregisters a subscriber object from the internal subscriber list
         '''
         self._subscriber.remove(sub)
 
     def notifySubscriber(self, dataEntry):
         '''
+        Iterates through the list of all registered subscribers and calls their
+        notify() method with the data entry as argument
         '''
         for sub in self._subscriber:
             if sub != None:
