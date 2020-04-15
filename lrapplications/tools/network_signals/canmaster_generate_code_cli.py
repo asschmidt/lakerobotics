@@ -57,4 +57,4 @@ canMsgPreProc = CANMessagePreprocessor(networkBuilder)
 canMsgPreProc.prepareCANMessageDatabase()
 
 canMsgGen = CANMessageGenerator(networkBuilder, env)
-canMsgGen.generateCANMessageCode()
+canMsgGen.generateCode()
