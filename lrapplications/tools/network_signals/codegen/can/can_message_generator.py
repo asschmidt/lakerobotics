@@ -1,28 +1,9 @@
-'''
-Created on 16.05.2019
+from codegen.base_generator import BaseCodeGenerator, CodeTemplateStruct
 
-@author: Andreas
-'''
-
-from model.static.messages import *
-from model.static.signals import *
-
-from codegen.base_generator import *
-
-'''
-'''
-class CANTemplateStruct:
+class CANMessageGenerator(BaseCodeGenerator):
     '''
-    '''
-    def __init__(self, ctrlName, codeTpl, headerTpl):
-        self.ControllerName = ctrlName
-        self.CodeTemplate = codeTpl
-        self.HeaderTemplate = headerTpl
-
-'''
-'''
-class CANMessageGenerator(BaseMessageGenerator):
-    '''
+    Class to generate code for the CAN message creation and parsing for different controllers
+    Currently the controllers MCP2515 and the STMF103 are supported.
     '''
     def __init__(self, networkBuilder, jinjaEnv):
         super().__init__(networkBuilder)
@@ -30,18 +11,16 @@ class CANMessageGenerator(BaseMessageGenerator):
         self._jinjaEnv = jinjaEnv
 
         self._templates = {}
-        self._templates['Default'] = CANTemplateStruct('Default', self._jinjaEnv.get_template('node_code_mcp2515.j2'), self._jinjaEnv.get_template('node_header_mcp2515.j2'))
-        self._templates['MCP2515'] = CANTemplateStruct('MCP2515', self._jinjaEnv.get_template('node_code_mcp2515.j2'), self._jinjaEnv.get_template('node_header_mcp2515.j2'))
-        self._templates['STM32F103'] = CANTemplateStruct('STM32F103', self._jinjaEnv.get_template('node_code_stm32.j2'), self._jinjaEnv.get_template('node_header_stm32.j2'))
+        self._templates['Default'] = CodeTemplateStruct('Default', self._jinjaEnv.get_template('node_code_mcp2515.j2'), self._jinjaEnv.get_template('node_header_mcp2515.j2'))
+        self._templates['MCP2515'] = CodeTemplateStruct('MCP2515', self._jinjaEnv.get_template('node_code_mcp2515.j2'), self._jinjaEnv.get_template('node_header_mcp2515.j2'))
+        self._templates['STM32F103'] = CodeTemplateStruct('STM32F103', self._jinjaEnv.get_template('node_code_stm32.j2'), self._jinjaEnv.get_template('node_header_stm32.j2'))
 
-        #self._nodeCodeTemplate = self._jinjaEnv.get_template('node_code.j2')
-        #self._nodeHeaderTemplate = self._jinjaEnv.get_template('node_header.j2')
-
-
-    '''
-    '''
     def generateCANMessageCode(self):
-        for node in self._networkBuilder.getNodes():
+        '''
+        Generates the code based on the internal data model provided via the networkBuilder instance. The
+        generated code is directly saved in source and header files.
+        '''
+        for node in self._networkBuilder.getNodeList():
             # Iterate over all Interfaces of a node
             for interface in node.Interfaces.values():
                 templateCtx = {}
