@@ -70,6 +70,7 @@ class NodeParameterData:
         self.ID = "Unkown"
         self.Name = "Unknown"
         self.Type = ParameterType.PARAM_UNKNOWN
+        self.Size = 0
         self.MinValue = 0
         self.MaxValue = 0
         self.DefaultValue = 0
@@ -87,6 +88,7 @@ class NodeData:
         '''
         self.ID = "Unknown"
         self.Name = "Unknown"
+        self.NodeController = "Default" # Microcontroller type used for the node
         self.Interfaces = {}
         self.Parameters = {}
 
@@ -125,6 +127,7 @@ class NodeDataParser:
             # Get the ID and the Name of the Node
             nodeData.ID = nodeElement.get("ID")
             nodeData.Name = nodeElement.get("Name")
+            nodeData.NodeController = nodeElement.get("NodeController")
 
             # Find the <Interfaces> element inside the actual Node element
             interfacesRoot = nodeElement.find("Interfaces")
@@ -229,6 +232,17 @@ class NodeDataParser:
                     # Get the Interface ID, Name and Network Controller
                     parameterData.ID = parameterChild.get("ID")
                     parameterData.Name = parameterChild.get("Name")
+                    parameterData.Type = ParameterType.parseSignalType(parameterChild.get("Type"))
+
+                    try:
+                        size = int(parameterChild.get("Size"))
+
+                        if size is None:
+                            size = 8
+                    except:
+                        size = 8
+
+                    parameterData.Size = size
 
                     try:
                         minValue = parameterChild.get("MinValue")

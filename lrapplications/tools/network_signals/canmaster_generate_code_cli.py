@@ -9,8 +9,10 @@ from model.static.nodes import *
 from model.static.network_builder import *
 
 from model.static.can.can_message_preprocessor import *
+from model.static.parameter.parameter_preprocessor import *
 
 from codegen.can.can_message_generator import *
+from codegen.parameter.parameter_generator import *
 
 '''
 '''
@@ -58,3 +60,9 @@ canMsgPreProc.prepareCANMessageDatabase()
 
 canMsgGen = CANMessageGenerator(networkBuilder, env)
 canMsgGen.generateCode()
+
+paramPreProc = ParameterPreprocessor(networkBuilder)
+paramPreProc.prepareParameterDatabase()
+
+paramGen = ParameterGenerator(networkBuilder, env)
+paramGen.generateCode()
