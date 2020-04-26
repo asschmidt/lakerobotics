@@ -10,11 +10,12 @@ lrplatform/out
 **/__pycache__
 **/*.pyc
 **/*.pyo
+# Ignore gernated code files
+**/_output/*.*
 /lrapplications/tools/can_commander/.vs/CANcommander/v15
 /lrapplications/tools/can_commander/CANcommander/GeneratedFiles
 /lrapplications/tools/can_commander/CANcommander/x64/Debug
 /lrapplications/tools/can_commander/x64/Debug
 /lrapplications/tools/can_commander/CAN_USBTin/x64/Debug
 /lrapplications/tools/can_commander/CANcore/x64/Debug
-lrapplications/tools/network_signals/.vscode/settings.json
-lrapplications/tools/network_signals/_output/*
+/lrapplications/tools/network_signals/.vscode/settings.json
