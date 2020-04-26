@@ -27,8 +27,10 @@ class CANInterfaceThread(threading.Thread):
         '''
         threading.Thread.__init__(self)
         self._canInterface = canInterface
-        self._canConnector = canConnector
         self._wantAbort = False
+
+        self._canConnector = canConnector
+        self._canConnector.setCANInterfaceThread(self)
 
         self._canTxQueue = queue.Queue()
 

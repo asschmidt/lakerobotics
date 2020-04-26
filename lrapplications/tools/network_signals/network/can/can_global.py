@@ -24,6 +24,8 @@ from network.can.can_data_subscriber import CANDataUISubscriber
 from network.can.can_thread import CANInterfaceThread
 from network.can.can_usbtin_interface import CANUSBtinInterface
 from network.can.can_virtual_interface import CANVirtualInterface
+from network.can.can_protocol_handler_manager import CANProtocolHandlerManager
+from network.can.can_parameter_protocol_handler import CANParameterProtocolHandler
 
 class CANGlobal:
     '''
@@ -43,7 +45,9 @@ class CANGlobal:
         self._networkBuilder = None
         self._dynamicModel = None
         self._canInterface = None
+        self._canConnector = None
         self._canThread = None
+        self._protocolHandlerManager = None
 
     @staticmethod
     def getInstance():
@@ -131,13 +135,23 @@ class CANGlobal:
         # Check whether the CAN interface is already initialized
         if self._canInterface != None:
             # Create the CAN data connector and bind it to the dynamic model instance
-            dataConnect = CANDataConnector(self._dynamicModel)
+            self._canConnector = CANDataConnector(self._dynamicModel)
             # Create the thread and connect it with the interface and the data connector
-            self._canThread = CANInterfaceThread(self._canInterface, dataConnect)
+            self._canThread = CANInterfaceThread(self._canInterface, self._canConnector)
             # Start the thread
             self._canThread.start()
         else:
             raise Exception("No CAN Interface initialized")
+
+    def _initializeCANProtocolHandler(self):
+        '''
+        Initializes the CAN Protocol Handler Manager
+        '''
+        self._protocolHandlerManager = CANProtocolHandlerManager(self._networkBuilder)
+        self._protocolHandlerManager.registerProtocolHandler(CANParameterProtocolHandler(self._networkBuilder, self._canConnector))
+
+        # Connect the Protocol Handler Manager with the CAN Connector
+        self._canConnector.registerProtocolHandlerManager(self._protocolHandlerManager)
 
     def initializeCAN(self, networkFileName, comPort, canBaudrate):
         '''
@@ -147,6 +161,7 @@ class CANGlobal:
         self._initializeDynamicModel()
         self._initializeCANInterface(comPort, canBaudrate)
         self._initializeCANThread()
+        self._initializeCANProtocolHandler()
 
     def finalizeCAN(self):
         '''
