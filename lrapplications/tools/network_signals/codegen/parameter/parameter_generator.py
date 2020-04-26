@@ -13,7 +13,7 @@ class ParameterGenerator(BaseCodeGenerator):
         self._templates = {}
         self._templates['Default'] = CodeTemplateStruct('Default', self._jinjaEnv.get_template('node_param_code_arduino.j2'), self._jinjaEnv.get_template('node_param_header_arduino.j2'))
         self._templates['Arduino'] = CodeTemplateStruct('Arduino', self._jinjaEnv.get_template('node_param_code_arduino.j2'), self._jinjaEnv.get_template('node_param_header_arduino.j2'))
-        #self._templates['STM32F103'] = CodeTemplateStruct('STM32F103', self._jinjaEnv.get_template('node_param_code_stm32.j2'), self._jinjaEnv.get_template('node_param_header_stm32.j2'))
+        self._templates['STM32F103'] = CodeTemplateStruct('STM32F103', self._jinjaEnv.get_template('node_param_code_stm32.j2'), self._jinjaEnv.get_template('node_param_header_stm32.j2'))
 
     def generateCode(self):
         '''

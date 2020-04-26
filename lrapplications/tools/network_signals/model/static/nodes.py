@@ -71,6 +71,7 @@ class NodeParameterData:
         self.Name = "Unknown"
         self.Type = ParameterType.PARAM_UNKNOWN
         self.Size = 0
+        self.Unit = "Unknown Unit"
         self.MinValue = 0
         self.MaxValue = 0
         self.DefaultValue = 0
@@ -233,6 +234,10 @@ class NodeDataParser:
                     parameterData.ID = parameterChild.get("ID")
                     parameterData.Name = parameterChild.get("Name")
                     parameterData.Type = ParameterType.parseSignalType(parameterChild.get("Type"))
+
+                    parameterData.Unit = parameterChild.get("Unit")
+                    if parameterData.Unit is None:
+                        parameterData.Unit = "No Unit"
 
                     try:
                         size = int(parameterChild.get("Size"))
