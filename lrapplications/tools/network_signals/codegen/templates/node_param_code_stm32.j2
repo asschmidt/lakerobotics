@@ -1,0 +1,24 @@
+/***********************************************************
+ * Generated CAN Code File for Node
+ ***********************************************************
+ * Node: {{ nodeName }}
+ * Network Version: {{ networkVersion }}
+ *
+ ***********************************************************
+ *
+ **********************************************************/
+
+#include "{{nodeName}}_Param_{{nodeController}}.h"
+
+
+/*
+ * Function to initialize the parameter struct with the default values
+ *
+*/
+int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct)
+{
+    {% for param in parameters %}
+    // Param-ID: {{param.ID}} param-Type: {{param.Type}} Param-Size: {{param.Size}}
+    pParamStruct->{{param.ID}} = {{param.DefaultValue}}; // {{param.Unit}}
+    {% endfor %}
+}

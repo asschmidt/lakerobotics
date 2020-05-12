@@ -1,0 +1,57 @@
+/***********************************************************
+ * Generated Parameter Header File for Node
+ ***********************************************************
+ * Node: {{ nodeName }}
+ * Interface: {{ interfaceName }}
+ * Network Version: {{ networkVersion }}
+ *
+ ***********************************************************
+ *
+ **********************************************************/
+
+#ifndef {{ nodeHeaderName }}
+#define {{ nodeHeaderName }}
+
+#include <stdint.h>
+
+/*
+ * Defines for Parameter IDs
+ *
+*/
+{% for param in parameters %}
+#define PARAM_ID_{{param.ID}}			{{param.GeneratorData['PARAM_ID']}}
+{% endfor %}
+
+
+/*
+ * Declare data type structures for Parameter
+ *
+*/
+typedef struct _Param_Struct
+{
+	{% for param in parameters %}
+	// Param-ID: {{param.ID}} param-Type: {{param.Type}} Param-Size: {{param.Size}}
+		{% if param.Type == 2 %}
+	// Integer Parameter
+			{% if param.Size == 1 or param.Size == 8 %}
+	// 8 Bit
+	int8_t {{param.ID}};
+			{% elif param.Size == 16 %}
+	// 16 Bit
+	int16_t {{param.ID}};
+			{% elif param.Size == 32 %}
+	// 32 Bit
+	int32_t {{param.ID}};
+			{% endif %}
+		{% endif %}
+	{% endfor %}
+} Param_Struct;
+
+
+/*
+ * Function prototypes
+ *
+/
+int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct);
+
+#endif

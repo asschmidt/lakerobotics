@@ -1,3 +1,9 @@
 {
-    "python.pythonPath": "D:\\LR\\DevEnv\\python-3.7.3\\python.exe"
+    "python.pythonPath": "/home/andreas/anaconda3/bin/python",
+    "python.autoComplete.extraPaths": [
+        "lrapplications/tools/network_signals",
+        "lrapplications/tools/cantools"
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }

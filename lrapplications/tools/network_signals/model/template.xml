@@ -2,12 +2,12 @@
 	<!-- Network Definitions -->
 	<Networks>
 		<Network ID="MainCAN" Name="Main CAN" Type="CAN" Bandwidth="500kbps"></Network>
-		
+
 		<Network ID="Network_123" Name="Transmission CAN" Type="CAN" Bandwidth="500kbps"></Network>
 		<Network ID="Network_345" Name="Distance Sensor CAN" Type="CAN" Bandwidth="500kpbs"></Network>
 		<Network ID="Network_678" Name="Brain Backbone" Type="Ethernet" Bandwidth="100Mbps"></Network>
 	</Networks>
-	
+
 	<!-- Node Definitions -->
 	<Nodes>
 		<Node ID="Node_Pwr" Name="Power Manager Unit">
@@ -15,7 +15,7 @@
 				<Interface ID="Node_Pwr_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" ConnectedTo="MainCAN">
 					<RxMessages>
 					</RxMessages>
-					
+
 					<TxMessages>
 						<TxMessage RefID="Power_Supply_Motor"></TxMessage>
 						<TxMessage RefID="Power_Supply_Electronic"></TxMessage>
@@ -23,13 +23,13 @@
 				</Interface>
 			</Interfaces>
 		</Node>
-		
+
 		<Node ID="Node_123" Name="Engine Control Unit Front Axsis">
 			<Interfaces>
 				<Interface ID="Node123_CAN_1" Name="Main CAN" Type="CAN" Bandwidth="500kbps" ConnectedTo="Network_123">
 					<RxMessages>
 					</RxMessages>
-					
+
 					<TxMessages>
 						<TxMessage RefID="Message_123"></TxMessage>
 					</TxMessages>
@@ -37,27 +37,27 @@
 			</Interfaces>
 		</Node>
 	</Nodes>
-	
+
 	<!-- Signal Definitions -->
 	<Signals>
 		<Signal ID="Power_Supply_Motor_Voltage" Name="Voltage of Motor Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mV"></Signal>
 		<Signal ID="Power_Supply_Motor_Current" Name="Current of Motor Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mA"></Signal>
 		<Signal ID="Power_Supply_Electronic_Voltage" Name="Voltage of Electronic Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mV"></Signal>
 		<Signal ID="Power_Supply_Electronic_Current" Name="Current of Electronic Power Supply" Size="16" Type="Integer" Endian="Little" PhysicalUnit="mA"></Signal>
-		
+
 		<Signal ID="Signal_123" Name="Engine Speed Left Motor Front Axsis" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm">
 			<Calculation Type="Linear">
 				<LinearCalculation StartRawValue="0" EndRawValue="65000" StartValue="0" EndValue="1000"></LinearCalculation>
 			</Calculation>
 		</Signal>
-		
+
 		<Signal ID="Signal_456" Name="Engine Speed Right Motor Front Axsis" Size="16" Type="Integer" Endian="Little" PhysicalUnit="rpm">
 			<Calculation Type="Linear">
-				<LinearCalculation StartRawValue="0" EndRawValue="65000" StartValue="0" EndValue="1000"></LinearCalculation>				
+				<LinearCalculation StartRawValue="0" EndRawValue="65000" StartValue="0" EndValue="1000"></LinearCalculation>
 			</Calculation>
 		</Signal>
 	</Signals>
-	
+
 	<!-- Message Definitions -->
 	<Messages>
 		<Message ID="Power_Supply_Motor" Name="Power Supply Values Motor" NetworkType="CAN">
@@ -66,14 +66,14 @@
 				<Signal RefID="Power_Supply_Motor_Current" Position="2"></Signal>
 			</Signals>
 		</Message>
-		
+
 		<Message ID="Power_Supply_Electronic" Name="Power Supply Values Electronic" NetworkType="CAN">
 			<Signals>
 				<Signal RefID="Power_Supply_Electronic_Voltage" Position="1"></Signal>
 				<Signal RefID="Power_Supply_Electronic_Current" Position="2"></Signal>
 			</Signals>
 		</Message>
-	
+
 		<Message ID="Message_123" Name="Engine Speeds Front Axsis" NetworkType="CAN">
 			<Signals>
 				<Signal RefID="Signal_123" Position="2"></Signal>
