@@ -6,14 +6,14 @@
  * Network Version: {{ networkVersion }}
  *
  ***********************************************************
- * 
+ *
  **********************************************************/
- 
+
 #ifndef {{ interfaceHeaderName }}
 #define {{ interfaceHeaderName }}
- 
+
 #include "mcp2515/can.h"
- 
+
 /*
  * Defines for TX CAN Messages
  *
@@ -21,8 +21,8 @@
 {% for txMsg in txMessages %}
 #define CAN_ID_{{txMsg.Message.ID}}			{{txMsg.Message.GeneratorData['CAN_ID_HEX']}}
 {% endfor %}
- 
- 
+
+
 /*
  * Declare data type structures for CAN TX Messages
  *
@@ -43,9 +43,9 @@ typedef struct _Msg_{{txMsg.Message.ID}}
 		{% endif %}
 	{% endfor %}
 } Msg_{{txMsg.Message.ID}};
- 	
+
 {% endfor %}
- 
+
 /*
  * Declare function prototypes for CAN Tx Message creation
  *
@@ -84,7 +84,7 @@ typedef struct _Msg_{{rxMsg.Message.ID}}
 		{% endif %}
 	{% endfor %}
 } Msg_{{rxMsg.Message.ID}};
- 	
+
 {% endfor %}
 
 
@@ -94,6 +94,8 @@ typedef struct _Msg_{{rxMsg.Message.ID}}
  */
 {% for rxMsg in rxMessages %}
 extern int8_t parseMsg_{{rxMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{rxMsg.Message.ID}}* pMsg);
+extern int8_t isMsg_{{rxMsg.Message.ID}}(struct can_frame* pCANFrame);
+
 {% endfor %}
- 
+
 #endif

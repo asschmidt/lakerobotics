@@ -13,8 +13,16 @@
 #include <freertos/task.h>
 
 #include <stm32f1xx_hal_can.h>
+#include "gen/ecu_type.h"
 
-#include "gen/Node_ECU_Front_CAN_STM32F103.h"
+#if ENGINE_CTRL_ECU == ECU_REAR
+    #include "gen/Node_ECU_Rear_CAN_STM32F103.h"
+#elif ENGINE_CTRL_ECU == ECU_MID
+    #include "gen/Node_ECU_Mid_CAN_STM32F103.h"
+#elif ENGINE_CTRL_ECU == ECU_FRONT
+    #include "gen/Node_ECU_Front_CAN_STM32F103.h"
+#endif
+
 #include "hal/can.h"
 
 #include "errorcodes.h"
@@ -122,7 +130,28 @@ int32_t canHandlerProcessReceiveBuffer(CANHandler* pHandler)
             HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
         }*/
 
-        if (canFrame.rxHeader.StdId == CAN_ID_Wheel_Speed_Front_Setpoint)
+#if ENGINE_CTRL_ECU == ECU_REAR
+        if (isMsg_Wheel_Speed_Rear_Setpoint(&canFrame))
+        {
+            Msg_Wheel_Speed_Rear_Setpoint wheelSetpointMsg;
+            parseMsg_Wheel_Speed_Rear_Setpoint(&canFrame, &wheelSetpointMsg);
+
+            pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_R_L_Setpoint;
+            pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_R_R_Setpoint;
+        }
+
+#elif ENGINE_CTRL_ECU == ECU_MID
+        if (isMsg_Wheel_Speed_Mid_Setpoint(&canFrame))
+        {
+            Msg_Wheel_Speed_Mid_Setpoint wheelSetpointMsg;
+            parseMsg_Wheel_Speed_Mid_Setpoint(&canFrame, &wheelSetpointMsg);
+
+            pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_M_L_Setpoint;
+            pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_M_R_Setpoint;
+        }
+
+#elif ENGINE_CTRL_ECU == ECU_FRONT
+        if (isMsg_Wheel_Speed_Front_Setpoint(&canFrame))
         {
             Msg_Wheel_Speed_Front_Setpoint wheelSetpointMsg;
             parseMsg_Wheel_Speed_Front_Setpoint(&canFrame, &wheelSetpointMsg);
@@ -130,6 +159,7 @@ int32_t canHandlerProcessReceiveBuffer(CANHandler* pHandler)
             pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_F_L_Setpoint;
             pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_F_R_Setpoint;
         }
+#endif
     }
 
     return ERR_OK;
@@ -161,6 +191,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 int32_t canHandlerTransmitEngineSpeed(CANHandler* pHandler, CANTransmissionTableEntry* pEntry)
 {
     CAN_FRAME canFrame;
+
+#if ENGINE_CTRL_ECU == ECU_REAR
+
+#elif ENGINE_CTRL_ECU == ECU_MID
+
+#elif ENGINE_CTRL_ECU == ECU_FRONT
     Msg_Engine_Speed_Front canMessage;
 
     // Transfer the data from the process model to the CAN model
@@ -169,6 +205,7 @@ int32_t canHandlerTransmitEngineSpeed(CANHandler* pHandler, CANTransmissionTable
 
     // Create a CAN frame out of the data
     createMsg_Engine_Speed_Front(&canFrame, &canMessage);
+#endif
 
     // Transmit it
     uint32_t usedMailbox = 0;
@@ -186,6 +223,12 @@ int32_t canHandlerTransmitEngineSpeed(CANHandler* pHandler, CANTransmissionTable
 int32_t canHandlerTransmitWheelSpeed(CANHandler* pHandler, CANTransmissionTableEntry* pEntry)
 {
     CAN_FRAME canFrame;
+
+#if ENGINE_CTRL_ECU == ECU_REAR
+
+#elif ENGINE_CTRL_ECU == ECU_MID
+
+#elif ENGINE_CTRL_ECU == ECU_FRONT
     Msg_Wheel_Speed_Front canMessage;
 
     // Transfer the data from the process model to the CAN model
@@ -194,6 +237,7 @@ int32_t canHandlerTransmitWheelSpeed(CANHandler* pHandler, CANTransmissionTableE
 
     // Create a CAN frame out of the data
     createMsg_Wheel_Speed_Front(&canFrame, &canMessage);
+#endif
 
     // Transmit it
     uint32_t usedMailbox = 0;

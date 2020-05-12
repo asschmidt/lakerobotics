@@ -23,12 +23,28 @@ from model.ui.wx_ui_model_connector import *
 
 from data_interpreter_ui import *
 
-def sendSetSpeed(networkBuilder, canThread, value):
+def sendSetSpeedFront(networkBuilder, canThread, value):
     signalValueDict = {'Wheel_Speed_F_L_Setpoint' : value,
                            'Wheel_Speed_F_R_Setpoint' : value}
 
     msgBuilder = CANMessageBuilder(networkBuilder)
     canMsg = msgBuilder.buildMessage("Wheel_Speed_Front_Setpoint", signalValueDict)
+    canThread.transmitFrame(canMsg)
+
+def sendSetSpeedMid(networkBuilder, canThread, value):
+    signalValueDict = {'Wheel_Speed_M_L_Setpoint' : value,
+                           'Wheel_Speed_M_R_Setpoint' : value}
+
+    msgBuilder = CANMessageBuilder(networkBuilder)
+    canMsg = msgBuilder.buildMessage("Wheel_Speed_Mid_Setpoint", signalValueDict)
+    canThread.transmitFrame(canMsg)
+
+def sendSetSpeedRear(networkBuilder, canThread, value):
+    signalValueDict = {'Wheel_Speed_R_L_Setpoint' : value,
+                           'Wheel_Speed_R_R_Setpoint' : value}
+
+    msgBuilder = CANMessageBuilder(networkBuilder)
+    canMsg = msgBuilder.buildMessage("Wheel_Speed_Rear_Setpoint", signalValueDict)
     canThread.transmitFrame(canMsg)
 
 '''
@@ -92,10 +108,14 @@ canThread.start()
 
 logFile = open('logrun_1.csv', "w")
 
-waitTime = 0.01
+waitTime = 0.5
 targetSpeed = 30
 rampValue = 10 / (1 / waitTime)
 currentTargetSpeed = 0
+
+sendSetSpeedFront(networkBuilder, canThread, 0)
+sendSetSpeedMid(networkBuilder, canThread, 0)
+sendSetSpeedRear(networkBuilder, canThread, 0)
 
 while True:
     try:
@@ -108,14 +128,16 @@ while True:
             currentTargetSpeed = 0.0
             rampValue = rampValue * -1
 
-        sendSetSpeed(networkBuilder, canThread, int(currentTargetSpeed))
+        #sendSetSpeedFront(networkBuilder, canThread, int(currentTargetSpeed))
+        #sendSetSpeedMid(networkBuilder, canThread, int(currentTargetSpeed))
+        sendSetSpeedRear(networkBuilder, canThread, int(currentTargetSpeed))
 
         logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
         print(logString)
         logFile.write(logString + "\n")
 
         if currentTargetSpeed == 30.0 or currentTargetSpeed == 0.0:
-            time.sleep(2)
+            time.sleep(5)
 
 
         # Wait 1 Seconds
@@ -156,6 +178,10 @@ while True:
         time.sleep(waitTime)
 
     except KeyboardInterrupt:
+        sendSetSpeedFront(networkBuilder, canThread, 0)
+        sendSetSpeedMid(networkBuilder, canThread, 0)
+        sendSetSpeedRear(networkBuilder, canThread, 0)
+        time.sleep(2)
         break
 
 canThread.stop()

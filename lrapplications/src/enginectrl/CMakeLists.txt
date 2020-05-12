@@ -28,7 +28,21 @@ set(LR_CMAKE_DEBUG 1)
 set(CMAKE_COLOR_MAKEFILE OFF)
 
 # First, initialize the configuration variables
-set(APPLICATION_OUTPUTNAME "enginectrl")
+set(APPLICATION_BASENAME "enginectrl")
+	
+if(ENGINE_CTRL_ECU MATCHES "REAR")
+	# First, initialize the configuration variables
+	set(APPLICATION_OUTPUTNAME "enginectrl_rear")
+elseif(ENGINE_CTRL_ECU MATCHES "MIDDLE")
+	# First, initialize the configuration variables
+	set(APPLICATION_OUTPUTNAME "enginectrl_mid")
+elseif(ENGINE_CTRL_ECU MATCHES "FRONT")
+	# First, initialize the configuration variables
+	set(APPLICATION_OUTPUTNAME "enginectrl_front")
+else(ENGINE_CTRL_ECU MATCHES "REAR")
+	# First, initialize the configuration variables
+	set(APPLICATION_OUTPUTNAME "enginectrl_rear")
+endif(ENGINE_CTRL_ECU MATCHES "REAR")
 
 # Include the needed CMake build filenames
 # The LR_VarsCommon include file must be loaded via the environment var because
@@ -50,7 +64,7 @@ set(LR_TARGET_PROGRAMMER_HOST "COM3")
 showTargetVariables()
 
 # Linker script
-set(APPLICATION_LINKER_SCRIPT ${LR_APPLICATION_SOURCE_ROOT}/${APPLICATION_OUTPUTNAME}/lib_bsp_enginectrl_cube/ldscript.ld)
+set(APPLICATION_LINKER_SCRIPT ${LR_APPLICATION_SOURCE_ROOT}/${APPLICATION_BASENAME}/lib_bsp_enginectrl_cube/ldscript.ld)
 string(REGEX REPLACE "\\\\" "/" APPLICATION_LINKER_SCRIPT ${APPLICATION_LINKER_SCRIPT})
 
 # After the target variables have been set, the other include files can be
@@ -70,6 +84,21 @@ showOutputVariables()
 
 # Set the project name
 project(${APPLICATION_OUTPUTNAME})
+
+if(ENGINE_CTRL_ECU MATCHES "REAR")
+	message(STATUS "Building Rear Engine Control ECU")
+	add_definitions(-DENGINE_CTRL_ECU=ECU_REAR)
+elseif(ENGINE_CTRL_ECU MATCHES "MIDDLE")
+	message(STATUS "Building Middle Engine Control ECU")
+	add_definitions(-DENGINE_CTRL_ECU=ECU_MID)
+elseif(ENGINE_CTRL_ECU MATCHES "FRONT")
+	message(STATUS "Building Front Engine Control ECU")
+	add_definitions(-DENGINE_CTRL_ECU=ECU_FRONT)
+else(ENGINE_CTRL_ECU MATCHES "REAR")
+	message(WARNING "NO Engine Control ECU TYPE SPECIFIED!!! Using Rear")
+	set(ENGINE_CTRL_ECU "REAR")
+	add_definitions(-DENGINE_CTRL_ECU=ECU_REAR)
+endif(ENGINE_CTRL_ECU MATCHES "REAR")
 
 # Include libraries (exports and dependency). 
 add_local_application_library(enginectrl lib_bsp_enginectrl_cube)

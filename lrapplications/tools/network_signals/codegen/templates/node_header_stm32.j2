@@ -112,6 +112,8 @@ typedef struct _Msg_{{rxMsg.Message.ID}}
  */
 {% for rxMsg in rxMessages %}
 extern int8_t parseMsg_{{rxMsg.Message.ID}}(CAN_FRAME* pCANFrame, Msg_{{rxMsg.Message.ID}}* pMsg);
+extern int8_t isMsg_{{rxMsg.Message.ID}}(CAN_FRAME* pCANFrame);
+
 {% endfor %}
 
 #endif
