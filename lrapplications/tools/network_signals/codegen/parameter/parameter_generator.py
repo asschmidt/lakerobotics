@@ -27,8 +27,8 @@ class ParameterGenerator(BaseCodeGenerator):
             templateCtx['nodeHeaderName'] = "_" + node.ID.upper() + "_Param_" + node.NodeController + "_H_"
             templateCtx['nodeController'] = node.NodeController
 
-            outputHeaderFile = open("_output/" + node.ID + "_Param_" + node.NodeController + ".h", "w")
-            outputCodeFile = open("_output/" + node.ID + "_Param_" + node.NodeController + ".cpp", "w")
+            outputHeaderFile = open("codegen/output/" + node.ID + "_Param_" + node.NodeController + ".h", "w")
+            outputCodeFile = open("codegen/output/" + node.ID + "_Param_" + node.NodeController + ".cpp", "w")
 
             try:
                 headerTemplate = self._templates[node.NodeController].HeaderTemplate

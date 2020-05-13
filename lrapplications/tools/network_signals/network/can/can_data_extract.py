@@ -68,6 +68,8 @@ class CANDataExtractFunctions:
                 # Iterate over the byte array and build an integer value
                 for bytePos in range(startByte, endByte, -1):
                     intValue = intValue + (dataBytes[bytePos - 1] << ((bytePos - 1) * 8))
+
+                intValue = CANDataExtractFunctions._getSignedNumber(intValue, signalRef.Size)
             elif signalRef.Endianess == SignalEndianess.ENDIAN_BIG:
                 # Big endian starts with the first byte in the array
                 startByte = 0
@@ -78,7 +80,7 @@ class CANDataExtractFunctions:
                     shiftCount = (numberOfBytes - 1) - bytePos
                     intValue = intValue + (dataBytes[bytePos] << (shiftCount * 8))
 
-                intValue = CANDataExtractFunctions._getSignedNumber(intValue, 16)
+                intValue = CANDataExtractFunctions._getSignedNumber(intValue, signalRef.Size)
             else:
                 intValue = None
 

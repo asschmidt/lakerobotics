@@ -3,23 +3,24 @@ import threading
 import time
 import queue
 
-from model.networks import *
-from model.signals import *
-from model.messages import *
-from model.nodes import *
-from model.network_builder import *
-from model.dynamic_datamodel import *
-from model.measurement_model import *
-from model.model_subscriber import *
+from model.static.networks import *
+from model.static.signals import *
+from model.static.messages import *
+from model.static.nodes import *
+from model.static.network_builder import *
+from model.dynamic.dynamic_datamodel import *
+from model.dynamic.model_subscriber import *
 
-from model.can.can_message_preprocessor import *
-from model.can.can_datamodel import *
-from model.can.can_data_connector import *
-from model.can.can_data_subscriber import *
-from model.can.can_thread import *
-from model.can.can_message_builder import *
+from model.static.can.can_message_preprocessor import *
+from network.can.can_data_connector import *
+from network.can.can_data_subscriber import *
+from network.can.can_thread import *
+from network.can.can_message_builder import *
+from network.can.can_data_definition import *
+from network.can.can_data_extract import *
+from network.can.can_usbtin_interface import *
 
-from model.ui.wx_ui_model_connector import *
+from ui.wx_ui_model_connector import *
 
 from data_interpreter_ui import *
 
@@ -106,12 +107,12 @@ canThread = CANInterfaceThread(canInterface, dataConnect)
 #canThread = CANSimulationThread(dataConnect)
 canThread.start()
 
-logFile = open('logrun_1.csv', "w")
+#logFile = open('logrun_1.csv', "w")
 
-waitTime = 0.5
+waitTime = 0.01
 targetSpeed = 30
 rampValue = 10 / (1 / waitTime)
-currentTargetSpeed = 0
+currentTargetSpeed = 20
 
 sendSetSpeedFront(networkBuilder, canThread, 0)
 sendSetSpeedMid(networkBuilder, canThread, 0)
@@ -119,25 +120,26 @@ sendSetSpeedRear(networkBuilder, canThread, 0)
 
 while True:
     try:
-        currentTargetSpeed = currentTargetSpeed + rampValue
+        #currentTargetSpeed = currentTargetSpeed + rampValue
 
-        if (currentTargetSpeed >= 30.0):
-            currentTargetSpeed = 30.0
-            rampValue = rampValue * -1
-        elif (currentTargetSpeed < 0.0):
-            currentTargetSpeed = 0.0
-            rampValue = rampValue * -1
+        #if (currentTargetSpeed >= 30.0):
+        #    currentTargetSpeed = 30.0
+        #    rampValue = rampValue * -1
+        #elif (currentTargetSpeed < 0.0):
+        #    currentTargetSpeed = 0.0
+        #    rampValue = rampValue * -1
 
         #sendSetSpeedFront(networkBuilder, canThread, int(currentTargetSpeed))
         #sendSetSpeedMid(networkBuilder, canThread, int(currentTargetSpeed))
         sendSetSpeedRear(networkBuilder, canThread, int(currentTargetSpeed))
 
-        logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_F_L").getData())
+        logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_R_L").getData())
         print(logString)
-        logFile.write(logString + "\n")
 
-        if currentTargetSpeed == 30.0 or currentTargetSpeed == 0.0:
-            time.sleep(5)
+        #logFile.write(logString + "\n")
+
+        #if currentTargetSpeed == 30.0 or currentTargetSpeed == 0.0:
+        #    time.sleep(5)
 
 
         # Wait 1 Seconds
@@ -187,4 +189,4 @@ while True:
 canThread.stop()
 canThread.join()
 
-logFile.close()
+#logFile.close()

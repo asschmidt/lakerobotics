@@ -27,6 +27,12 @@ class EngCtrlMonitorPanel(BaseMonitorPanel):
     WHEEL_SPEED_FRONT_LEFT = "Wheel_Speed_F_L"
     WHEEL_SPEED_FRONT_RIGHT = "Wheel_Speed_F_R"
 
+    WHEEL_SPEED_MID_LEFT = "Wheel_Speed_M_L"
+    WHEEL_SPEED_MID_RIGHT = "Wheel_Speed_M_R"
+
+    WHEEL_SPEED_REAR_LEFT = "Wheel_Speed_R_L"
+    WHEEL_SPEED_REAR_RIGHT = "Wheel_Speed_R_R"
+
     def __init__(self, parent):
         '''
         Initializes the UI panel including the UI Connector and the Subscriber
@@ -43,8 +49,14 @@ class EngCtrlMonitorPanel(BaseMonitorPanel):
         '''
         Adds the CAN signals to the internal list
         '''
-        self._addSignalToList(self.ENG_SPEED_FRONT_LEFT)
-        self._addSignalToList(self.ENG_SPEED_FRONT_RIGHT)
+        #self._addSignalToList(self.ENG_SPEED_FRONT_LEFT)
+        #self._addSignalToList(self.ENG_SPEED_FRONT_RIGHT)
 
         self._addSignalToList(self.WHEEL_SPEED_FRONT_LEFT)
         self._addSignalToList(self.WHEEL_SPEED_FRONT_RIGHT)
+
+        self._addSignalToList(self.WHEEL_SPEED_MID_LEFT)
+        self._addSignalToList(self.WHEEL_SPEED_MID_RIGHT)
+
+        self._addSignalToList(self.WHEEL_SPEED_REAR_LEFT)
+        self._addSignalToList(self.WHEEL_SPEED_REAR_RIGHT)
