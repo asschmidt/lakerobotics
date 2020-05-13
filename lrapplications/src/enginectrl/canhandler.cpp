@@ -125,11 +125,6 @@ int32_t canHandlerProcessReceiveBuffer(CANHandler* pHandler)
         CAN_FRAME canFrame;
         circular_buf_get(gReceiveBufferHandle, &canFrame);
 
-        /*if (canFrame.rxHeader.DLC > 1)
-        {
-            HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-        }*/
-
 #if ENGINE_CTRL_ECU == ECU_REAR
         if (isMsg_Wheel_Speed_Rear_Setpoint(&canFrame))
         {
@@ -193,8 +188,24 @@ int32_t canHandlerTransmitEngineSpeed(CANHandler* pHandler, CANTransmissionTable
     CAN_FRAME canFrame;
 
 #if ENGINE_CTRL_ECU == ECU_REAR
+    Msg_Engine_Speed_Rear canMessage;
+
+    // Transfer the data from the process model to the CAN model
+    canMessage.Engine_Speed_R_L = pHandler->pModel->enginespeed.engineSpeedLeft;
+    canMessage.Engine_Speed_R_R = pHandler->pModel->enginespeed.engineSpeedRight;
+
+    // Create a CAN frame out of the data
+    createMsg_Engine_Speed_Rear(&canFrame, &canMessage);
 
 #elif ENGINE_CTRL_ECU == ECU_MID
+    Msg_Engine_Speed_Mid canMessage;
+
+    // Transfer the data from the process model to the CAN model
+    canMessage.Engine_Speed_M_L = pHandler->pModel->enginespeed.engineSpeedLeft;
+    canMessage.Engine_Speed_M_R = pHandler->pModel->enginespeed.engineSpeedRight;
+
+    // Create a CAN frame out of the data
+    createMsg_Engine_Speed_Mid(&canFrame, &canMessage);
 
 #elif ENGINE_CTRL_ECU == ECU_FRONT
     Msg_Engine_Speed_Front canMessage;
@@ -225,8 +236,24 @@ int32_t canHandlerTransmitWheelSpeed(CANHandler* pHandler, CANTransmissionTableE
     CAN_FRAME canFrame;
 
 #if ENGINE_CTRL_ECU == ECU_REAR
+    Msg_Wheel_Speed_Rear canMessage;
+
+    // Transfer the data from the process model to the CAN model
+    canMessage.Wheel_Speed_R_L = pHandler->pModel->wheelspeed.wheelSpeedLeft;
+    canMessage.Wheel_Speed_R_R = pHandler->pModel->wheelspeed.wheelSpeedRight;
+
+    // Create a CAN frame out of the data
+    createMsg_Wheel_Speed_Rear(&canFrame, &canMessage);
 
 #elif ENGINE_CTRL_ECU == ECU_MID
+    Msg_Wheel_Speed_Mid canMessage;
+
+    // Transfer the data from the process model to the CAN model
+    canMessage.Wheel_Speed_M_L = pHandler->pModel->wheelspeed.wheelSpeedLeft;
+    canMessage.Wheel_Speed_M_R = pHandler->pModel->wheelspeed.wheelSpeedRight;
+
+    // Create a CAN frame out of the data
+    createMsg_Wheel_Speed_Mid(&canFrame, &canMessage);
 
 #elif ENGINE_CTRL_ECU == ECU_FRONT
     Msg_Wheel_Speed_Front canMessage;
