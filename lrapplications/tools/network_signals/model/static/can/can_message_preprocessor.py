@@ -25,11 +25,13 @@ class CANMessagePreprocessor:
             if node != None:
                 actualMsgNumber = 1
 
+                canIDOffset = 10
+
                 # Iterate over all Interfaces of a node
                 for interface in node.Interfaces.values():
                     # Iterate over all Tx Messages of a Interface
                     for txMessage in interface.TxMessages.values():
-                        txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID] = interface.NetworkID + actualMsgNumber
+                        txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID] = interface.NetworkID + canIDOffset + actualMsgNumber
                         txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID_HEX] = hex(txMessage.Message.GeneratorData[MessageGeneratorData.CAN_ID])
                         actualMsgNumber = actualMsgNumber + 1
 

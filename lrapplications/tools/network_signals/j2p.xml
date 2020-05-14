@@ -48,7 +48,7 @@
 
 		<Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axis" NodeController="STM32F103">
 			<Interfaces>
-				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x4FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
+				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x10FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
 						<RxMessage RefID="Wheel_Speed_Front_Setpoint"></RxMessage>
 					</RxMessages>
@@ -64,7 +64,7 @@
 
 		<Node ID="Node_ECU_Mid" Name="Engine Control Unit for Middle Axis" NodeController="STM32F103">
 			<Interfaces>
-				<Interface ID="Node_ECU_Mid_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x5FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
+				<Interface ID="Node_ECU_Mid_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x11FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
 						<RxMessage RefID="Wheel_Speed_Mid_Setpoint"></RxMessage>
 					</RxMessages>
@@ -80,7 +80,7 @@
 
 		<Node ID="Node_ECU_Rear" Name="Engine Control Unit for Rear Axis" NodeController="STM32F103">
 			<Interfaces>
-				<Interface ID="Node_ECU_Rear_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x8FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
+				<Interface ID="Node_ECU_Rear_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x12FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
 						<RxMessage RefID="Wheel_Speed_Rear_Setpoint"></RxMessage>
 					</RxMessages>

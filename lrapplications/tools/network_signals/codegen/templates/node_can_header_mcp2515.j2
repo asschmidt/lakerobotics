@@ -15,11 +15,25 @@
 #include "mcp2515/can.h"
 
 /*
+ * Define the network ID of the node
+ */
+#define NODE_INTERFACE_NETWORK_ID	{{nodeNetworkID}}
+
+/*
+ * Define CAN-IDs for special protocol purposes
+ *
+ */
+#define CAN_ID_PARAMETER_REQUEST	NODE_INTERFACE_NETWORK_ID + 1
+#define CAN_ID_PARAMETER_RESPONSE	NODE_INTERFACE_NETWORK_ID + 2
+
+/*
  * Defines for TX CAN Messages
  *
 */
 {% for txMsg in txMessages %}
 #define CAN_ID_{{txMsg.Message.ID}}			{{txMsg.Message.GeneratorData['CAN_ID_HEX']}}
+#define CYCLE_{{txMsg.Message.ID}}			{{txMsg.Message.Cycle}}
+
 {% endfor %}
 
 

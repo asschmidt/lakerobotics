@@ -19,7 +19,7 @@
  *
 */
 {% for param in parameters %}
-#define PARAM_ID_{{param.ID}}			{{param.GeneratorData['PARAM_ID']}}
+#define PARAM_ID_{{param.ID}}						{{param.GeneratorData['PARAM_ID']}}
 {% endfor %}
 
 
@@ -30,7 +30,7 @@
 typedef struct _Param_Struct
 {
 	{% for param in parameters %}
-	// Param-ID: {{param.ID}} param-Type: {{param.Type}} Param-Size: {{param.Size}}
+	// Param-ID: {{param.ID}} Param-Type: {{param.Type}} Param-Size: {{param.Size}}
 		{% if param.Type == 2 %}
 	// Integer Parameter
 			{% if param.Size == 1 or param.Size == 8 %}
@@ -47,6 +47,18 @@ typedef struct _Param_Struct
 	{% endfor %}
 } Param_Struct;
 
+typedef struct _Param_Mapping
+{
+	uint8_t paramID;
+	uint8_t paramSize;
+	uint8_t* paramPointer;
+} Param_Mapping;
+
+/*
+ * Global Variables
+ *
+*/
+extern ParamMapping gParameterMap[parameters|length];
 
 /*
  * Function prototypes

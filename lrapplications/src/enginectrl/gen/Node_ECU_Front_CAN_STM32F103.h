@@ -34,13 +34,13 @@ typedef struct _CAN_FRAME
  * Defines for TX CAN Messages
  *
 */
-#define CAN_ID_EngineCtrlFront_Alive			0x600
+#define CAN_ID_EngineCtrlFront_Alive			0x1100
 #define CYCLE_EngineCtrlFront_Alive			1000
 
-#define CAN_ID_Engine_Speed_Front			0x601
+#define CAN_ID_Engine_Speed_Front			0x1101
 #define CYCLE_Engine_Speed_Front			100
 
-#define CAN_ID_Wheel_Speed_Front			0x602
+#define CAN_ID_Wheel_Speed_Front			0x1102
 #define CYCLE_Wheel_Speed_Front			100
 
 
