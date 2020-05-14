@@ -29,7 +29,8 @@ int8_t createMsg_EngineCtrlRear_Alive(CAN_FRAME* pCANFrame, Msg_EngineCtrlRear_A
 	pCANFrame->txHeader.TransmitGlobalTime = DISABLE;
 
 	// Signal	: EngineCtrlRear_Alive
-	// Start-Bit: 0 End-Bit: 15	pCANFrame->data[0] = (uint8_t)((pMsg->EngineCtrlRear_Alive & 0xFF00) >> 8);
+	// Start-Bit: 0 End-Bit: 15
+	pCANFrame->data[0] = (uint8_t)((pMsg->EngineCtrlRear_Alive & 0xFF00) >> 8);
 	pCANFrame->data[1] = (uint8_t)(pMsg->EngineCtrlRear_Alive & 0x00FF);
 
 	return 0;
@@ -46,10 +47,12 @@ int8_t createMsg_Engine_Speed_Rear(CAN_FRAME* pCANFrame, Msg_Engine_Speed_Rear* 
 	pCANFrame->txHeader.TransmitGlobalTime = DISABLE;
 
 	// Signal	: Engine_Speed_R_L
-	// Start-Bit: 0 End-Bit: 15	pCANFrame->data[0] = (uint8_t)((pMsg->Engine_Speed_R_L & 0xFF00) >> 8);
+	// Start-Bit: 0 End-Bit: 15
+	pCANFrame->data[0] = (uint8_t)((pMsg->Engine_Speed_R_L & 0xFF00) >> 8);
 	pCANFrame->data[1] = (uint8_t)(pMsg->Engine_Speed_R_L & 0x00FF);
 	// Signal	: Engine_Speed_R_R
-	// Start-Bit: 16 End-Bit: 31	pCANFrame->data[2] = (uint8_t)((pMsg->Engine_Speed_R_R & 0xFF00) >> 8);
+	// Start-Bit: 16 End-Bit: 31
+	pCANFrame->data[2] = (uint8_t)((pMsg->Engine_Speed_R_R & 0xFF00) >> 8);
 	pCANFrame->data[3] = (uint8_t)(pMsg->Engine_Speed_R_R & 0x00FF);
 
 	return 0;
@@ -66,10 +69,12 @@ int8_t createMsg_Wheel_Speed_Rear(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_Rear* pM
 	pCANFrame->txHeader.TransmitGlobalTime = DISABLE;
 
 	// Signal	: Wheel_Speed_R_L
-	// Start-Bit: 0 End-Bit: 15	pCANFrame->data[0] = (uint8_t)((pMsg->Wheel_Speed_R_L & 0xFF00) >> 8);
+	// Start-Bit: 0 End-Bit: 15
+	pCANFrame->data[0] = (uint8_t)((pMsg->Wheel_Speed_R_L & 0xFF00) >> 8);
 	pCANFrame->data[1] = (uint8_t)(pMsg->Wheel_Speed_R_L & 0x00FF);
 	// Signal	: Wheel_Speed_R_R
-	// Start-Bit: 16 End-Bit: 31	pCANFrame->data[2] = (uint8_t)((pMsg->Wheel_Speed_R_R & 0xFF00) >> 8);
+	// Start-Bit: 16 End-Bit: 31
+	pCANFrame->data[2] = (uint8_t)((pMsg->Wheel_Speed_R_R & 0xFF00) >> 8);
 	pCANFrame->data[3] = (uint8_t)(pMsg->Wheel_Speed_R_R & 0x00FF);
 
 	return 0;
@@ -93,7 +98,8 @@ int8_t parseMsg_Wheel_Speed_Rear_Setpoint(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_
 	if (pCANFrame->rxHeader.DLC != 4)
 		return -1;
 
-	// Extract the data from CAN-Frame	// Signal	: Wheel_Speed_R_L_Setpoint
+	// Extract the data from CAN-Frame
+	// Signal	: Wheel_Speed_R_L_Setpoint
 	// Start-Bit: 0 End-Bit: 15
 	pMsg->Wheel_Speed_R_L_Setpoint = (pCANFrame->data[0] << 8) |
 							  (pCANFrame->data[1]);

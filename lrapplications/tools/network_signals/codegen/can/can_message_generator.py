@@ -25,6 +25,7 @@ class CANMessageGenerator(BaseCodeGenerator):
             for interface in node.Interfaces.values():
                 templateCtx = {}
                 templateCtx['nodeName'] = node.ID
+                templateCtx['nodeNetworkID'] = hex(interface.NetworkID)
 
                 templateCtx['interfaceHeaderName'] = "_" + node.ID.upper() + "_CAN_" + interface.NetworkController + "_H_"
                 templateCtx['interfaceName'] = interface.ID

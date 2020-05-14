@@ -31,6 +31,18 @@ typedef struct _CAN_FRAME
 } CAN_FRAME;
 
 /*
+ * Define the network ID of the node
+ */
+#define NODE_INTERFACE_NETWORK_ID	{{nodeNetworkID}}
+
+/*
+ * Define CAN-IDs for special protocol purposes
+ *
+ */
+#define CAN_ID_PARAMETER_REQUEST	NODE_INTERFACE_NETWORK_ID + 1
+#define CAN_ID_PARAMETER_RESPONSE	NODE_INTERFACE_NETWORK_ID + 2
+
+/*
  * Defines for TX CAN Messages
  *
 */

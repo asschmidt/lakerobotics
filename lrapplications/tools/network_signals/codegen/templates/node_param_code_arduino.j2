@@ -21,4 +21,6 @@ int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct)
     // Param-ID: {{param.ID}} param-Type: {{param.Type}} Param-Size: {{param.Size}}
     pParamStruct->{{param.ID}} = {{param.DefaultValue}}; // {{param.Unit}}
     {% endfor %}
+
+    return 0;
 }
