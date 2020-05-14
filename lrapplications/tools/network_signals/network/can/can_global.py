@@ -6,6 +6,9 @@ import threading
 import time
 import queue
 
+from util.logger import LoggerEntryType
+from util.logger_global import defaultLog
+
 from model.static.networks import NetworkDataParser
 from model.static.signals import SignalDataParser
 from model.static.messages import MessageDataParser
@@ -16,6 +19,7 @@ from model.static.parameter.parameter_preprocessor import ParameterPreprocessor
 
 from model.dynamic.dynamic_datamodel import DataModelEntry, DynamicDataModel
 from model.dynamic.model_subscriber import Subscriber
+from model.dynamic.node_parameter_model import NodeParameterModelData, NodeParameterDynamicModel
 
 from network.can.can_data_definition import CANDataDefinition
 from network.can.can_data_extract import CANDataExtractFunctions
@@ -65,6 +69,9 @@ class CANGlobal:
 
         This date includes the Signals, Messages, Nodes and Networks for the complete CAN system
         '''
+
+        defaultLog("Parsing Network database {0}".format(fileName))
+
         # Create the XML Parser object
         tree = ET.parse(fileName)
         root = tree.getroot()
@@ -94,9 +101,12 @@ class CANGlobal:
         self._networkBuilder = NetworkBuilder(networkVersion, networks, nodes, messages, signals)
 
         # Perform the CAN-ID calculations
+        defaultLog("Performing CAN Message Preprocessing on {0} messages".format(len(self._networkBuilder.getMessages())))
+
         canMsgPreproc = CANMessagePreprocessor(self._networkBuilder)
         canMsgPreproc.prepareCANMessageDatabase()
 
+        defaultLog("Performing Parameter Preprocessing")
         paramMsgPreProc = ParameterPreprocessor(self._networkBuilder)
         paramMsgPreProc.prepareParameterDatabase()
 
@@ -106,6 +116,8 @@ class CANGlobal:
         '''
         Initializeses the dynamic data model used to handle the CAN signals and messages
         '''
+
+        defaultLog("Initializing Dynamic Data Model")
         # Create the dynamic model object
         self._dynamicModel = DynamicDataModel()
 
@@ -117,10 +129,29 @@ class CANGlobal:
                 dataEntry.setExtractFunction(CANDataExtractFunctions.extractInteger)
                 self._dynamicModel.addDataModelEntry(dataEntry)
 
+        defaultLog("Initializing Dynamic Parameter Model")
+        # Create the dynamic parameter model
+        self._parameterModel = NodeParameterDynamicModel()
+
+        # Initialize the Parameter model with all parameters from all nodes
+        for node in self._networkBuilder.getNodeList():
+            # Get the main Network ID of the Node
+            nodeNetworkID = node.getMainNetworkID()
+            # If there is a valid main network ID we add the parameter for this 
+            # network ID to the dynamic data model
+            if nodeNetworkID is not None:
+                # Iterate over all parameter of the node
+                for param in node.Parameters.values():
+                    defaultLog("Adding parameter {0} for node {1} to parameter model".format(param.ID, node.ID))
+                    paramModelData = NodeParameterModelData(node, param)
+                    self._parameterModel.addParameterModelEntry(nodeNetworkID, paramModelData)
+
     def _initializeCANInterface(self, comPort, canBaudrate):
         '''
         Initializes the CAN interface used to connect to a CAN bus
         '''
+        defaultLog("Initializing CAN Intergface on {0} with speed {1}".format(comPort, canBaudrate))
+
         if comPort == 'Virtual':
             self._canInterface = CANVirtualInterface()
         else:
@@ -132,12 +163,18 @@ class CANGlobal:
         '''
         Initializes and start the CAN thread which handles the RX and TX of CAN messages
         '''
+
+        defaultLog("Initializing CAN Thread")
+
         # Check whether the CAN interface is already initialized
         if self._canInterface != None:
+            defaultLog("Creating CAN Data Connector")
             # Create the CAN data connector and bind it to the dynamic model instance
             self._canConnector = CANDataConnector(self._dynamicModel)
+            defaultLog("Creating CAN Thread")
             # Create the thread and connect it with the interface and the data connector
             self._canThread = CANInterfaceThread(self._canInterface, self._canConnector)
+            defaultLog("Starting CAN Thread")
             # Start the thread
             self._canThread.start()
         else:
@@ -147,8 +184,10 @@ class CANGlobal:
         '''
         Initializes the CAN Protocol Handler Manager
         '''
+        defaultLog("Initializing CAN Protocol Handler")
+
         self._protocolHandlerManager = CANProtocolHandlerManager(self._networkBuilder)
-        self._protocolHandlerManager.registerProtocolHandler(CANParameterProtocolHandler(self._networkBuilder, self._canConnector))
+        self._protocolHandlerManager.registerProtocolHandler(CANParameterProtocolHandler(self._networkBuilder, self._canConnector, self._parameterModel))
 
         # Connect the Protocol Handler Manager with the CAN Connector
         self._canConnector.registerProtocolHandlerManager(self._protocolHandlerManager)

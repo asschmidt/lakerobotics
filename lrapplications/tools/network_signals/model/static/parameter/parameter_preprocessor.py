@@ -26,7 +26,7 @@ class ParameterPreprocessor:
 
                 # Iterate over all Tx Messages of a Interface
                 for parameter in node.Parameters.values():
-                    parameter.GeneratorData[ParameterGeneratorData.PARAM_ID] = actualParamNumber
+                    parameter.GeneratorData[ParameterGeneratorData.PARAM_NO] = actualParamNumber
                     actualParamNumber = actualParamNumber + 1
 
 

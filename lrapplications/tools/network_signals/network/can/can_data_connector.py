@@ -71,11 +71,12 @@ class CANDataConnector(CANBaseConnector):
         except:
             pass
 
-        if msgObj != None:
+        if msgObj is not None:
+            # Convert the data to a byte array
+            dataArray = list(pack('<Q', canMessage.get_data()))
+
             # Iterate over all signals in the message
             for signalRef in msgObj.Signals:
-                # Convert the data to a byte array
-                dataArray = list(pack('<Q', canMessage.get_data()))
                 self._dataModel.updateDataModelEntry(signalRef.Signal.ID, dataArray)
         else:
             # If the CAN-ID is not associated with a message, check for 

@@ -39,7 +39,7 @@ class CANVirtualInterface(CANInterface):
         CAN frames.
         '''
         while self._stopRxThread == False:
-            canID = random.randrange(0x5FF, 0x610)
+            canID = random.randrange(0x01, 0x15)
             val1 = random.randrange(0x0, 0xFF)
             val2 = random.randrange(0x0, 0xFF)
             msg = CANMessage(canID, [val1, 0, val2, 0])

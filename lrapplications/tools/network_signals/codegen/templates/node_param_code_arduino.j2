@@ -10,12 +10,14 @@
 
 #include "{{nodeName}}_Param_{{nodeController}}.h"
 
+// Global Parameter struct object
+struct Param_Struct gParameterModel;
 
 /*
  * Function to initialize the parameter struct with the default values
  *
 */
-int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct)
+int32_t parameterInitializeDefaultValues(struct Param_Struct* pParamStruct)
 {
     {% for param in parameters %}
     // Param-ID: {{param.ID}} param-Type: {{param.Type}} Param-Size: {{param.Size}}

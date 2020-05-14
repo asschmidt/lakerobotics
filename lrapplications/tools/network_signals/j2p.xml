@@ -8,7 +8,7 @@
 	<!-- Node Definitions -->
 	<Nodes>
 		<!-- Power Manager ECU -->
-		<Node ID="Node_Pwr" Name="Power Manager Unit" NodeController="Arduino">
+		<Node ID="Node_Pwr" Name="Power Manager Unit" NodeController="Arduino" NodeMainInterface="Node_Pwr_CAN_1">
 			<Interfaces>
 				<Interface ID="Node_Pwr_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x1FF" NetworkController="MCP2515" ConnectedTo="MainCAN">
 					<RxMessages>
@@ -25,6 +25,7 @@
 
 			<Parameters>
 				<Parameter ID="MinimumElectronicVoltage" Name="Minimum Voltage for Eletronics" Type="Integer" Size="32" MinValue="0" MaxValue="24000" Unit="mV" DefaultValue="9000"/>
+				<Parameter ID="MinimumMotorVoltage" Name="Minimum Voltage for Motor" Type="Integer" Size="32" MinValue="0" MaxValue="24000" Unit="mV" DefaultValue="9000"/>
 			</Parameters>
 		</Node>
 

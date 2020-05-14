@@ -17,4 +17,4 @@ class ParameterGeneratorData:
     '''
     Class which provides constants for the Generator for Parameter
     '''
-    PARAM_ID    = 'PARAM_ID'
+    PARAM_NO    = 'PARAM_NO'

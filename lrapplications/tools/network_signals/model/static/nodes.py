@@ -89,11 +89,22 @@ class NodeData:
         '''
         self.ID = "Unknown"
         self.Name = "Unknown"
-        self.NodeController = "Default" # Microcontroller type used for the node
+        self.NodeController = "Default"         # Microcontroller type used for the node
+        self.NodeMainInterface = "Unknown"      # Interface ID which is the main interface (used for Parameter etc.)
         self.Interfaces = {}
         self.Parameters = {}
 
         self.GeneratorData = {}
+
+    def getMainNetworkID(self):
+        '''
+        Returns the network ID for the Main Interface
+        '''
+        if self.NodeMainInterface is not None and self.NodeMainInterface != "Unknown":
+            mainInterface = self.Interfaces[self.NodeMainInterface]
+            return mainInterface.NetworkID
+        else:
+            return None
 
 class NodeDataParser:
     '''
@@ -129,6 +140,7 @@ class NodeDataParser:
             nodeData.ID = nodeElement.get("ID")
             nodeData.Name = nodeElement.get("Name")
             nodeData.NodeController = nodeElement.get("NodeController")
+            nodeData.NodeMainInterface = nodeElement.get("NodeMainInterface")
 
             # Find the <Interfaces> element inside the actual Node element
             interfacesRoot = nodeElement.find("Interfaces")

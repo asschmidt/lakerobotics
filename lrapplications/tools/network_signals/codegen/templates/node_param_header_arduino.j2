@@ -15,11 +15,11 @@
 #include <stdint.h>
 
 /*
- * Defines for Parameter IDs
+ * Defines for Parameter Numbers
  *
 */
 {% for param in parameters %}
-#define PARAM_ID_{{param.ID}}			{{param.GeneratorData['PARAM_ID']}}
+#define PARAM_ID_{{param.ID}}			{{param.GeneratorData['PARAM_NO']}}
 {% endfor %}
 
 
@@ -61,9 +61,15 @@ typedef struct _Param_Mapping
 extern ParamMapping gParameterMap[{{parameters|length}}];
 
 /*
+ * Global Object
+ *
+*/
+extern struct Param_Struct gParameterModel;
+
+/*
  * Function prototypes
  *
 /
-int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct);
+extern int32_t parameterInitializeDefaultValues(struct Param_Struct* pParamStruct);
 
 #endif
