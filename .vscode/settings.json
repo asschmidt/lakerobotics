@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/home/andreas/anaconda3/bin/python",
+    "python.pythonPath": "D:\\LR\\DevEnv\\python-3.7.3\\python.exe",
     "python.autoComplete.extraPaths": [
         "lrapplications/tools/network_signals",
         "lrapplications/tools/cantools"

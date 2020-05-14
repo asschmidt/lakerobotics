@@ -346,9 +346,10 @@ class CANMessage(object):
             elif mtype == 'T':
                 mid = int(msg[index: index + 8], 16)
                 dlc = int(msg[index + 8], 16)
-                index = index + 8
+                index = index + 9 # [ASS] Fix for skipping the DLC byte
                 for i in range(dlc):
-                    data.append(int(msg[index: index +1], 16))
+                    dataByte = msg[index: index + 2]
+                    data.append(int(dataByte, 16))
                     index += 2
             return cls(mid, data=data, dlc=dlc, rtr=rtr)
         else:

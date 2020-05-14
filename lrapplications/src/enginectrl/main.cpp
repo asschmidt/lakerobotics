@@ -56,10 +56,14 @@ int main(int argc, char* argv[])
     xTaskCreate( taskADCAccquire, "ADC_Accquire", 256, NULL, 1, NULL);
     xTaskCreate( taskMotorControl, "Motor_Control", 512, NULL, 1, NULL);
 
+    HAL_GPIO_WritePin(GPIOB, LED1_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, LED2_Pin, GPIO_PIN_SET);
+
     // Start the tasks
     vTaskStartScheduler();
 
     return 0;
+
 }
 
 

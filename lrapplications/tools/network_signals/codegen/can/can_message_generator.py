@@ -30,8 +30,8 @@ class CANMessageGenerator(BaseCodeGenerator):
                 templateCtx['interfaceName'] = interface.ID
                 templateCtx['interfaceController'] = interface.NetworkController
 
-                outputHeaderFile = open("_output/" + node.ID + "_CAN_" + interface.NetworkController + ".h", "w")
-                outputCodeFile = open("_output/" + node.ID + "_CAN_" + interface.NetworkController + ".cpp", "w")
+                outputHeaderFile = open("codegen/output/" + node.ID + "_CAN_" + interface.NetworkController + ".h", "w")
+                outputCodeFile = open("codegen/output/" + node.ID + "_CAN_" + interface.NetworkController + ".cpp", "w")
 
                 try:
                     headerTemplate = self._templates[interface.NetworkController].HeaderTemplate

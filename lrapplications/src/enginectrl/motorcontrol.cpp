@@ -30,7 +30,7 @@
 #include "motorcontrol.h"
 
 static FastPID2 gLeftPID;
-static FastPID gRightPID;
+static FastPID2 gRightPID;
 
 static int16_t motorControlRunLeftEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel);
 static int16_t motorControlRunRightEngine(MotorControl* pControl, EngineCtrlProcessModel* pProcessModel);
@@ -41,9 +41,9 @@ int32_t motorControlInitialize(MotorControl* pControl)
     pControl->kiLeftEngine = 0.005555 * 50;
     pControl->kdLeftEngine = 1.0;
 
-    pControl->kpRightEngine = 0.0;
-    pControl->kiRightEngine = 0.0;
-    pControl->kdRightEngine = 0.0;
+    pControl->kpRightEngine = pControl->kpLeftEngine;
+    pControl->kiRightEngine = pControl->kiLeftEngine;
+    pControl->kdRightEngine = pControl->kdLeftEngine;
 
     pControl->maxOutput = DEFAULT_MAX_OUTPUT;
     pControl->minOutput = DEFAULT_MIN_OUTPUT;
@@ -88,10 +88,13 @@ int32_t motorControlRun(MotorControl* pControl)
     EngineCtrlProcessModel* pProcessModel = processModelGetModel();
     processModelSetSpeedValues(pProcessModel, encDiffM1, encDiffM2);
 
+    pProcessModel->wheelspeed.wheelSetpointSpeedRight = pProcessModel->wheelspeed.wheelSetpointSpeedLeft;
+
     int16_t pwmLeft = motorControlRunLeftEngine(pControl, pProcessModel);
     int16_t pwmRight = motorControlRunRightEngine(pControl, pProcessModel);
 
-    debugPrint("%d, %d, %d, %d, %d, %d\r\n", tickCount, pProcessModel->wheelspeed.wheelSetpointSpeedLeft, pwmLeft, encDiffM1, pProcessModel->wheelspeed.wheelSpeedLeft, pProcessModel->enginespeed.engineSpeedLeft);
+    debugPrint("%d, %d, %d, %d, %d, %d\t\t", tickCount, pProcessModel->wheelspeed.wheelSetpointSpeedLeft, pwmLeft, encDiffM1, pProcessModel->wheelspeed.wheelSpeedLeft, pProcessModel->enginespeed.engineSpeedLeft);
+    debugPrint("%d, %d, %d, %d, %d, %d\r\n", tickCount, pProcessModel->wheelspeed.wheelSetpointSpeedRight, pwmRight, encDiffM2, pProcessModel->wheelspeed.wheelSpeedRight, pProcessModel->enginespeed.engineSpeedRight);
 
     return ERR_OK;
 }

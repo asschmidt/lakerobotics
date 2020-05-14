@@ -288,6 +288,9 @@ class USBtin(object):
                         message = self.incoming_message
                         cmd = message[0]
                         if cmd in 'tTrR':
+                            #if cmd == 'T':
+                            #    print("Message: " + message)
+
                             # create CAN message from message string
                             canmsg = CANMessage.from_string(message)
 
