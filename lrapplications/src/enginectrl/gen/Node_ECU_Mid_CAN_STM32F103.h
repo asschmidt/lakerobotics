@@ -31,16 +31,28 @@ typedef struct _CAN_FRAME
 } CAN_FRAME;
 
 /*
+ * Define the network ID of the node
+ */
+#define NODE_INTERFACE_NETWORK_ID	0x11ff
+
+/*
+ * Define CAN-IDs for special protocol purposes
+ *
+ */
+#define CAN_ID_PARAMETER_REQUEST	NODE_INTERFACE_NETWORK_ID + 1
+#define CAN_ID_PARAMETER_RESPONSE	NODE_INTERFACE_NETWORK_ID + 2
+
+/*
  * Defines for TX CAN Messages
  *
 */
-#define CAN_ID_EngineCtrlMid_Alive			0x1200
+#define CAN_ID_EngineCtrlMid_Alive			0x120a
 #define CYCLE_EngineCtrlMid_Alive			1000
 
-#define CAN_ID_Engine_Speed_Mid			0x1201
+#define CAN_ID_Engine_Speed_Mid			0x120b
 #define CYCLE_Engine_Speed_Mid			100
 
-#define CAN_ID_Wheel_Speed_Mid			0x1202
+#define CAN_ID_Wheel_Speed_Mid			0x120c
 #define CYCLE_Wheel_Speed_Mid			100
 
 
@@ -84,7 +96,7 @@ extern int8_t createMsg_Wheel_Speed_Mid(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_Mi
  * Defines for RX CAN Messages
  *
  */
-#define CAN_ID_Wheel_Speed_Mid_Setpoint			0x302
+#define CAN_ID_Wheel_Speed_Mid_Setpoint			0x30c
 
 /*
  * Declare data type structures for CAN RX Messages

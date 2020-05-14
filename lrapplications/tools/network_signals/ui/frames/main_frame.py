@@ -12,6 +12,7 @@ from ui.dialogs.hw_interface_dlg import *
 from ui.ecu.pwrmanager.pwrmanager_monitor_frame import *
 from ui.ecu.pwrmanager.pwrmanager_control_frame import *
 from ui.ecu.enginectrl.enginectrl_monitor_frame import *
+from ui.ecu.enginectrl.enginectrl_parameter_frame import *
 
 class MainFrame(wx.Frame):
     '''
@@ -22,7 +23,7 @@ class MainFrame(wx.Frame):
         '''
         Initializes the main window of the CAN Master
         '''
-        super().__init__(parent=None, title='CAN Master', size=(1280, 768))
+        super().__init__(parent=None, title='CAN Master', size=(640, 480))
 
         # Bind some events of the main frame
         self.Bind(wx.EVT_CLOSE, handler=self._onCloseEvent)
@@ -99,9 +100,11 @@ class MainFrame(wx.Frame):
         provided parent menu.
         '''
         engineECU = wx.Menu()
+        self._engineECUMParameterMenuItem = engineECU.Append(wx.ID_ANY, 'Parameter Engine ECU', '')
         self._engineECUMonitorMenuItem = engineECU.Append(wx.ID_ANY, 'Monitor Engine ECU', '')
         self._engineECUMControlMenuItem = engineECU.Append(wx.ID_ANY, 'Control Engine ECU', '')
 
+        self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUParameter, source=self._engineECUMParameterMenuItem)
         self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineECUMonitor, source=self._engineECUMonitorMenuItem)
         #self.Bind(event=wx.EVT_MENU, handler=self._onOpenEngineFrontECUMonitor, source=self._frontEngineECUMControlMenuItem)
 
@@ -148,6 +151,13 @@ class MainFrame(wx.Frame):
         '''
         pwrManagerMonitorFrame = PowerManagerMonitorFrame(self)
         pwrManagerMonitorFrame.Show()
+
+    def _onOpenEngineECUParameter(self, event):
+        '''
+        Event Handler to open the "Engine Control Parameter" UI Panel
+        '''
+        engCtrlParameterFrame = EngCtrlParameterFrame(self)
+        engCtrlParameterFrame.Show()
 
     def _onOpenEngineECUMonitor(self, event):
         '''

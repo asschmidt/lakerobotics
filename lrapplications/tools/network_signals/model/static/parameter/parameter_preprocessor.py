@@ -55,7 +55,7 @@ class ParameterPreprocessor:
         print("Parameters")
         print("==================================")
         for param in parameterList:
-            paramString = "Parameter {0:36} from Node {1:20} with Parameter-ID: {2:5}".format(param.ID, param.Node.ID, param.GeneratorData[ParameterGeneratorData.PARAM_ID])
+            paramString = "Parameter {0:36} from Node {1:20} with Parameter-ID: {2:5}".format(param.ID, param.Node.ID, param.GeneratorData[ParameterGeneratorData.PARAM_NO])
             print(paramString)
 
         print("")

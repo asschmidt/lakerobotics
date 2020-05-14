@@ -1,5 +1,13 @@
 
 
+class NodeParameterModelState:
+    '''
+    Class which provides constants for a state of a parameter model data
+    '''
+    VALUE_STATUS_UNKNOWN    = 0x01
+    VALUE_REQUESTED         = 0x02
+    VALUE_RECEIVED          = 0x04
+
 class NodeParameterModelData:
     '''
     Class which hold the dynamic data of one parameter for a node and also
@@ -14,6 +22,7 @@ class NodeParameterModelData:
         self._parameterDef = parameterDef
         self._actualValue = None
         self._locallyChanged = False
+        self._status = NodeParameterModelState.VALUE_STATUS_UNKNOWN
 
     def getNode(self):
         '''
@@ -26,6 +35,18 @@ class NodeParameterModelData:
         Returns the parameter definition object
         '''
         return self._parameterDef
+
+    def getValueStatus(self):
+        '''
+        Returns the value status of the parameter
+        '''
+        return self._status
+
+    def setValueStatus(self, status):
+        '''
+        Sets the value status of the parameter
+        '''
+        self._status = status
 
     def getDefaultValue(self):
         '''
@@ -77,6 +98,28 @@ class NodeParameterDynamicModel:
         Initializes the dynamic parameter model object
         '''
         self._nodeParameterMap = {}
+        self._subscriber = []
+
+    def registerSubscriber(self, sub):
+        '''
+        Registers a subscriber object in the internal subscriber list
+        '''
+        self._subscriber.append(sub)
+
+    def unregisterSubscriber(self, sub):
+        '''
+        Unregisters a subscriber object from the internal subscriber list
+        '''
+        self._subscriber.remove(sub)
+
+    def notifySubscriber(self, dataEntry):
+        '''
+        Iterates through the list of all registered subscribers and calls their
+        notify() method with the data entry as argument
+        '''
+        for sub in self._subscriber:
+            if sub != None:
+                sub.notify(dataEntry)
 
     def addParameterModelEntry(self, nodeNetworkID, paramModelData):
         '''
@@ -91,6 +134,29 @@ class NodeParameterDynamicModel:
         # Add the parameter to the parameter dictionary of the node
         parameterDict[paramModelData.getParameterDefinition().ID] = paramModelData
         self._nodeParameterMap[nodeNetworkID] = parameterDict
+
+    def getParameterIDForParameterNo(self, nodeNetworkID, paramNo):
+        '''
+        Returns the parameter ID for the specific parameter number
+        '''
+        for param in self.getParameterListForNode(nodeNetworkID):
+            paramDef = param.getParameterDefinition()
+            if paramDef.GeneratorData['PARAM_NO'] == paramNo:
+                return paramDef.ID
+
+        return None
+
+    def getParameterModelEntry(self, nodeNetworkID, paramID):
+        '''
+        Returns the parameter model entry object for the provided networkID and param ID
+        '''
+        if nodeNetworkID in self._nodeParameterMap:
+            try:
+                return self._nodeParameterMap[nodeNetworkID][paramID]
+            except:
+                return None
+        else:
+            return None
 
     def getNodeNetworkIDList(self):
         '''
@@ -116,7 +182,11 @@ class NodeParameterDynamicModel:
 
     def setParameterActualValue(self, nodeNetworkID, parameterNo, actualValue):
         '''
-        Sets the parameters actual value for the provided node network ID and the 
+        Sets the parameters actual value for the provided node network ID and the
         parameter number
         '''
-        pass
+        parameterID = self.getParameterIDForParameterNo(nodeNetworkID, parameterNo)
+        paramModelEntry = self.getParameterModelEntry(nodeNetworkID, parameterID)
+        if paramModelEntry is not None:
+            paramModelEntry.setActualValue(actualValue)
+            self.notifySubscriber(paramModelEntry)

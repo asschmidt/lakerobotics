@@ -1,16 +1,16 @@
 /***********************************************************
  * Generated Parameter Header File for Node
  ***********************************************************
- * Node: {{ nodeName }}
- * Interface: {{ interfaceName }}
- * Network Version: {{ networkVersion }}
+ * Node: Node_ECU_Rear
+ * Interface: 
+ * Network Version: 1.0
  *
  ***********************************************************
  *
  **********************************************************/
 
-#ifndef {{ nodeHeaderName }}
-#define {{ nodeHeaderName }}
+#ifndef _NODE_ECU_REAR_Param_STM32F103_H_
+#define _NODE_ECU_REAR_Param_STM32F103_H_
 
 #include <stdint.h>
 
@@ -18,10 +18,10 @@
  * Defines for Parameter IDs
  *
 */
-{% for param in parameters %}
-#define PARAM_ID_{{param.ID}}						{{param.GeneratorData['PARAM_NO']}}
-{% endfor %}
-#define PARAM_COUNT									{{parameters|length}}
+#define PARAM_ID_SpeedCtrlLeft_KP						1
+#define PARAM_ID_SpeedCtrlLeft_KI						2
+#define PARAM_ID_SpeedCtrlLeft_KD						3
+#define PARAM_COUNT									3
 
 /*
  * Declare data type structures for Parameter
@@ -29,27 +29,23 @@
 */
 typedef struct _Param_Struct
 {
-	{% for param in parameters %}
-	// Param-ID: {{param.ID}} Param-Type: {{param.Type}} Param-Size: {{param.Size}}
-		{% if param.Type == 2 %}
+	// Param-ID: SpeedCtrlLeft_KP Param-Type: 2 Param-Size: 32
 	// Integer Parameter
-			{% if param.Size == 1 or param.Size == 8 %}
-	// 8 Bit
-	int8_t {{param.ID}};
-			{% elif param.Size == 16 %}
-	// 16 Bit
-	int16_t {{param.ID}};
-			{% elif param.Size == 32 %}
 	// 32 Bit
-	int32_t {{param.ID}};
-			{% endif %}
-		{% endif %}
-	{% endfor %}
+	int32_t SpeedCtrlLeft_KP;
+	// Param-ID: SpeedCtrlLeft_KI Param-Type: 2 Param-Size: 32
+	// Integer Parameter
+	// 32 Bit
+	int32_t SpeedCtrlLeft_KI;
+	// Param-ID: SpeedCtrlLeft_KD Param-Type: 2 Param-Size: 32
+	// Integer Parameter
+	// 32 Bit
+	int32_t SpeedCtrlLeft_KD;
 } Param_Struct;
 
 typedef struct _Param_Mapping
 {
-	uint8_t paramType;
+	uint8_t paramID;
 	uint8_t paramSize;
 	uint8_t* paramPointer;
 } Param_Mapping;

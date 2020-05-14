@@ -30,7 +30,7 @@
 		</Node>
 
 		<!-- Telematic ECU -->
-		<Node ID="Node_Tele" Name="Telematic Unit" NodeController="Arduino">
+		<Node ID="Node_Tele" Name="Telematic Unit" NodeController="Arduino" NodeMainInterface="Node_Tele_CAN_1">
 			<Interfaces>
 				<Interface ID="Node_Tele_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x2FF" NetworkController="Default" ConnectedTo="MainCAN">
 					<RxMessages>
@@ -47,7 +47,7 @@
 			</Interfaces>
 		</Node>
 
-		<Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axis" NodeController="STM32F103">
+		<Node ID="Node_ECU_Front" Name="Engine Control Unit for Front Axis" NodeController="STM32F103" NodeMainInterface="Node_ECU_Front_CAN_1">
 			<Interfaces>
 				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x10FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
@@ -63,7 +63,7 @@
 			</Interfaces>
 		</Node>
 
-		<Node ID="Node_ECU_Mid" Name="Engine Control Unit for Middle Axis" NodeController="STM32F103">
+		<Node ID="Node_ECU_Mid" Name="Engine Control Unit for Middle Axis" NodeController="STM32F103" NodeMainInterface="Node_ECU_Mid_CAN_1">
 			<Interfaces>
 				<Interface ID="Node_ECU_Mid_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x11FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
@@ -79,7 +79,7 @@
 			</Interfaces>
 		</Node>
 
-		<Node ID="Node_ECU_Rear" Name="Engine Control Unit for Rear Axis" NodeController="STM32F103">
+		<Node ID="Node_ECU_Rear" Name="Engine Control Unit for Rear Axis" NodeController="STM32F103" NodeMainInterface="Node_ECU_Rear_CAN_1">
 			<Interfaces>
 				<Interface ID="Node_ECU_Rear_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x12FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
@@ -93,6 +93,12 @@
 					</TxMessages>
 				</Interface>
 			</Interfaces>
+
+			<Parameters>
+				<Parameter ID="SpeedCtrlLeft_KP" Name="KP value for PID Speed Controller Left" Type="Integer" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
+				<Parameter ID="SpeedCtrlLeft_KI" Name="KI value for PID Speed Controller Left" Type="Integer" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
+				<Parameter ID="SpeedCtrlLeft_KD" Name="KD value for PID Speed Controller Left" Type="Integer" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
+			</Parameters>
 		</Node>
 	</Nodes>
 

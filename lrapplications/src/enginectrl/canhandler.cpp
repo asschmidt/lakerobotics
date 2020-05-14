@@ -122,41 +122,62 @@ int32_t canHandlerProcessReceiveBuffer(CANHandler* pHandler)
 {
     if (circular_buf_empty(gReceiveBufferHandle) == false)
     {
-        CAN_FRAME canFrame;
-        circular_buf_get(gReceiveBufferHandle, &canFrame);
-
-#if ENGINE_CTRL_ECU == ECU_REAR
-        if (isMsg_Wheel_Speed_Rear_Setpoint(&canFrame))
+        while(circular_buf_empty(gReceiveBufferHandle) == false)
         {
-            Msg_Wheel_Speed_Rear_Setpoint wheelSetpointMsg;
-            parseMsg_Wheel_Speed_Rear_Setpoint(&canFrame, &wheelSetpointMsg);
+            CAN_FRAME canFrame;
+            circular_buf_get(gReceiveBufferHandle, &canFrame);
 
-            pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_R_L_Setpoint;
-            pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_R_R_Setpoint;
+    #if ENGINE_CTRL_ECU == ECU_REAR
+            if (canFrame.rxHeader.ExtId == CAN_ID_PARAMETER_REQUEST)
+            {
+                CAN_FRAME sendFrame;
+                sendFrame.txHeader.ExtId = CAN_ID_PARAMETER_RESPONSE;
+                sendFrame.txHeader.StdId = 0;
+                sendFrame.txHeader.IDE = CAN_ID_EXT;
+                sendFrame.txHeader.DLC = 6;
+
+                sendFrame.data[0] = 0x1; // Parameter ID Low Byte
+                sendFrame.data[1] = 0x0; // Parameter ID High Byte
+                sendFrame.data[2] = 0xAA;
+                sendFrame.data[3] = 0xBB;
+                sendFrame.data[4] = 0xCC;
+                sendFrame.data[5] = 0xDD;
+
+                // Transmit it
+                uint32_t usedMailbox = 0;
+                int32_t transmitResult = HAL_CAN_AddTxMessage(&hcan, &sendFrame.txHeader, sendFrame.data, &usedMailbox);
+            }
+            else if (isMsg_Wheel_Speed_Rear_Setpoint(&canFrame))
+            {
+                Msg_Wheel_Speed_Rear_Setpoint wheelSetpointMsg;
+                parseMsg_Wheel_Speed_Rear_Setpoint(&canFrame, &wheelSetpointMsg);
+
+                pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_R_L_Setpoint;
+                pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_R_R_Setpoint;
+            }
+
+    #elif ENGINE_CTRL_ECU == ECU_MID
+            if (isMsg_Wheel_Speed_Mid_Setpoint(&canFrame))
+            {
+                Msg_Wheel_Speed_Mid_Setpoint wheelSetpointMsg;
+                parseMsg_Wheel_Speed_Mid_Setpoint(&canFrame, &wheelSetpointMsg);
+
+                pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_M_L_Setpoint;
+                pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_M_R_Setpoint;
+            }
+
+    #elif ENGINE_CTRL_ECU == ECU_FRONT
+            if (isMsg_Wheel_Speed_Front_Setpoint(&canFrame))
+            {
+                Msg_Wheel_Speed_Front_Setpoint wheelSetpointMsg;
+                parseMsg_Wheel_Speed_Front_Setpoint(&canFrame, &wheelSetpointMsg);
+
+                pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_F_L_Setpoint;
+                pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_F_R_Setpoint;
+            }
+    #endif
         }
-
-#elif ENGINE_CTRL_ECU == ECU_MID
-        if (isMsg_Wheel_Speed_Mid_Setpoint(&canFrame))
-        {
-            Msg_Wheel_Speed_Mid_Setpoint wheelSetpointMsg;
-            parseMsg_Wheel_Speed_Mid_Setpoint(&canFrame, &wheelSetpointMsg);
-
-            pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_M_L_Setpoint;
-            pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_M_R_Setpoint;
-        }
-
-#elif ENGINE_CTRL_ECU == ECU_FRONT
-        if (isMsg_Wheel_Speed_Front_Setpoint(&canFrame))
-        {
-            Msg_Wheel_Speed_Front_Setpoint wheelSetpointMsg;
-            parseMsg_Wheel_Speed_Front_Setpoint(&canFrame, &wheelSetpointMsg);
-
-            pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_F_L_Setpoint;
-            pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_F_R_Setpoint;
-        }
-#endif
     }
-
     return ERR_OK;
 }
 

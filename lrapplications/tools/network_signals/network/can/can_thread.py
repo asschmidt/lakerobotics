@@ -8,6 +8,9 @@ import threading
 import time
 import queue
 
+from util.logger import LoggerEntryType
+from util.logger_global import defaultLog
+
 from pyusbtin.usbtin import CANMessage, USBtin
 
 class CANInterfaceThread(threading.Thread):
@@ -64,9 +67,12 @@ class CANInterfaceThread(threading.Thread):
                 # Check if the TX queue is empty
                 if self._canTxQueue.empty() == False:
                     # If there is a frame to transmit, get it out of the queue
-                    canTxMsg = self._canTxQueue.get(timeout=0.01)
-                    # Send it via the CAN Interface object
-                    self._canInterface.sendFrame(canTxMsg)
+                    canTxMsg = self._canTxQueue.get(timeout=0.001)
+
+                    if canTxMsg is not None:
+                        # Send it via the CAN Interface object
+                        self._canInterface.sendFrame(canTxMsg)
+                        defaultLog("CAN Message {0} sent".format(canTxMsg), LoggerEntryType.LOG_ACTIVITY)
             except queue.Empty:
                 pass
 

@@ -10,18 +10,24 @@
 
 #include "{{nodeName}}_Param_{{nodeController}}.h"
 
-// Global Parameter struct object
-struct Param_Struct gParameterModel;
+Param_Mapping gParameterMap[PARAM_COUNT] = 
+{
+    {% for param in parameters %}
+    { {{param.Type}}, {{param.Size}}, 0},        // {{param.ID}}
+    {% endfor %}
+};
 
 /*
  * Function to initialize the parameter struct with the default values
  *
 */
-int32_t parameterInitializeDefaultValues(struct Param_Struct* pParamStruct)
+int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct)
 {
     {% for param in parameters %}
     // Param-ID: {{param.ID}} param-Type: {{param.Type}} Param-Size: {{param.Size}}
     pParamStruct->{{param.ID}} = {{param.DefaultValue}}; // {{param.Unit}}
+    gParameterMap[{{param.GeneratorData['PARAM_NO'] - 1}}].paramPointer = (uint8_t*)&(pParamStruct->{{param.ID}});
+
     {% endfor %}
 
     return 0;

@@ -30,4 +30,4 @@ class WxUIModelConnector:
         For the Wx framework, the method wx.CallAfter is used
         '''
         if self._ui != None:
-            wx.CallAfter(self._ui.receiveDataForUI, data=dataEntry)
+            wx.CallAfter(self._ui.receiveDataForUI, paramEntry=dataEntry)

@@ -48,6 +48,7 @@ class CANGlobal:
 
         self._networkBuilder = None
         self._dynamicModel = None
+        self._parameterModel = None
         self._canInterface = None
         self._canConnector = None
         self._canThread = None
@@ -217,6 +218,12 @@ class CANGlobal:
         Returns the internal instance of the dynamic data model
         '''
         return self._dynamicModel
+
+    def getParameterModel(self):
+        '''
+        Returns the internal instance of the parameter model
+        '''
+        return self._parameterModel
 
     def getNetworkBuilder(self):
         '''
