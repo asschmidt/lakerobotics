@@ -22,7 +22,7 @@ class CANMessagePreprocessor:
         '''
         # Iterate over all Nodes
         for node in self._networkBuilder.getNodeList():
-            if node != None:
+            if node is not None:
                 actualMsgNumber = 1
 
                 canIDOffset = 10
@@ -42,7 +42,7 @@ class CANMessagePreprocessor:
         '''
         # Iterate over all Nodes
         for node in self._networkBuilder.getNodeList():
-            if node != None:
+            if node is not None:
                 # Iterate over all Interfaces of a node
                 for interface in node.Interfaces.values():
                     # Iterate over all Tx Messages of a Interface
@@ -59,6 +59,44 @@ class CANMessagePreprocessor:
                         # Calculate DLC in number of bytes
                         txMessage.Message.GeneratorData['DLC'] = int(msgDLC / 8)
 
+    def _generateMessageCodeNames(self):
+        '''
+        Generates the message names used in the code generation
+        '''
+        # Iterate over all Nodes
+        for node in self._networkBuilder.getNodeList():
+            if node is not None:
+                # Iterate over all Interfaces of a node
+                for interface in node.Interfaces.values():
+                    # Iterate over all Tx Messages of a Interface
+                    for txMessage in interface.TxMessages.values():
+                        if txMessage.InstanceIndepName is not None:
+                            txMessage.Message.GeneratorData['CODE_NAME'] = txMessage.InstanceIndepName
+                        else:
+                            txMessage.Message.GeneratorData['CODE_NAME'] = txMessage.Message.ID
+
+                        # Iterate over all Signals inside the Tx Message
+                        for sig in txMessage.Message.Signals:
+                            if sig.InstanceIndepName is not None:
+                                sig.Signal.GeneratorData['CODE_NAME'] = sig.InstanceIndepName
+                            else:
+                                sig.Signal.GeneratorData['CODE_NAME'] = sig.Signal.ID
+
+                    # Iterate over all Rx Messages of a Interface
+                    for rxMessage in interface.RxMessages.values():
+                        if rxMessage.InstanceIndepName is not None:
+                            rxMessage.Message.GeneratorData['CODE_NAME'] = rxMessage.InstanceIndepName
+                        else:
+                            rxMessage.Message.GeneratorData['CODE_NAME'] = rxMessage.Message.ID
+
+                        # Iterate over all Signals inside the Rx Message
+                        for sig in rxMessage.Message.Signals:
+                            if sig.InstanceIndepName is not None:
+                                sig.Signal.GeneratorData['CODE_NAME'] = sig.InstanceIndepName
+                            else:
+                                sig.Signal.GeneratorData['CODE_NAME'] = sig.Signal.ID
+
+
     def _findCorrespondingTxMessage(self, rxMessage):
         '''
         Returns a TX message which corresponds to the RX message provided as argument. If no
@@ -68,7 +106,7 @@ class CANMessagePreprocessor:
 
         # Iterate over all Nodes
         for node in self._networkBuilder.getNodeList():
-            if node != None:
+            if node is not None:
                 # Iterate over all Interfaces of a node
                 for interface in node.Interfaces.values():
                     # Iterate over all Tx Messages of a Interface
@@ -87,17 +125,18 @@ class CANMessagePreprocessor:
         '''
         # Iterate over all Nodes
         for node in self._networkBuilder.getNodeList():
-            if node != None:
+            if node is not None:
                 # Iterate over all Interfaces of a node
                 for interface in node.Interfaces.values():
                     # Iterate over all Rx Messages of a Interface
                     for rxMessage in interface.RxMessages.values():
                         # Find txMessage in Network tree
                         txMessage = self._findCorrespondingTxMessage(rxMessage)
-                        if txMessage != None:
+                        if txMessage is not None:
                             rxMessage.Message.GeneratorData = txMessage.Message.GeneratorData
                         else:
                             print("Rx Message " + rxMessage.Message.ID + " not found in Tx list of any node")
+
     def _buildTxMessageList(self):
         '''
         Returns a list of all TX messages
@@ -106,7 +145,7 @@ class CANMessagePreprocessor:
 
         # Iterate over all Nodes
         for node in self._networkBuilder.getNodeList():
-            if node != None:
+            if node is not None:
                 # Iterate over all Interfaces of a node
                 for interface in node.Interfaces.values():
                     # Iterate over all Tx Messages of a Interface
@@ -154,6 +193,7 @@ class CANMessagePreprocessor:
         # Calculate the Node IDs
         self._calculateMessageIDs()
         self._calculateMessageDLCs()
+        self._generateMessageCodeNames()
         self._updateRxMessageGeneratorData()
 
         self._printNodeIDs()

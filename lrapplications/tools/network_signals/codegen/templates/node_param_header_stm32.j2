@@ -26,12 +26,15 @@
 /*
  * Declare data type structures for Parameter
  *
-*/
+ */
 typedef struct _Param_Struct
 {
 	{% for param in parameters %}
 	// Param-ID: {{param.ID}} Param-Type: {{param.Type}} Param-Size: {{param.Size}}
-		{% if param.Type == 2 %}
+		{% if param.Type == 1 %}
+	// Bool parameter
+	int8_t {{param.ID}};
+		{% elif param.Type == 2 %}
 	// Integer Parameter
 			{% if param.Size == 1 or param.Size == 8 %}
 	// 8 Bit
@@ -43,9 +46,18 @@ typedef struct _Param_Struct
 	// 32 Bit
 	int32_t {{param.ID}};
 			{% endif %}
+		{% elif param.Type == 3 %}
+	// Float Parameter
+	float {{param.ID}};
 		{% endif %}
 	{% endfor %}
 } Param_Struct;
+
+typedef union _Param_Value
+{
+	int32_t intValue;
+	float floatValue;
+} Param_Value;
 
 typedef struct _Param_Mapping
 {
@@ -58,12 +70,15 @@ typedef struct _Param_Mapping
  * Global Variables
  *
 */
-extern Param_Mapping gParameterMap[PARAM_COUNT];
+extern Param_Struct gParameter;
+extern const Param_Mapping gParameterMap[PARAM_COUNT];
 
 /*
  * Function prototypes
  *
 */
-int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct);
+extern int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct);
+extern int32_t parameterGetValue(Param_Struct* pParamStruct, uint16_t paramNo, Param_Value* pValue);
+extern int32_t parameterSetValue(Param_Struct* pParamStruct, uint16_t paramNo, Param_Value value);
 
 #endif

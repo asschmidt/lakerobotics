@@ -26,12 +26,15 @@
 /*
  * Declare data type structures for Parameter
  *
-*/
+ */
 typedef struct _Param_Struct
 {
 	{% for param in parameters %}
-	// Param-ID: {{param.ID}} param-Type: {{param.Type}} Param-Size: {{param.Size}}
-		{% if param.Type == 2 %}
+	// Param-ID: {{param.ID}} Param-Type: {{param.Type}} Param-Size: {{param.Size}}
+		{% if param.Type == 1 %}
+	// Bool parameter
+	int8_t {{param.ID}};
+		{% elif param.Type == 2 %}
 	// Integer Parameter
 			{% if param.Size == 1 or param.Size == 8 %}
 	// 8 Bit
@@ -43,6 +46,9 @@ typedef struct _Param_Struct
 	// 32 Bit
 	int32_t {{param.ID}};
 			{% endif %}
+		{% elif param.Type == 3 %}
+	// Float Parameter
+	float {{param.ID}};
 		{% endif %}
 	{% endfor %}
 } Param_Struct;
@@ -65,5 +71,7 @@ extern Param_Mapping gParameterMap[PARAM_COUNT];
  *
 */
 extern int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct);
+extern int32_t parameterGetValue(Param_Struct* pParamStruct, uint16_t paramNo);
+extern int32_t parameterSetValue(Param_Struct* pParamStruct, uint16_t paramNo, int32_t value);
 
 #endif

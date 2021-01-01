@@ -9,7 +9,7 @@ class SignalType:
     SIGNAL_FLOAT    = 3 # Floating data type
 
     @classmethod
-    def parseSignalType(self, signalTypeAttribValue):
+    def parseSignalType(cls, signalTypeAttribValue):
         '''
         Parses the signal type attribute string and returns a corresponding signal type
         '''
@@ -31,7 +31,7 @@ class SignalEndianess:
     ENDIAN_BIG      = 2 # Big Endian MSB first
 
     @classmethod
-    def parseSignalEndianess(self, signalEndianessAttribValue):
+    def parseSignalEndianess(cls, signalEndianessAttribValue):
         '''
         Parses the signal endianess attribute string and returns a corresponding signal endianess
         '''
@@ -57,6 +57,8 @@ class SignalData:
         self.Type = SignalType.SIGNAL_UNKNOWN
         self.Endianess = SignalEndianess.ENDIAN_UNKNOWN
         self.PhysicalUnit = "Unknown"
+
+        self.GeneratorData = {}
 
     def __repr__(self):
         '''

@@ -23,14 +23,20 @@
 /*
  * Declare data type structures for Parameter
  *
-*/
+ */
 typedef struct _Param_Struct
 {
 } Param_Struct;
 
+typedef union _Param_Value
+{
+	int32_t intValue;
+	float floatValue;
+} Param_Value;
+
 typedef struct _Param_Mapping
 {
-	uint8_t paramID;
+	uint8_t paramType;
 	uint8_t paramSize;
 	uint8_t* paramPointer;
 } Param_Mapping;
@@ -39,12 +45,15 @@ typedef struct _Param_Mapping
  * Global Variables
  *
 */
-extern Param_Mapping gParameterMap[PARAM_COUNT];
+extern Param_Struct gParameter;
+extern const Param_Mapping gParameterMap[PARAM_COUNT];
 
 /*
  * Function prototypes
  *
 */
-int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct);
+extern int32_t parameterInitializeDefaultValues(Param_Struct* pParamStruct);
+extern int32_t parameterGetValue(Param_Struct* pParamStruct, uint16_t paramNo, Param_Value* pValue);
+extern int32_t parameterSetValue(Param_Struct* pParamStruct, uint16_t paramNo, Param_Value value);
 
 #endif

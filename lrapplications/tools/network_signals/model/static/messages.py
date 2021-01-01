@@ -13,6 +13,7 @@ class MessageSignalRef:
         '''
         self.Signal = None
         self.Position = 0
+        self.InstanceIndepName = None       # Instance independent name used for code generation
 
 class MessageData:
     '''
@@ -119,7 +120,11 @@ class MessageDataParser:
                         # an error message is printed
                         signalRef.Signal = self._signalDict[signalRefID]
 
-                        # Add the signal to the signal list of the message
+                        # Get InstanceIndepName if available
+                        if "InstanceIndepName" in signalChild.attrib:
+                            signalRef.InstanceIndepName = signalChild.get("InstanceIndepName")
+
+                            # Add the signal to the signal list of the message
                         message.Signals.append(signalRef)
                     except:
                         print("Error while parsing Signal " + signalRefID)
@@ -132,7 +137,7 @@ class MessageDataParser:
         return messageDict
 
     @classmethod
-    def __sortSignalPosition(self, signalObject):
+    def __sortSignalPosition(cls, signalObject):
         '''
         Helper method to sort the signal array according the signal position
         '''

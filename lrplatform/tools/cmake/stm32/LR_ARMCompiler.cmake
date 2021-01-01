@@ -68,7 +68,7 @@ set(LR_LINKER_DEFAULT_FLAGS "${LR_COMPILER_MCU_FLAGS} --specs=nano.specs -Wl,--c
 # one for the Linker MAP file
 if(DEFINED APPLICATION_OUTPUTNAME)
     # Define the MAP options for the Linker
-    set(LR_LINKER_MAP_FLAGS "-Wl,-Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${APPLICATION_OUTPUTNAME}.map")
+    set(LR_LINKER_MAP_FLAGS "-Wl,-Map=${APPLICATION_OUTPUTNAME}.map")
     # STM32 needs also a linker script
     set(LR_LINKER_FLAGS_SCRIPT "-Wl,-T${APPLICATION_LINKER_SCRIPT}")
 endif(DEFINED APPLICATION_OUTPUTNAME)

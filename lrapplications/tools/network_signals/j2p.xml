@@ -51,13 +51,13 @@
 			<Interfaces>
 				<Interface ID="Node_ECU_Front_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x10FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
-						<RxMessage RefID="Wheel_Speed_Front_Setpoint"></RxMessage>
+						<RxMessage RefID="Wheel_Speed_Front_Setpoint" InstanceIndepName="Wheel_Speed_Setpoint"></RxMessage>
 					</RxMessages>
 
 					<TxMessages>
-						<TxMessage RefID="EngineCtrlFront_Alive"></TxMessage>
-						<TxMessage RefID="Engine_Speed_Front"></TxMessage>
-						<TxMessage RefID="Wheel_Speed_Front"></TxMessage>
+						<TxMessage RefID="EngineCtrlFront_Alive" InstanceIndepName="EngineCtrl_Alive"></TxMessage>
+						<TxMessage RefID="Engine_Speed_Front" InstanceIndepName="Engine_Speed"></TxMessage>
+						<TxMessage RefID="Wheel_Speed_Front" InstanceIndepName="Wheel_Speed"></TxMessage>
 					</TxMessages>
 				</Interface>
 			</Interfaces>
@@ -67,13 +67,13 @@
 			<Interfaces>
 				<Interface ID="Node_ECU_Mid_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x11FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
-						<RxMessage RefID="Wheel_Speed_Mid_Setpoint"></RxMessage>
+						<RxMessage RefID="Wheel_Speed_Mid_Setpoint" InstanceIndepName="Wheel_Speed_Setpoint"></RxMessage>
 					</RxMessages>
 
 					<TxMessages>
-						<TxMessage RefID="EngineCtrlMid_Alive"></TxMessage>
-						<TxMessage RefID="Engine_Speed_Mid"></TxMessage>
-						<TxMessage RefID="Wheel_Speed_Mid"></TxMessage>
+						<TxMessage RefID="EngineCtrlMid_Alive" InstanceIndepName="EngineCtrl_Alive"></TxMessage>
+						<TxMessage RefID="Engine_Speed_Mid" InstanceIndepName="Engine_Speed"></TxMessage>
+						<TxMessage RefID="Wheel_Speed_Mid" InstanceIndepName="Wheel_Speed"></TxMessage>
 					</TxMessages>
 				</Interface>
 			</Interfaces>
@@ -83,21 +83,31 @@
 			<Interfaces>
 				<Interface ID="Node_ECU_Rear_CAN_1" Name="Main CAN Interface" Type="CAN" Bandwidth="500kbps" NetworkID="0x12FF" NetworkController="STM32F103" ConnectedTo="MainCAN">
 					<RxMessages>
-						<RxMessage RefID="Wheel_Speed_Rear_Setpoint"></RxMessage>
+						<RxMessage RefID="Wheel_Speed_Rear_Setpoint" InstanceIndepName="Wheel_Speed_Setpoint"></RxMessage>
 					</RxMessages>
 
 					<TxMessages>
-						<TxMessage RefID="EngineCtrlRear_Alive"></TxMessage>
-						<TxMessage RefID="Engine_Speed_Rear"></TxMessage>
-						<TxMessage RefID="Wheel_Speed_Rear"></TxMessage>
+						<TxMessage RefID="EngineCtrlRear_Alive" InstanceIndepName="EngineCtrl_Alive"></TxMessage>
+						<TxMessage RefID="Engine_Speed_Rear" InstanceIndepName="Engine_Speed"></TxMessage>
+						<TxMessage RefID="Wheel_Speed_Rear" InstanceIndepName="Wheel_Speed"></TxMessage>
 					</TxMessages>
 				</Interface>
 			</Interfaces>
 
 			<Parameters>
-				<Parameter ID="SpeedCtrlLeft_KP" Name="KP value for PID Speed Controller Left" Type="Integer" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
-				<Parameter ID="SpeedCtrlLeft_KI" Name="KI value for PID Speed Controller Left" Type="Integer" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
-				<Parameter ID="SpeedCtrlLeft_KD" Name="KD value for PID Speed Controller Left" Type="Integer" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
+				<!-- Parameter for mechanical configuration -->
+				<!-- Axis: 0 = Invalid, 1 = Rear, 2 = Mid, 3 = Front -->
+				<Parameter ID="Axis" Name="ID for the Axis (Rear, Mid, Front)" Type="Integer" Size="8" MinValue="0" MaxValue="3" Unit="digit" DefaultValue="1"/>
+				<!-- Side: 0 = Invalid, 1 = Left, 2 = Right -->
+				<Parameter ID="Side" Name="Side of the engine ctrl (Left, Right)" Type="Integer" Size="8" MinValue="0" MaxValue="2" Unit="digit" DefaultValue="1"/>
+
+				<!-- Parameter for Engine Controller -->
+				<!-- ReverseDirection: 0 = No Reverse, 1 = Reverse. -->
+				<Parameter ID="ReverseDirection" Name="Reverese the drive direction of Engine" Type="Integer" Size="8" MinValue="0" MaxValue="1" Unit="digit" DefaultValue="0"/>
+				<!-- Parameter for PID motor controller -->
+				<Parameter ID="SpeedCtrlLeft_KP" Name="KP value for PID Speed Controller Left" Type="Float" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
+				<Parameter ID="SpeedCtrlLeft_KI" Name="KI value for PID Speed Controller Left" Type="Float" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
+				<Parameter ID="SpeedCtrlLeft_KD" Name="KD value for PID Speed Controller Left" Type="Float" Size="32" MinValue="0" MaxValue="100000" Unit="digit" DefaultValue="0"/>
 			</Parameters>
 		</Node>
 	</Nodes>
@@ -190,84 +200,84 @@
 		<!-- Engine Control FRONT Message -->
 		<Message ID="EngineCtrlFront_Alive" Name="Engine Control Alive" NetworkType="CAN" Cycle="1000ms">
 			<Signals>
-				<Signal RefID="EngineCtrlFront_Alive" Position="1"></Signal>
+				<Signal RefID="EngineCtrlFront_Alive" Position="1" InstanceIndepName="EngineCtrl_Alive"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Wheel_Speed_Front" Name="Wheel Speed Front Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
-				<Signal RefID="Wheel_Speed_F_L" Position="1"></Signal>
-				<Signal RefID="Wheel_Speed_F_R" Position="2"></Signal>
+				<Signal RefID="Wheel_Speed_F_L" Position="1" InstanceIndepName="Wheel_Speed_L"></Signal>
+				<Signal RefID="Wheel_Speed_F_R" Position="2" InstanceIndepName="Wheel_Speed_R"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Engine_Speed_Front" Name="Engine Speed Front Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
-				<Signal RefID="Engine_Speed_F_L" Position="1"></Signal>
-				<Signal RefID="Engine_Speed_F_R" Position="2"></Signal>
+				<Signal RefID="Engine_Speed_F_L" Position="1" InstanceIndepName="Engine_Speed_L"></Signal>
+				<Signal RefID="Engine_Speed_F_R" Position="2" InstanceIndepName="Engine_Speed_R"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Wheel_Speed_Front_Setpoint" Name="Wheel Speed Front Axis Setpoint" NetworkType="CAN" Cycle="250ms">
 			<Signals>
-				<Signal RefID="Wheel_Speed_F_L_Setpoint" Position="1"></Signal>
-				<Signal RefID="Wheel_Speed_F_R_Setpoint" Position="2"></Signal>
+				<Signal RefID="Wheel_Speed_F_L_Setpoint" Position="1" InstanceIndepName="Wheel_Speed_L_Setpoint"></Signal>
+				<Signal RefID="Wheel_Speed_F_R_Setpoint" Position="2" InstanceIndepName="Wheel_Speed_R_Setpoint"></Signal>
 			</Signals>
 		</Message>
 
 		<!-- Engine Control MIDDLE Message -->
 		<Message ID="EngineCtrlMid_Alive" Name="Engine Control Alive" NetworkType="CAN" Cycle="1000ms">
 			<Signals>
-				<Signal RefID="EngineCtrlMid_Alive" Position="1"></Signal>
+				<Signal RefID="EngineCtrlMid_Alive" Position="1" InstanceIndepName="EngineCtrl_Alive"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Wheel_Speed_Mid" Name="Wheel Speed Middle Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
-				<Signal RefID="Wheel_Speed_M_L" Position="1"></Signal>
-				<Signal RefID="Wheel_Speed_M_R" Position="2"></Signal>
+				<Signal RefID="Wheel_Speed_M_L" Position="1" InstanceIndepName="Wheel_Speed_L"></Signal>
+				<Signal RefID="Wheel_Speed_M_R" Position="2" InstanceIndepName="Wheel_Speed_R"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Engine_Speed_Mid" Name="Engine Speed Middle Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
-				<Signal RefID="Engine_Speed_M_L" Position="1"></Signal>
-				<Signal RefID="Engine_Speed_M_R" Position="2"></Signal>
+				<Signal RefID="Engine_Speed_M_L" Position="1" InstanceIndepName="Engine_Speed_L"></Signal>
+				<Signal RefID="Engine_Speed_M_R" Position="2" InstanceIndepName="Engine_Speed_R"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Wheel_Speed_Mid_Setpoint" Name="Wheel Speed Middle Axis Setpoint" NetworkType="CAN" Cycle="250ms">
 			<Signals>
-				<Signal RefID="Wheel_Speed_M_L_Setpoint" Position="1"></Signal>
-				<Signal RefID="Wheel_Speed_M_R_Setpoint" Position="2"></Signal>
+				<Signal RefID="Wheel_Speed_M_L_Setpoint" Position="1" InstanceIndepName="Wheel_Speed_L_Setpoint"></Signal>
+				<Signal RefID="Wheel_Speed_M_R_Setpoint" Position="2" InstanceIndepName="Wheel_Speed_R_Setpoint"></Signal>
 			</Signals>
 		</Message>
 
 		<!-- Engine Control REAR Message -->
 		<Message ID="EngineCtrlRear_Alive" Name="Engine Control Alive" NetworkType="CAN" Cycle="1000ms">
 			<Signals>
-				<Signal RefID="EngineCtrlRear_Alive" Position="1"></Signal>
+				<Signal RefID="EngineCtrlRear_Alive" Position="1" InstanceIndepName="EngineCtrl_Alive"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Wheel_Speed_Rear" Name="Wheel Speed Rear Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
-				<Signal RefID="Wheel_Speed_R_L" Position="1"></Signal>
-				<Signal RefID="Wheel_Speed_R_R" Position="2"></Signal>
+				<Signal RefID="Wheel_Speed_R_L" Position="1" InstanceIndepName="Wheel_Speed_L"></Signal>
+				<Signal RefID="Wheel_Speed_R_R" Position="2" InstanceIndepName="Wheel_Speed_R"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Engine_Speed_Rear" Name="Engine Speed Rear Axis" NetworkType="CAN" Cycle="100ms">
 			<Signals>
-				<Signal RefID="Engine_Speed_R_L" Position="1"></Signal>
-				<Signal RefID="Engine_Speed_R_R" Position="2"></Signal>
+				<Signal RefID="Engine_Speed_R_L" Position="1" InstanceIndepName="Engine_Speed_L"></Signal>
+				<Signal RefID="Engine_Speed_R_R" Position="2" InstanceIndepName="Engine_Speed_R"></Signal>
 			</Signals>
 		</Message>
 
 		<Message ID="Wheel_Speed_Rear_Setpoint" Name="Wheel Speed Rear Axis Setpoint" NetworkType="CAN" Cycle="250ms">
 			<Signals>
-				<Signal RefID="Wheel_Speed_R_L_Setpoint" Position="1"></Signal>
-				<Signal RefID="Wheel_Speed_R_R_Setpoint" Position="2"></Signal>
+				<Signal RefID="Wheel_Speed_R_L_Setpoint" Position="1" InstanceIndepName="Wheel_Speed_L_Setpoint"></Signal>
+				<Signal RefID="Wheel_Speed_R_R_Setpoint" Position="2" InstanceIndepName="Wheel_Speed_R_Setpoint"></Signal>
 			</Signals>
 		</Message>
 	</Messages>

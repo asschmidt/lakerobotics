@@ -17,10 +17,13 @@
 
 #if ENGINE_CTRL_ECU == ECU_REAR
     #include "gen/Node_ECU_Rear_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Rear_Param_STM32F103.h"
 #elif ENGINE_CTRL_ECU == ECU_MID
     #include "gen/Node_ECU_Mid_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Mid_Param_STM32F103.h"
 #elif ENGINE_CTRL_ECU == ECU_FRONT
     #include "gen/Node_ECU_Front_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Front_Param_STM32F103.h"
 #endif
 
 #include "hal/can.h"
@@ -46,7 +49,7 @@ static cbuf_handle_t gReceiveBufferHandle = &gReceiveBuffer;
  * @param pModel
  * @return
  */
-int32_t canHandlerInitialize(CANHandler* pHandler, CANTransmissionTableEntry* pTransTable, int16_t tableEntryCount, EngineCtrlProcessModel* pModel)
+int32_t canHandlerInitialize(CANHandler* pHandler, CANTransmissionTableEntry* pTransTable, int16_t tableEntryCount, EngineCtrlProcessModel* pModel, Param_Struct* pCANParam)
 {
     if (pHandler == 0)
         return ERR_INVALID_PTR;
@@ -55,6 +58,7 @@ int32_t canHandlerInitialize(CANHandler* pHandler, CANTransmissionTableEntry* pT
     pHandler->transTableEntryCount = tableEntryCount;
 
     pHandler->pModel = pModel;
+    pHandler->pCANParameter = pCANParam;
 
     circular_buf_init(gReceiveBufferHandle, &gReceiveFrameBuffer[0], 10);
 
@@ -120,64 +124,35 @@ int32_t canHandlerProcessTransmitTable(CANHandler* pHandler)
  */
 int32_t canHandlerProcessReceiveBuffer(CANHandler* pHandler)
 {
-    if (circular_buf_empty(gReceiveBufferHandle) == false)
+    while(circular_buf_empty(gReceiveBufferHandle) == false)
     {
-        while(circular_buf_empty(gReceiveBufferHandle) == false)
+        CAN_FRAME canFrame;
+        circular_buf_get(gReceiveBufferHandle, &canFrame);
+
+        if (canFrame.rxHeader.ExtId == CAN_ID_PARAMETER_REQUEST)
         {
-            CAN_FRAME canFrame;
-            circular_buf_get(gReceiveBufferHandle, &canFrame);
+            uint16_t paramNo = ((canFrame.data[1] << 8) | canFrame.data[0]);
 
-    #if ENGINE_CTRL_ECU == ECU_REAR
-            if (canFrame.rxHeader.ExtId == CAN_ID_PARAMETER_REQUEST)
+            if (canFrame.rxHeader.DLC == 2)
             {
-                CAN_FRAME sendFrame;
-                sendFrame.txHeader.ExtId = CAN_ID_PARAMETER_RESPONSE;
-                sendFrame.txHeader.StdId = 0;
-                sendFrame.txHeader.IDE = CAN_ID_EXT;
-                sendFrame.txHeader.DLC = 6;
-
-                sendFrame.data[0] = 0x1; // Parameter ID Low Byte
-                sendFrame.data[1] = 0x0; // Parameter ID High Byte
-                sendFrame.data[2] = 0xAA;
-                sendFrame.data[3] = 0xBB;
-                sendFrame.data[4] = 0xCC;
-                sendFrame.data[5] = 0xDD;
-
-                // Transmit it
-                uint32_t usedMailbox = 0;
-                int32_t transmitResult = HAL_CAN_AddTxMessage(&hcan, &sendFrame.txHeader, sendFrame.data, &usedMailbox);
+                canHandlerTransmitParameterResponse(pHandler, paramNo);
             }
-            else if (isMsg_Wheel_Speed_Rear_Setpoint(&canFrame))
+            else
             {
-                Msg_Wheel_Speed_Rear_Setpoint wheelSetpointMsg;
-                parseMsg_Wheel_Speed_Rear_Setpoint(&canFrame, &wheelSetpointMsg);
-
-                pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_R_L_Setpoint;
-                pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_R_R_Setpoint;
+                canHandlerPerformParameterChange(pHandler, paramNo, &canFrame);
             }
+        }
 
-    #elif ENGINE_CTRL_ECU == ECU_MID
-            if (isMsg_Wheel_Speed_Mid_Setpoint(&canFrame))
-            {
-                Msg_Wheel_Speed_Mid_Setpoint wheelSetpointMsg;
-                parseMsg_Wheel_Speed_Mid_Setpoint(&canFrame, &wheelSetpointMsg);
+        if (isMsg_Wheel_Speed_Setpoint(&canFrame))
+        {
+            Msg_Wheel_Speed_Setpoint wheelSetpointMsg;
+            parseMsg_Wheel_Speed_Setpoint(&canFrame, &wheelSetpointMsg);
 
-                pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_M_L_Setpoint;
-                pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_M_R_Setpoint;
-            }
-
-    #elif ENGINE_CTRL_ECU == ECU_FRONT
-            if (isMsg_Wheel_Speed_Front_Setpoint(&canFrame))
-            {
-                Msg_Wheel_Speed_Front_Setpoint wheelSetpointMsg;
-                parseMsg_Wheel_Speed_Front_Setpoint(&canFrame, &wheelSetpointMsg);
-
-                pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_F_L_Setpoint;
-                pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_F_R_Setpoint;
-            }
-    #endif
+            pHandler->pModel->wheelspeed.wheelSetpointSpeedLeft = wheelSetpointMsg.Wheel_Speed_L_Setpoint;
+            pHandler->pModel->wheelspeed.wheelSetpointSpeedRight = wheelSetpointMsg.Wheel_Speed_R_Setpoint;
         }
     }
+
     return ERR_OK;
 }
 
@@ -201,6 +176,68 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 /**
  *
  * @param pHandler
+ * @param parameterNo
+ * @return
+ */
+int32_t canHandlerTransmitParameterResponse(CANHandler* pHandler, uint16_t parameterNo)
+{
+    CAN_FRAME sendFrame;
+
+    if (CAN_ID_PARAMETER_RESPONSE > 0x7FF)
+    {
+        sendFrame.txHeader.ExtId = CAN_ID_PARAMETER_RESPONSE;
+        sendFrame.txHeader.StdId = 0;
+        sendFrame.txHeader.IDE = CAN_ID_EXT;
+    }
+    else
+    {
+        sendFrame.txHeader.StdId = CAN_ID_PARAMETER_RESPONSE;
+        sendFrame.txHeader.ExtId = 0;
+        sendFrame.txHeader.IDE = CAN_ID_STD;
+    }
+
+    sendFrame.txHeader.DLC = 6;
+
+    sendFrame.data[0] = (parameterNo & 0x00FF); // Parameter No Low Byte
+    sendFrame.data[1] = (parameterNo & 0xFF00) >> 8; // Parameter No High Byte
+
+    Param_Value paramValue;
+    parameterGetValue(pHandler->pCANParameter, parameterNo, &paramValue);
+
+    sendFrame.data[2] = (paramValue.intValue & 0x000000FF);
+    sendFrame.data[3] = (paramValue.intValue & 0x0000FF00) >> 8;
+    sendFrame.data[4] = (paramValue.intValue & 0x00FF0000) >> 16;
+    sendFrame.data[5] = (paramValue.intValue & 0xFF000000) >> 24;
+
+    // Transmit it
+    uint32_t usedMailbox = 0;
+    int32_t transmitResult = HAL_CAN_AddTxMessage(&hcan, &sendFrame.txHeader, sendFrame.data, &usedMailbox);
+
+    return transmitResult;
+}
+
+/**
+ *
+ * @param pHandler
+ * @param paramNo
+ * @param pCANFrame
+ * @return
+ */
+int32_t canHandlerPerformParameterChange(CANHandler* pHandler, uint16_t paramNo, CAN_FRAME* pCANFrame)
+{
+    int32_t paramRawValue = pCANFrame->data[5] << 24 | pCANFrame->data[4] << 16 | pCANFrame->data[3] << 8 | pCANFrame->data[2];
+
+    Param_Value paramValue;
+    paramValue.intValue = paramRawValue;
+
+    parameterSetValue(pHandler->pCANParameter, paramNo, paramValue);
+
+    return 0;
+}
+
+/**
+ *
+ * @param pHandler
  * @param pEntry
  * @param pModel
  */
@@ -208,36 +245,14 @@ int32_t canHandlerTransmitEngineSpeed(CANHandler* pHandler, CANTransmissionTable
 {
     CAN_FRAME canFrame;
 
-#if ENGINE_CTRL_ECU == ECU_REAR
-    Msg_Engine_Speed_Rear canMessage;
+    Msg_Engine_Speed canMessage;
 
     // Transfer the data from the process model to the CAN model
-    canMessage.Engine_Speed_R_L = pHandler->pModel->enginespeed.engineSpeedLeft;
-    canMessage.Engine_Speed_R_R = pHandler->pModel->enginespeed.engineSpeedRight;
+    canMessage.Engine_Speed_L = pHandler->pModel->enginespeed.engineSpeedLeft;
+    canMessage.Engine_Speed_R = pHandler->pModel->enginespeed.engineSpeedRight;
 
     // Create a CAN frame out of the data
-    createMsg_Engine_Speed_Rear(&canFrame, &canMessage);
-
-#elif ENGINE_CTRL_ECU == ECU_MID
-    Msg_Engine_Speed_Mid canMessage;
-
-    // Transfer the data from the process model to the CAN model
-    canMessage.Engine_Speed_M_L = pHandler->pModel->enginespeed.engineSpeedLeft;
-    canMessage.Engine_Speed_M_R = pHandler->pModel->enginespeed.engineSpeedRight;
-
-    // Create a CAN frame out of the data
-    createMsg_Engine_Speed_Mid(&canFrame, &canMessage);
-
-#elif ENGINE_CTRL_ECU == ECU_FRONT
-    Msg_Engine_Speed_Front canMessage;
-
-    // Transfer the data from the process model to the CAN model
-    canMessage.Engine_Speed_F_L = pHandler->pModel->enginespeed.engineSpeedLeft;
-    canMessage.Engine_Speed_F_R = pHandler->pModel->enginespeed.engineSpeedRight;
-
-    // Create a CAN frame out of the data
-    createMsg_Engine_Speed_Front(&canFrame, &canMessage);
-#endif
+    createMsg_Engine_Speed(&canFrame, &canMessage);
 
     // Transmit it
     uint32_t usedMailbox = 0;
@@ -256,36 +271,14 @@ int32_t canHandlerTransmitWheelSpeed(CANHandler* pHandler, CANTransmissionTableE
 {
     CAN_FRAME canFrame;
 
-#if ENGINE_CTRL_ECU == ECU_REAR
-    Msg_Wheel_Speed_Rear canMessage;
+    Msg_Wheel_Speed canMessage;
 
     // Transfer the data from the process model to the CAN model
-    canMessage.Wheel_Speed_R_L = pHandler->pModel->wheelspeed.wheelSpeedLeft;
-    canMessage.Wheel_Speed_R_R = pHandler->pModel->wheelspeed.wheelSpeedRight;
+    canMessage.Wheel_Speed_L = pHandler->pModel->wheelspeed.wheelSpeedLeft;
+    canMessage.Wheel_Speed_R = pHandler->pModel->wheelspeed.wheelSpeedRight;
 
     // Create a CAN frame out of the data
-    createMsg_Wheel_Speed_Rear(&canFrame, &canMessage);
-
-#elif ENGINE_CTRL_ECU == ECU_MID
-    Msg_Wheel_Speed_Mid canMessage;
-
-    // Transfer the data from the process model to the CAN model
-    canMessage.Wheel_Speed_M_L = pHandler->pModel->wheelspeed.wheelSpeedLeft;
-    canMessage.Wheel_Speed_M_R = pHandler->pModel->wheelspeed.wheelSpeedRight;
-
-    // Create a CAN frame out of the data
-    createMsg_Wheel_Speed_Mid(&canFrame, &canMessage);
-
-#elif ENGINE_CTRL_ECU == ECU_FRONT
-    Msg_Wheel_Speed_Front canMessage;
-
-    // Transfer the data from the process model to the CAN model
-    canMessage.Wheel_Speed_F_L = pHandler->pModel->wheelspeed.wheelSpeedLeft;
-    canMessage.Wheel_Speed_F_R = pHandler->pModel->wheelspeed.wheelSpeedRight;
-
-    // Create a CAN frame out of the data
-    createMsg_Wheel_Speed_Front(&canFrame, &canMessage);
-#endif
+    createMsg_Wheel_Speed(&canFrame, &canMessage);
 
     // Transmit it
     uint32_t usedMailbox = 0;

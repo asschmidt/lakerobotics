@@ -47,8 +47,8 @@ typedef struct _CAN_FRAME
  *
 */
 {% for txMsg in txMessages %}
-#define CAN_ID_{{txMsg.Message.ID}}			{{txMsg.Message.GeneratorData['CAN_ID_HEX']}}
-#define CYCLE_{{txMsg.Message.ID}}			{{txMsg.Message.Cycle}}
+#define CAN_ID_{{txMsg.Message.GeneratorData['CODE_NAME']}}			{{txMsg.Message.GeneratorData['CAN_ID_HEX']}}
+#define CYCLE_{{txMsg.Message.GeneratorData['CODE_NAME']}}			{{txMsg.Message.Cycle}}
 
 {% endfor %}
 
@@ -58,21 +58,21 @@ typedef struct _CAN_FRAME
  *
 */
 {% for txMsg in txMessages %}
-typedef struct _Msg_{{txMsg.Message.ID}}
+typedef struct _Msg_{{txMsg.Message.GeneratorData['CODE_NAME']}}
 {
 	{% for sig in txMsg.Message.Signals %}
-	// Signal-ID: {{sig.Signal.ID}} Signal-Type: {{sig.Signal.Type}} Signal-Size: {{sig.Signal.Size}}
+	// Signal-ID: {{sig.Signal.GeneratorData['CODE_NAME']}} Signal-Type: {{sig.Signal.Type}} Signal-Size: {{sig.Signal.Size}}
 		{% if sig.Signal.Type == 2 %}
 			{% if sig.Signal.Size == 1 or sig.Signal.Size == 8 %}
-	int8_t {{sig.Signal.ID}};
+	int8_t {{sig.Signal.GeneratorData['CODE_NAME']}};
 			{% elif sig.Signal.Size == 16 %}
-	int16_t {{sig.Signal.ID}};
+	int16_t {{sig.Signal.GeneratorData['CODE_NAME']}};
 			{% elif sig.Signal.Size == 32 %}
-	int32_t {{sig.Signal.ID}};
+	int32_t {{sig.Signal.GeneratorData['CODE_NAME']}};
 			{% endif %}
 		{% endif %}
 	{% endfor %}
-} Msg_{{txMsg.Message.ID}};
+} Msg_{{txMsg.Message.GeneratorData['CODE_NAME']}};
 
  {% endfor %}
 
@@ -81,7 +81,7 @@ typedef struct _Msg_{{txMsg.Message.ID}}
  *
  */
 {% for txMsg in txMessages %}
-extern int8_t createMsg_{{txMsg.Message.ID}}(CAN_FRAME* pCANFrame, Msg_{{txMsg.Message.ID}}* pMsg);
+extern int8_t createMsg_{{txMsg.Message.GeneratorData['CODE_NAME']}}(CAN_FRAME* pCANFrame, Msg_{{txMsg.Message.GeneratorData['CODE_NAME']}}* pMsg);
 {% endfor %}
 
 /*
@@ -89,7 +89,7 @@ extern int8_t createMsg_{{txMsg.Message.ID}}(CAN_FRAME* pCANFrame, Msg_{{txMsg.M
  *
  */
 {% for rxMsg in rxMessages %}
-#define CAN_ID_{{rxMsg.Message.ID}}			{{rxMsg.Message.GeneratorData['CAN_ID_HEX']}}
+#define CAN_ID_{{rxMsg.Message.GeneratorData['CODE_NAME']}}			{{rxMsg.Message.GeneratorData['CAN_ID_HEX']}}
 {% endfor %}
 
 /*
@@ -97,23 +97,23 @@ extern int8_t createMsg_{{txMsg.Message.ID}}(CAN_FRAME* pCANFrame, Msg_{{txMsg.M
  *
 */
 {% for rxMsg in rxMessages %}
-typedef struct _Msg_{{rxMsg.Message.ID}}
+typedef struct _Msg_{{rxMsg.Message.GeneratorData['CODE_NAME']}}
 {
 	{% for sig in rxMsg.Message.Signals %}
-	// Signal-ID: {{sig.Signal.ID}} Signal-Type: {{sig.Signal.Type}} Signal-Size: {{sig.Signal.Size}}
+	// Signal-ID: {{sig.Signal.GeneratorData['CODE_NAME']}} Signal-Type: {{sig.Signal.Type}} Signal-Size: {{sig.Signal.Size}}
 		{% if sig.Signal.Type == 2 %}
 			{% if sig.Signal.Size == 1 %}
-	int8_t {{sig.Signal.ID}};
+	int8_t {{sig.Signal.GeneratorData['CODE_NAME']}};
 			{% elif sig.Signal.Size == 8 %}
-	int8_t {{sig.Signal.ID}};
+	int8_t {{sig.Signal.GeneratorData['CODE_NAME']}};
 			{% elif sig.Signal.Size == 16 %}
-	int16_t {{sig.Signal.ID}};
+	int16_t {{sig.Signal.GeneratorData['CODE_NAME']}};
 			{% elif sig.Signal.Size == 32 %}
-	int32_t {{sig.Signal.ID}};
+	int32_t {{sig.Signal.GeneratorData['CODE_NAME']}};
 			{% endif %}
 		{% endif %}
 	{% endfor %}
-} Msg_{{rxMsg.Message.ID}};
+} Msg_{{rxMsg.Message.GeneratorData['CODE_NAME']}};
 
 {% endfor %}
 
@@ -123,8 +123,8 @@ typedef struct _Msg_{{rxMsg.Message.ID}}
  *
  */
 {% for rxMsg in rxMessages %}
-extern int8_t parseMsg_{{rxMsg.Message.ID}}(CAN_FRAME* pCANFrame, Msg_{{rxMsg.Message.ID}}* pMsg);
-extern int8_t isMsg_{{rxMsg.Message.ID}}(CAN_FRAME* pCANFrame);
+extern int8_t parseMsg_{{rxMsg.Message.GeneratorData['CODE_NAME']}}(CAN_FRAME* pCANFrame, Msg_{{rxMsg.Message.GeneratorData['CODE_NAME']}}* pMsg);
+extern int8_t isMsg_{{rxMsg.Message.GeneratorData['CODE_NAME']}}(CAN_FRAME* pCANFrame);
 
 {% endfor %}
 

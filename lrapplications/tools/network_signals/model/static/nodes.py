@@ -34,6 +34,7 @@ class NodeInterfaceMessage:
         '''
         self.Message = None
         self.Node = None
+        self.InstanceIndepName = None       # Instance independent name for a message. Used for code generation
 
 class ParameterType:
     '''
@@ -45,7 +46,7 @@ class ParameterType:
     PARAM_FLOAT         = 3
 
     @classmethod
-    def parseSignalType(self, paramTypeAttribValue):
+    def parseSignalType(cls, paramTypeAttribValue):
         '''
         Parses the parameter type attribute string and returns a corresponding parameter type
         '''
@@ -160,7 +161,7 @@ class NodeDataParser:
                         convertBase = 10
                         netID = interfaceChild.get("NetworkID")
 
-                        if netID.startswith("0x") == True:
+                        if netID.startswith("0x"):
                             convertBase = 16
 
                         # Get the Network ID. This might be used (e.g. for CAN) to have an Node-ID for this interface
@@ -179,7 +180,7 @@ class NodeDataParser:
                         networkObj = self._networkDict[interfaceChild.get("ConnectedTo")]
 
                         # If the network was found, store a reference to the Network object
-                        if networkObj != None:
+                        if networkObj is not None:
                             nodeInterface.ConnectTo = networkObj
                     except:
                         print("Error while parsing Node " + nodeInterface.ID)
@@ -189,7 +190,7 @@ class NodeDataParser:
                     txMessageRoot = interfaceChild.find("TxMessages")
 
                     # If the <RxMessages> element was found
-                    if rxMessageRoot != None:
+                    if rxMessageRoot is not None:
                         # Iterate over all <RxMessage> elements
                         for rxMessageChild in rxMessageRoot:
                             # Check if it is the correct element
@@ -201,6 +202,10 @@ class NodeDataParser:
                                     nodeRxMessage.Message = self._messageDict[rxMessageChild.get("RefID")]
                                     nodeRxMessage.Node = nodeData
 
+                                    # Read the instance independent name if available
+                                    if "InstanceIndepName" in rxMessageChild.attrib:
+                                        nodeRxMessage.InstanceIndepName = rxMessageChild.get("InstanceIndepName")
+
                                     # Add the message container object with the reference to the message object to the Rx
                                     # messages dictionary
                                     nodeInterface.RxMessages[nodeRxMessage.Message.ID] = nodeRxMessage
@@ -208,7 +213,7 @@ class NodeDataParser:
                                     print("Error while parsing RxMessage for Interface " + nodeInterface.ID)
 
                     # If the <TxMessages> element was found
-                    if txMessageRoot != None:
+                    if txMessageRoot is not None:
                         # Iterate over all <TxMessage> elements
                         for txMessageChild in txMessageRoot:
                             # Check if it is the correct element
@@ -219,6 +224,10 @@ class NodeDataParser:
                                     # Try to find the referenced message via its ID in the message dictionary
                                     nodeTxMessage.Message = self._messageDict[txMessageChild.get("RefID")]
                                     nodeTxMessage.Node = nodeData
+
+                                    # Read the instance independent name if available
+                                    if "InstanceIndepName" in txMessageChild.attrib:
+                                        nodeTxMessage.InstanceIndepName = txMessageChild.get("InstanceIndepName")
 
                                     # Add the message container object with the reference to the message object to the Rx
                                     # messages dictionary

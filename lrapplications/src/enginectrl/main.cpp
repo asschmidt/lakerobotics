@@ -35,6 +35,8 @@ int main(int argc, char* argv[])
     // Initialize the board and the peripherals
     initCustomBoard();
 
+    parameterInitializeDefaultValues(&gParameter);
+
     // Initialize the global objects and points
     paramModelInitialize(&gParameterModel);
     paramModelInitializeDefaults(&gParameterModel);
@@ -42,7 +44,7 @@ int main(int argc, char* argv[])
     processModelInitialize(&gProcessModel);
     encoderInitialize(&gEncoderModel);
 
-    canHandlerInitialize(&gCANHandler, &gCANTransmissionTable[0], gCANTableEntryCount, &gProcessModel);
+    canHandlerInitialize(&gCANHandler, &gCANTransmissionTable[0], gCANTableEntryCount, &gProcessModel, &gParameter);
 
     motorControlInitialize(&gMotorControl);
 

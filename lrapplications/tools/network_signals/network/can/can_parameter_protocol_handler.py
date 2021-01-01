@@ -78,5 +78,5 @@ class CANParameterProtocolHandler(CANBaseProtocolHandler):
         '''
         dataArray = list(pack('<Q', canMessage.get_data()))
 
-        intValue = dataArray[2] + dataArray[3] + dataArray[4] + dataArray[5]
+        intValue = dataArray[2] + (dataArray[3] << 8) + (dataArray[4] << 16) + (dataArray[5] << 24)
         return intValue

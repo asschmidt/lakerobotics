@@ -35,7 +35,7 @@ class CANUSBtinInterface(CANInterface):
         Called by the USBtin internal message listener thread if a new CAN frame has
         been received. The received CAN message is added to the internal RX queue
         '''
-        defaultLog(str(msg), LoggerEntryType.LOG_ACTIVITY)
+        #defaultLog(str(msg), LoggerEntryType.LOG_ACTIVITY)
         self._canRxQueue.put(msg)
 
     def getInterfaceObject(self):

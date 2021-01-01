@@ -20,13 +20,15 @@ class EngCtrlParameterFrame(wx.Frame):
         super().__init__(parent, title='Engine Control ECU Parameter', size=(500, 200))
 
         # Create the PowerManagerPanel
+        pan = wx.Panel(self)
+
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self._mainPanel = EngCtrlParameterPanel(self)
-        self._ctrlPanel = EngineCtrlParameterCtrlPanel(self)
+        self._mainPanel = EngCtrlParameterPanel(pan)
+        self._ctrlPanel = EngineCtrlParameterCtrlPanel(pan)
 
         topSizer.Add(self._mainPanel, 0, wx.ALL | wx.EXPAND, 5)
         topSizer.Add(self._ctrlPanel, 0, wx.ALL | wx.EXPAND, 5)
 
-        self.SetSizer(topSizer)
+        pan.SetSizer(topSizer)
         topSizer.Fit(self)

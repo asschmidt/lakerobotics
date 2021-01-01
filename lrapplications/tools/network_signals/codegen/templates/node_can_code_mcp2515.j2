@@ -16,9 +16,9 @@
   *
   */
 {% for txMsg in txMessages %}
-	int8_t createMsg_{{txMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{txMsg.Message.ID}}* pMsg)
+	int8_t createMsg_{{txMsg.Message.GeneratorData['CODE_NAME']}}(struct can_frame* pCANFrame, Msg_{{txMsg.Message.GeneratorData['CODE_NAME']}}* pMsg)
 	{
-		pCANFrame->can_id = CAN_ID_{{txMsg.Message.ID}};
+		pCANFrame->can_id = CAN_ID_{{txMsg.Message.GeneratorData['CODE_NAME']}};
 		{% set msgCANID = txMsg.Message.GeneratorData['CAN_ID'] | int %}
 		{% if msgCANID > 2047 %}
 		pCANFrame->can_id = pCANFrame->can_id | CAN_EFF_FLAG;
@@ -33,19 +33,19 @@
 			{%- endif %}
 			{%- set signalBits.bitCount = signalBits.bitCount + signalSize %}
 			{% if sig.Signal.Type == 2 %}
-		// Signal	: {{sig.Signal.ID}}
+		// Signal	: {{sig.Signal.GeneratorData['CODE_NAME']}}
 		// Start-Bit: {{signalBits.bitCount - signalSize}} End-Bit: {{signalBits.bitCount - 1}}
 				{%- set startByte = (signalBits.bitCount - signalSize) // 8 %}
 				{% if sig.Signal.Size == 1 or sig.Signal.Size == 8 %}
-		pCANFrame->data[{{startByte}}] = (int8_t)(pMsg->{{sig.Signal.ID}} & 0xFF);
+		pCANFrame->data[{{startByte}}] = (int8_t)(pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} & 0xFF);
 				{% elif sig.Signal.Size == 16 %}
-		pCANFrame->data[{{startByte}}] = (int8_t)((pMsg->{{sig.Signal.ID}} & 0xFF00) >> 8);
-		pCANFrame->data[{{startByte + 1}}] = (int8_t)(pMsg->{{sig.Signal.ID}} & 0x00FF);
+		pCANFrame->data[{{startByte}}] = (int8_t)((pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} & 0xFF00) >> 8);
+		pCANFrame->data[{{startByte + 1}}] = (int8_t)(pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} & 0x00FF);
 				{% elif sig.Signal.Size == 32 %}
-		pCANFrame->data[{{startByte}}] = (int8_t)((pMsg->{{sig.Signal.ID}} & 0xFF000000) >> 24);
-		pCANFrame->data[{{startByte + 1}}] = (int8_t)((pMsg->{{sig.Signal.ID}} & 0x00FF0000) >> 16);
-		pCANFrame->data[{{startByte + 2}}] = (int8_t)((pMsg->{{sig.Signal.ID}} & 0x0000FF00) >> 8);
-		pCANFrame->data[{{startByte + 3}}] = (int8_t)((pMsg->{{sig.Signal.ID}} & 0x000000FF));
+		pCANFrame->data[{{startByte}}] = (int8_t)((pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} & 0xFF000000) >> 24);
+		pCANFrame->data[{{startByte + 1}}] = (int8_t)((pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} & 0x00FF0000) >> 16);
+		pCANFrame->data[{{startByte + 2}}] = (int8_t)((pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} & 0x0000FF00) >> 8);
+		pCANFrame->data[{{startByte + 3}}] = (int8_t)((pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} & 0x000000FF));
 				{%- endif %}
 			{%- endif %}
 		{%- endfor %}
@@ -60,15 +60,15 @@
   *
   */
 {% for rxMsg in rxMessages %}
-	int8_t parseMsg_{{rxMsg.Message.ID}}(struct can_frame* pCANFrame, Msg_{{rxMsg.Message.ID}}* pMsg)
+	int8_t parseMsg_{{rxMsg.Message.GeneratorData['CODE_NAME']}}(struct can_frame* pCANFrame, Msg_{{rxMsg.Message.GeneratorData['CODE_NAME']}}* pMsg)
 	{
 		{% set msgCANID = rxMsg.Message.GeneratorData['CAN_ID'] | int %}
 		{%- if msgCANID > 2047 %}
 		// Check Extended ID without extended flag (remove it for the comparison)
-		if ((pCANFrame->can_id & ~CAN_EFF_FLAG) != CAN_ID_{{rxMsg.Message.ID}})
+		if ((pCANFrame->can_id & ~CAN_EFF_FLAG) != CAN_ID_{{rxMsg.Message.GeneratorData['CODE_NAME']}})
 		{%- else %}
 		// Check the Standard ID
-		if (pCANFrame->can_id != CAN_ID_{{rxMsg.Message.ID}})
+		if (pCANFrame->can_id != CAN_ID_{{rxMsg.Message.GeneratorData['CODE_NAME']}})
 		{%- endif %}
 			return -1;
 
@@ -86,16 +86,16 @@
 			{%- endif %}
 			{%- set signalBits.bitCount = signalBits.bitCount + signalSize %}
 			{% if sig.Signal.Type == 2 %}
-		// Signal	: {{sig.Signal.ID}}
+		// Signal	: {{sig.Signal.GeneratorData['CODE_NAME']}}
 		// Start-Bit: {{signalBits.bitCount - signalSize}} End-Bit: {{signalBits.bitCount - 1}}
 				{% set startByte = (signalBits.bitCount - signalSize) // 8 %}
 				{% if sig.Signal.Size == 1 or sig.Signal.Size == 8 %}
-		pMsg->{{sig.Signal.ID}} = pCANFrame->data[{{startByte}}];
+		pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} = pCANFrame->data[{{startByte}}];
 				{% elif sig.Signal.Size == 16 %}
-		pMsg->{{sig.Signal.ID}} = (pCANFrame->data[{{startByte}}] << 8) |
+		pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} = (pCANFrame->data[{{startByte}}] << 8) |
 								  (pCANFrame->data[{{startByte + 1}}]);
 				{% elif sig.Signal.Size == 32 %}
-		pMsg->{{sig.Signal.ID}} = (pCANFrame->data[{{startByte}}] << 24) |
+		pMsg->{{sig.Signal.GeneratorData['CODE_NAME']}} = (pCANFrame->data[{{startByte}}] << 24) |
 								  (pCANFrame->data[{{startByte + 1}}] << 16) |
 								  (pCANFrame->data[{{startByte + 2}}] << 8) |
 								  (pCANFrame->data[{{startByte + 3}}]);
@@ -106,18 +106,18 @@
 		return 0;
 	}
 
-	int8_t isMsg_{{rxMsg.Message.ID}}(struct can_frame* pCANFrame)
+	int8_t isMsg_{{rxMsg.Message.GeneratorData['CODE_NAME']}}(struct can_frame* pCANFrame)
 	{
 		{% set msgCANID = rxMsg.Message.GeneratorData['CAN_ID'] | int %}
 		{%- if msgCANID > 2047 %}
 		// Check Extended ID without extended flag (remove it for the comparison)
-		if ((pCANFrame->can_id & ~CAN_EFF_FLAG) == CAN_ID_{{rxMsg.Message.ID}})
+		if ((pCANFrame->can_id & ~CAN_EFF_FLAG) == CAN_ID_{{rxMsg.Message.GeneratorData['CODE_NAME']}})
 			return 1;
 		else
 			return 0;
 		{%- else %}
 		// Check the Standard ID
-		if (pCANFrame->can_id == CAN_ID_{{rxMsg.Message.ID}})
+		if (pCANFrame->can_id == CAN_ID_{{rxMsg.Message.GeneratorData['CODE_NAME']}})
 			return 1;
 		else
 			return 0;

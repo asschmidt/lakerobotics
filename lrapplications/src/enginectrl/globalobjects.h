@@ -14,6 +14,17 @@
 #include "canhandler.h"
 #include "motorcontrol.h"
 
+#if ENGINE_CTRL_ECU == ECU_REAR
+    #include "gen/Node_ECU_Rear_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Rear_Param_STM32F103.h"
+#elif ENGINE_CTRL_ECU == ECU_MID
+    #include "gen/Node_ECU_Mid_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Mid_Param_STM32F103.h"
+#elif ENGINE_CTRL_ECU == ECU_FRONT
+    #include "gen/Node_ECU_Front_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Front_Param_STM32F103.h"
+#endif
+
 extern EngineCtrlParameterModel gParameterModel;
 extern EngineCtrlProcessModel gProcessModel;
 extern EncoderModel gEncoderModel;

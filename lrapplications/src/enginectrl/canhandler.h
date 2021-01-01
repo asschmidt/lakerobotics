@@ -10,6 +10,17 @@
 
 #include <stdint.h>
 
+#if ENGINE_CTRL_ECU == ECU_REAR
+    #include "gen/Node_ECU_Rear_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Rear_Param_STM32F103.h"
+#elif ENGINE_CTRL_ECU == ECU_MID
+    #include "gen/Node_ECU_Mid_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Mid_Param_STM32F103.h"
+#elif ENGINE_CTRL_ECU == ECU_FRONT
+    #include "gen/Node_ECU_Front_CAN_STM32F103.h"
+    #include "gen/Node_ECU_Front_Param_STM32F103.h"
+#endif
+
 #include "parametermodel.h"
 #include "processmodel.h"
 
@@ -43,14 +54,18 @@ typedef struct _CANHandler
         int16_t transTableEntryCount;               //!< Number of Table Entries in the CAN Transmission Talbw
 
         EngineCtrlProcessModel* pModel;             //!< Pointer to the Process Model
+
+        Param_Struct* pCANParameter;
 } CANHandler;
 
-extern int32_t canHandlerInitialize(CANHandler* pHandler, CANTransmissionTableEntry* pTransTable, int16_t tableEntryCount, EngineCtrlProcessModel* pModel);
+extern int32_t canHandlerInitialize(CANHandler* pHandler, CANTransmissionTableEntry* pTransTable, int16_t tableEntryCount, EngineCtrlProcessModel* pModel, Param_Struct* pCANParam);
 extern int32_t canHandlerProcessTransmitTable(CANHandler* pHandler);
 extern int32_t canHandlerProcessReceiveBuffer(CANHandler* pHandler);
 
 extern int32_t canHandlerTransmitEngineSpeed(CANHandler* pHandler, CANTransmissionTableEntry* pEntry);
 extern int32_t canHandlerTransmitWheelSpeed(CANHandler* pHandler, CANTransmissionTableEntry* pEntry);
+extern int32_t canHandlerTransmitParameterResponse(CANHandler* pHandler, uint16_t parameterNo);
 
+extern int32_t canHandlerPerformParameterChange(CANHandler* pHandler, uint16_t paramNo, CAN_FRAME* pCANFrame);
 
 #endif /* LRAPPLICATIONS_SRC_ENGINECTRL_CANHANDLER_H_ */

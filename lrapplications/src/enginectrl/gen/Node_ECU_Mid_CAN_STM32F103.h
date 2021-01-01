@@ -46,14 +46,14 @@ typedef struct _CAN_FRAME
  * Defines for TX CAN Messages
  *
 */
-#define CAN_ID_EngineCtrlMid_Alive			0x120a
-#define CYCLE_EngineCtrlMid_Alive			1000
+#define CAN_ID_EngineCtrl_Alive			0x120a
+#define CYCLE_EngineCtrl_Alive			1000
 
-#define CAN_ID_Engine_Speed_Mid			0x120b
-#define CYCLE_Engine_Speed_Mid			100
+#define CAN_ID_Engine_Speed			0x120b
+#define CYCLE_Engine_Speed			100
 
-#define CAN_ID_Wheel_Speed_Mid			0x120c
-#define CYCLE_Wheel_Speed_Mid			100
+#define CAN_ID_Wheel_Speed			0x120c
+#define CYCLE_Wheel_Speed			100
 
 
 
@@ -61,54 +61,54 @@ typedef struct _CAN_FRAME
  * Declare data type structures for CAN TX Messages
  *
 */
-typedef struct _Msg_EngineCtrlMid_Alive
+typedef struct _Msg_EngineCtrl_Alive
 {
-	// Signal-ID: EngineCtrlMid_Alive Signal-Type: 2 Signal-Size: 16
-	int16_t EngineCtrlMid_Alive;
-} Msg_EngineCtrlMid_Alive;
+	// Signal-ID: EngineCtrl_Alive Signal-Type: 2 Signal-Size: 16
+	int16_t EngineCtrl_Alive;
+} Msg_EngineCtrl_Alive;
 
-typedef struct _Msg_Engine_Speed_Mid
+typedef struct _Msg_Engine_Speed
 {
-	// Signal-ID: Engine_Speed_M_L Signal-Type: 2 Signal-Size: 16
-	int16_t Engine_Speed_M_L;
-	// Signal-ID: Engine_Speed_M_R Signal-Type: 2 Signal-Size: 16
-	int16_t Engine_Speed_M_R;
-} Msg_Engine_Speed_Mid;
+	// Signal-ID: Engine_Speed_L Signal-Type: 2 Signal-Size: 16
+	int16_t Engine_Speed_L;
+	// Signal-ID: Engine_Speed_R Signal-Type: 2 Signal-Size: 16
+	int16_t Engine_Speed_R;
+} Msg_Engine_Speed;
 
-typedef struct _Msg_Wheel_Speed_Mid
+typedef struct _Msg_Wheel_Speed
 {
-	// Signal-ID: Wheel_Speed_M_L Signal-Type: 2 Signal-Size: 16
-	int16_t Wheel_Speed_M_L;
-	// Signal-ID: Wheel_Speed_M_R Signal-Type: 2 Signal-Size: 16
-	int16_t Wheel_Speed_M_R;
-} Msg_Wheel_Speed_Mid;
+	// Signal-ID: Wheel_Speed_L Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_L;
+	// Signal-ID: Wheel_Speed_R Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_R;
+} Msg_Wheel_Speed;
 
 
 /*
  * Declare function prototypes for CAN Tx Message creation
  *
  */
-extern int8_t createMsg_EngineCtrlMid_Alive(CAN_FRAME* pCANFrame, Msg_EngineCtrlMid_Alive* pMsg);
-extern int8_t createMsg_Engine_Speed_Mid(CAN_FRAME* pCANFrame, Msg_Engine_Speed_Mid* pMsg);
-extern int8_t createMsg_Wheel_Speed_Mid(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_Mid* pMsg);
+extern int8_t createMsg_EngineCtrl_Alive(CAN_FRAME* pCANFrame, Msg_EngineCtrl_Alive* pMsg);
+extern int8_t createMsg_Engine_Speed(CAN_FRAME* pCANFrame, Msg_Engine_Speed* pMsg);
+extern int8_t createMsg_Wheel_Speed(CAN_FRAME* pCANFrame, Msg_Wheel_Speed* pMsg);
 
 /*
  * Defines for RX CAN Messages
  *
  */
-#define CAN_ID_Wheel_Speed_Mid_Setpoint			0x30c
+#define CAN_ID_Wheel_Speed_Setpoint			0x30c
 
 /*
  * Declare data type structures for CAN RX Messages
  *
 */
-typedef struct _Msg_Wheel_Speed_Mid_Setpoint
+typedef struct _Msg_Wheel_Speed_Setpoint
 {
-	// Signal-ID: Wheel_Speed_M_L_Setpoint Signal-Type: 2 Signal-Size: 16
-	int16_t Wheel_Speed_M_L_Setpoint;
-	// Signal-ID: Wheel_Speed_M_R_Setpoint Signal-Type: 2 Signal-Size: 16
-	int16_t Wheel_Speed_M_R_Setpoint;
-} Msg_Wheel_Speed_Mid_Setpoint;
+	// Signal-ID: Wheel_Speed_L_Setpoint Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_L_Setpoint;
+	// Signal-ID: Wheel_Speed_R_Setpoint Signal-Type: 2 Signal-Size: 16
+	int16_t Wheel_Speed_R_Setpoint;
+} Msg_Wheel_Speed_Setpoint;
 
 
 
@@ -116,8 +116,8 @@ typedef struct _Msg_Wheel_Speed_Mid_Setpoint
  * Declare function prototypes for CAN Rx Message parsing
  *
  */
-extern int8_t parseMsg_Wheel_Speed_Mid_Setpoint(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_Mid_Setpoint* pMsg);
-extern int8_t isMsg_Wheel_Speed_Mid_Setpoint(CAN_FRAME* pCANFrame);
+extern int8_t parseMsg_Wheel_Speed_Setpoint(CAN_FRAME* pCANFrame, Msg_Wheel_Speed_Setpoint* pMsg);
+extern int8_t isMsg_Wheel_Speed_Setpoint(CAN_FRAME* pCANFrame);
 
 
 #endif
