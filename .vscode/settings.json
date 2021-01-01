@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "D:\\LR2\\DevEnv\\anaconda3\\python.exe",
+    "python.pythonPath": "${env:DEVENV_ROOT_PATH}\\anaconda3\\python.exe",
     "python.autoComplete.extraPaths": [
         "lrapplications/tools/network_signals",
         "lrapplications/tools/cantools"
