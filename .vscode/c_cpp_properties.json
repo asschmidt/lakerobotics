@@ -1,19 +1,36 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "LRPlatform ARM",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${env:DEVENV_ROOT_PATH}/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/**"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "D:\\LR\\DevEnv\\msys64\\mingw64\\bin\\gcc.exe",
+            "compilerPath": "${env:DEVENV_ROOT_PATH}/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "LRPlatform AVR",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${env:DEVENV_ROOT_PATH}/avr-gcc-10.1.0-x64-windows/avr/include/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "${env:DEVENV_ROOT_PATH}/avr-gcc-10.1.0-x64-windows/bin/avr-gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm"
         }
     ],
     "version": 4
