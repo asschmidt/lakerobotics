@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-    	<file>Images/view_dec_hex.png</file>
-    	<file>Images/view_delta_t.png</file>
-    	<file>Images/view_scroll_mode.png</file>
-        <file>Images/media-playback-start.svg</file>
-        <file>Images/media-playback-pause.svg</file>
-    </qresource>
-</RCC>
