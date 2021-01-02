@@ -1,8 +1,8 @@
 {
     "python.pythonPath": "${env:DEVENV_ROOT_PATH}\\anaconda3\\python.exe",
     "python.autoComplete.extraPaths": [
-        "lrapplications/tools/network_signals",
-        "lrapplications/tools/cantools"
+        "${workspaceFolder}/lrtools/robonet",
+        "${workspaceFolder}/lrtools/cantools"
     ],
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true
