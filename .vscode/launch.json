@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Aktuelle Datei",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Python: DataInterpreter UI",
             "type": "python",
             "request": "launch",
@@ -12,7 +19,7 @@
             "cwd": "${workspaceRoot}/lrtools/robonet",
             "console": "integratedTerminal",
             "env": {
-                "PYTHONPATH": "${workspaceRoot}/lrtools/cantools"
+                "PYTHONPATH": "${workspaceRoot}/lrtools/robonet:${workspaceRoot}/lrtools/cantools"
             }
         },
         {
@@ -23,7 +30,7 @@
             "cwd": "${workspaceRoot}/lrtools/robonet",
             "console": "integratedTerminal",
             "env": {
-                "PYTHONPATH": "${workspaceRoot}/lrtools/robonet;${workspaceRoot}/lrtools/cantools"
+                "PYTHONPATH": "${workspaceRoot}/lrtools/robonet:${workspaceRoot}/lrtools/cantools"
             }
         },
         {
@@ -34,7 +41,7 @@
             "cwd": "${workspaceRoot}/lrtools/robonet",
             "console": "integratedTerminal",
             "env": {
-                "PYTHONPATH": "${workspaceRoot}/lrtools/robonet;${workspaceRoot}/lrtools/cantools"
+                "PYTHONPATH": "${workspaceRoot}/lrtools/robonet:${workspaceRoot}/lrtools/cantools"
             }
         },
         {
@@ -45,7 +52,7 @@
             "cwd": "${workspaceRoot}/lrtools/robonet",
             "console": "integratedTerminal",
             "env": {
-                "PYTHONPATH": "${workspaceRoot}/lrtools/robonet;${workspaceRoot}/lrtools/cantools"
+                "PYTHONPATH": "${workspaceRoot}/lrtools/robonet:${workspaceRoot}/lrtools/cantools"
             }
         }
     ]

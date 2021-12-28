@@ -5,5 +5,12 @@
         "${workspaceFolder}/lrtools/cantools"
     ],
     "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/lrtools/robonet",
+        "${workspaceFolder}/lrtools/cantools"
+    ],
+    "files.exclude": {
+        "**/__pycache__": true
+    }
 }
