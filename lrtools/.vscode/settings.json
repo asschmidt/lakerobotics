@@ -1,0 +1,16 @@
+{
+    "python.autoComplete.extraPaths": [
+        "${workspaceRoot}/robonet",
+        "${workspaceRoot}/cantools"
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": ["--disable=C0111,W0614,W0611,wildcard-import,invalid-name,empty-docstring,no-name-in-module,import-error,too-few-public-methods"],
+    "python.linting.enabled": true,
+    "python.analysis.extraPaths": [
+        "${workspaceRoot}/robonet",
+        "${workspaceRoot}/cantools"
+    ],
+    "files.exclude": {
+        "**/__pycache__": true
+    }
+}

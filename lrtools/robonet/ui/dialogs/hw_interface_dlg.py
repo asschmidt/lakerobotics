@@ -31,7 +31,7 @@ class HardwareInterfaceDialog(wx.Dialog):
         lblInterface = wx.StaticText(self._panel, label="COM Interface")
         self._sizer.Add(lblInterface, pos=(2, 0), flag=wx.TOP | wx.LEFT, border=10)
 
-        self._cmbInterface = wx.Choice(self._panel, choices=['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'Virtual'])
+        self._cmbInterface = wx.Choice(self._panel, choices=['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'Virtual', '/dev/ttyACM0'])
         self._cmbInterface.SetSelection(5)
         self._sizer.Add(self._cmbInterface, pos=(2, 1), span=(1, 4), flag=wx.TOP | wx.EXPAND, border=10)
 

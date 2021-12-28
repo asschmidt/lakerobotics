@@ -8,19 +8,25 @@ class SignalType:
     SIGNAL_INT      = 2 # Integer data type
     SIGNAL_FLOAT    = 3 # Floating data type
 
+    _BOOL_VALUE     = "BOOL"        # XML Attribute value for Boolean Signal
+    _INT_VALUE      = "INTEGER"     # XML Attribute value for Integer Signal
+    _FLOAT_VALUE    = "FLOAT"       # XML Attribute value for Float Signal
+
     @classmethod
     def parseSignalType(cls, signalTypeAttribValue):
         '''
         Parses the signal type attribute string and returns a corresponding signal type
         '''
-        if signalTypeAttribValue.upper() == "BOOL":
-            return SignalType.SIGNAL_BOOL
-        elif signalTypeAttribValue.upper() == "INTEGER":
-            return SignalType.SIGNAL_INT
-        elif signalTypeAttribValue.upper() == "FLOAT":
-            return SignalType.SIGNAL_FLOAT
-        else:
-            return SignalType.SIGNAL_UNKNOWN
+        sigType = SignalType.SIGNAL_UNKNOWN
+
+        if signalTypeAttribValue.upper() == SignalType._BOOL_VALUE:
+            sigType = SignalType.SIGNAL_BOOL
+        elif signalTypeAttribValue.upper() == SignalType._INT_VALUE:
+            sigType = SignalType.SIGNAL_INT
+        elif signalTypeAttribValue.upper() == SignalType._FLOAT_VALUE:
+            sigType =  SignalType.SIGNAL_FLOAT
+
+        return sigType
 
 class SignalEndianess:
     '''
@@ -30,21 +36,28 @@ class SignalEndianess:
     ENDIAN_LITTLE   = 1 # Little Endian LSB first
     ENDIAN_BIG      = 2 # Big Endian MSB first
 
+    _LITTLE_ENDIAN_VALUE    = "LITTLE"  # XML Attribute value for "Little Endian"
+    _BIG_ENDIAN_VALUE       =  "BIG"    # XML Attribute value for "Big Endian"
+
     @classmethod
     def parseSignalEndianess(cls, signalEndianessAttribValue):
         '''
         Parses the signal endianess attribute string and returns a corresponding signal endianess
         '''
-        if signalEndianessAttribValue.upper() == "LITTLE":
-            return SignalEndianess.ENDIAN_LITTLE
-        elif signalEndianessAttribValue.upper() == "BIG":
-            return SignalEndianess.ENDIAN_BIG
-        else:
-            return SignalEndianess.ENDIAN_UNKNOWN
+        sigEndianess = SignalEndianess.ENDIAN_UNKNOWN
+
+        if signalEndianessAttribValue.upper() == SignalEndianess._LITTLE_ENDIAN_VALUE:
+            sigEndianess = SignalEndianess.ENDIAN_LITTLE
+        elif signalEndianessAttribValue.upper() == SignalEndianess._BIG_ENDIAN_VALUE:
+            sigEndianess = SignalEndianess.ENDIAN_BIG
+
+        return sigEndianess
 
 class SignalData:
     '''
-    Class representing a signal
+    Class representing a signal which can be part of a message
+    But it is also possible to have a "message-less signal" whereby the value of the
+    signal could be calculated or generated inside the network master
     '''
 
     def __init__(self):

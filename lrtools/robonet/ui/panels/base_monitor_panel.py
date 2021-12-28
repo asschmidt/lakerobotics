@@ -82,7 +82,7 @@ class BaseMonitorPanel(wx.Panel):
         '''
         return self._addSignalToList(signalID)
 
-    def receiveDataForUI(self, data):
+    def receiveDataForUI(self, data, paramEntry=None):
         '''
         Called by the UI-Model-Connector component if a data item in the model has changed
 

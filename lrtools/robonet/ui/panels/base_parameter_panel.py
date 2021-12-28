@@ -82,7 +82,7 @@ class BaseParameterPanel(wx.Panel):
 
         return newIndex
 
-    def receiveDataForUI(self, paramEntry):
+    def receiveDataForUI(self, data=None, paramEntry=None):
         '''
         Called by the UI-Model-Connector component if a data item in the model has changed
 

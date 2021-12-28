@@ -3,21 +3,24 @@ import threading
 import time
 import queue
 
-from model.networks import *
-from model.signals import *
-from model.messages import *
-from model.nodes import *
-from model.network_builder import *
-from model.dynamic_datamodel import *
-from model.measurement_model import *
-from model.model_subscriber import *
+from model.static.networks import *
+from model.static.signals import *
+from model.static.messages import *
+from model.static.nodes import *
+from model.static.network_builder import *
+from model.dynamic.dynamic_datamodel import *
+from model.static.measurement_model import *
+from model.dynamic.model_subscriber import *
 
-from model.can.can_message_preprocessor import *
-from model.can.can_datamodel import *
-from model.can.can_data_connector import *
-from model.can.can_data_subscriber import *
-from model.can.can_thread import *
-from model.ui.wx_ui_model_connector import *
+from model.static.can.can_message_preprocessor import *
+from network.can.can_data_definition import *
+from network.can.can_data_connector import *
+from network.can.can_data_subscriber import *
+from network.can.can_data_extract import *
+from network.can.can_thread import *
+from ui.wx_ui_model_connector import *
+
+from network.can.can_usbtin_interface import *
 
 from data_interpreter_ui import *
 
@@ -92,7 +95,7 @@ ui.initUI(list(measurements.values())[0])
 uiConnector = WxUIModelConnector(ui)
 
 # Create and regsiter a CAN subscriber for the dynamic model
-canSubscriber = CANDataUISubscriber(uiConnector, measurements)
+canSubscriber = CANDataUISubscriber(uiConnector)
 dynamicModel.registerSubscriber(canSubscriber)
 
 #for dataEntry in dynamicModel.getDataModelEntryIterator():
@@ -108,7 +111,7 @@ dynamicModel.registerSubscriber(canSubscriber)
 
 #msg = CANMessage(0x201, [0xED, 0x04, 0xFE, 0x05])
 canInterface = CANUSBtinInterface()
-canInterface.setInterfaceParameter("COM4", 500000)
+canInterface.setInterfaceParameter("/dev/ttyACM0", 500000)
 
 dataConnect = CANDataConnector(dynamicModel)
 canThread = CANInterfaceThread(canInterface, dataConnect)

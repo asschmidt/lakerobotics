@@ -25,7 +25,7 @@ class CANMessagePreprocessor:
             if node is not None:
                 actualMsgNumber = 1
 
-                canIDOffset = 10
+                canIDOffset = 0
 
                 # Iterate over all Interfaces of a node
                 for interface in node.Interfaces.values():

@@ -34,7 +34,7 @@ class DataInterpreterFrame(wx.Frame):
 
     '''
     '''
-    def receiveDataForUI(self, data):
+    def receiveDataForUI(self, data=None, paramEntry=None):
         if data != None:
             try:
                 signalID = data.getDataDefRef().getSignal().ID
