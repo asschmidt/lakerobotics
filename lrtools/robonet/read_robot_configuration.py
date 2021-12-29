@@ -1,21 +1,14 @@
 import xml.etree.ElementTree as ET
 
-from model.static.networks import *
-from model.static.signals import *
-from model.static.messages import *
-from model.static.nodes import *
-from model.static.network_builder import *
-from model.dynamic.dynamic_datamodel import *
-from model.dynamic.model_subscriber import *
+from model.static.networks import NetworkDataParser
+from model.static.signals import SignalDataParser
+from model.static.messages import MessageDataParser
+from model.static.nodes import NodeDataParser
 
-from model.static.can.can_message_preprocessor import *
-from network.can.can_data_connector import *
-from network.can.can_data_subscriber import *
-from network.can.can_thread import *
-from network.can.can_message_builder import *
-from network.can.can_data_definition import *
-from network.can.can_data_extract import *
-from network.can.can_usbtin_interface import *
+from model.static.network_builder import NetworkBuilder
+from model.static.can.can_message_preprocessor import CANMessagePreprocessor
+
+from model.dynamic.dynamic_datamodel import DynamicDataModel
 
 
 def loadNetworkData(fileName):
@@ -27,21 +20,18 @@ def loadNetworkData(fileName):
 
     # Create the parser for the <Network> elements
     networkParser = NetworkDataParser(root.find("Networks"))
+    networks = networkParser.parse()
+
     # Create the parser for the <Signal> elements
     signalParser = SignalDataParser(root.find("Signals"))
-
-    # Parse networks and signals
-    networks = networkParser.parse()
     signals = signalParser.parse()
 
     # Create the parser for the <Message> elements
     messageParser = MessageDataParser(networks, signals, root.find("Messages"))
-    # Parse the messages
     messages = messageParser.parse()
 
     # Create the parser for the <Node> elements
     nodeParser = NodeDataParser(networks, messages, root.find("Nodes"))
-    # Parse the node elements
     nodes = nodeParser.parse()
 
     # Create a NetworkBuilder object and return it
