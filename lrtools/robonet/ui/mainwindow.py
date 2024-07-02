@@ -1,6 +1,12 @@
-from PyQt5.QtCore import (QFile, QFileInfo, QPoint, QSettings, QSignalMapper, QSize, QTextStream, Qt)
-from PyQt5.QtGui import QIcon, QKeySequence
-from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow, QMdiArea, QMessageBox, QTextEdit, QWidget)
+from PyQt6.QtCore import (QFile, QFileInfo, QPoint, QSettings, QSignalMapper, QSize, QTextStream, Qt)
+from PyQt6.QtGui import QIcon, QKeySequence, QAction
+from PyQt6.QtWidgets import (QApplication, QFileDialog, QMainWindow, QMdiArea, QMessageBox, QTextEdit, QWidget)
+
+from ui.dialogs.dlg_new_session import NewSessionDialog
+from ui.windows.win_system_browser import SystemBrowserWindow
+from ui.windows.win_signal_viewer import SignalViewerWindow
+
+from network.can.can_global import *
 
 class MainWindow(QMainWindow):
     '''
@@ -14,14 +20,14 @@ class MainWindow(QMainWindow):
         # Create the MDI area and use it as central widget
         self.mdiArea = QMdiArea()
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
-        self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.setCentralWidget(self.mdiArea)
 
         # Create a signal mapper instance used to connect signals for
         # sub windows (MDI childs)
-        self.windowMapper = QSignalMapper(self)
-        self.windowMapper.mapped[QWidget].connect(self.setActiveSubWindow)
+        #self.windowMapper = QSignalMapper(self)
+        #self.windowMapper.mappedObject[QWidget].connect(self.setActiveSubWindow)
 
         # Read the application settings
         self.readSettings()
@@ -33,9 +39,15 @@ class MainWindow(QMainWindow):
         self.createMainStatusBar()
         self.updateMenus()
 
-        self.setWindowTitle("NetMaster")
+        self.setWindowTitle("CANmaster")
 
     def closeEvent(self, event):
+        '''
+        Event handler function for the close event. This handler closes all sub-windows
+        '''
+        if CANGlobal.getInstance().isCANInitialize():
+            CANGlobal.getInstance().finalizeCAN()
+
         self.mdiArea.closeAllSubWindows()
         if self.mdiArea.currentSubWindow():
             event.ignore()
@@ -87,7 +99,7 @@ class MainWindow(QMainWindow):
             child = window.widget()
 
             # Generate the menu-item text for the MDI child windows
-            text = "%d %s" % (i + 1, child.userFriendlyCurrentFile())
+            text = "%d " % (i + 1)
             # For the first 9 windows, we also generate a keyboard shortcut
             if i < 9:
                 text = '&' + text
@@ -96,8 +108,8 @@ class MainWindow(QMainWindow):
             action = self.windowMenu.addAction(text)
             action.setCheckable(True)
             action.setChecked(child is self.activeMdiChild())
-            action.triggered.connect(self.windowMapper.map)
-            self.windowMapper.setMapping(action, window)
+            #action.triggered.connect(self.windowMapper.map)
+            #self.windowMapper.setMapping(action, window)
 
     def createActions(self):
         '''
@@ -105,15 +117,16 @@ class MainWindow(QMainWindow):
         Window arrangement and About actions.
         '''
         # Create "Close" and "Exit" actions
-        self.exitAct = QAction("E&xit", self, shortcut=QKeySequence.Quit, statusTip="Exit the application", triggered=QApplication.instance().closeAllWindows)
+        self.newSessionAct = QAction("New Session...", statusTip="Starts a new Session", triggered=self.newSession)
+        self.exitAct = QAction("E&xit", self, shortcut=QKeySequence.StandardKey.Quit, statusTip="Exit the application", triggered=QApplication.instance().closeAllWindows)
         self.closeAct = QAction("Cl&ose", self, statusTip="Close the active window", triggered=self.mdiArea.closeActiveSubWindow)
         self.closeAllAct = QAction("Close &All", self, statusTip="Close all the windows", triggered=self.mdiArea.closeAllSubWindows)
 
         # Create "Window" actions
         self.tileAct = QAction("&Tile", self, statusTip="Tile the windows", triggered=self.mdiArea.tileSubWindows)
         self.cascadeAct = QAction("&Cascade", self, statusTip="Cascade the windows", triggered=self.mdiArea.cascadeSubWindows)
-        self.nextAct = QAction("Ne&xt", self, shortcut=QKeySequence.NextChild, statusTip="Move the focus to the next window", triggered=self.mdiArea.activateNextSubWindow)
-        self.previousAct = QAction("Pre&vious", self, shortcut=QKeySequence.PreviousChild, statusTip="Move the focus to the previous window", triggered=self.mdiArea.activatePreviousSubWindow)
+        self.nextAct = QAction("Ne&xt", self, shortcut=QKeySequence.StandardKey.NextChild, statusTip="Move the focus to the next window", triggered=self.mdiArea.activateNextSubWindow)
+        self.previousAct = QAction("Pre&vious", self, shortcut=QKeySequence.StandardKey.PreviousChild, statusTip="Move the focus to the previous window", triggered=self.mdiArea.activatePreviousSubWindow)
 
         self.separatorAct = QAction(self)
         self.separatorAct.setSeparator(True)
@@ -122,16 +135,26 @@ class MainWindow(QMainWindow):
         self.aboutAct = QAction("&About", self, statusTip="Show the application's About box", triggered=self.about)
         self.aboutQtAct = QAction("About &Qt", self, statusTip="Show the Qt library's About box", triggered=QApplication.instance().aboutQt)
 
+        # Create Tool Actions
+        self.systemBrowserAct = QAction("System Browser", statusTip="Opens the System Browser", triggered=self.openSystemBrowser)
+        self.signalViewerAct = QAction("Signal Viewer", statusTip="Opens the Signal Viwer", triggered=self.openSignalViewer)
+
     def createMainMenus(self):
         '''
         Create the menus for the main menu
         '''
         # Create "File" menu
         self.fileMenu = self.menuBar().addMenu("&File")
+        self.fileMenu.addAction(self.newSessionAct)
+        self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.closeAct)
         self.fileMenu.addAction(self.closeAllAct)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.exitAct)
+
+        self.toolMenu = self.menuBar().addMenu("&Tools")
+        self.toolMenu.addAction(self.systemBrowserAct)
+        self.toolMenu.addAction(self.signalViewerAct)
 
         # Create "Window" menu
         self.windowMenu = self.menuBar().addMenu("&Window")
@@ -179,3 +202,30 @@ class MainWindow(QMainWindow):
         if window:
             self.mdiArea.setActiveSubWindow(window)
 
+    def newSession(self):
+        # Load the dialog's GUI
+        sessionDlg = NewSessionDialog(self)
+        if sessionDlg.exec() :
+
+            hwInterface = sessionDlg.getHwInterface()
+            baudrate = sessionDlg.getBaudrate()
+            systemDefFile = sessionDlg.getSystemDefinitionFile()
+
+            CANGlobal.getInstance().initializeCAN(systemDefFile, hwInterface, baudrate)
+
+    def openSystemBrowser(self):
+        networkBuilder = CANGlobal.getInstance().getNetworkBuilder()
+        sysWin = SystemBrowserWindow(self, networkBuilder)
+        subWindow = self.mdiArea.addSubWindow(sysWin)
+        subWindow.resize(500, 700)
+        subWindow.updateGeometry()
+        subWindow.show()
+
+    def openSignalViewer(self):
+        networkBuilder = CANGlobal.getInstance().getNetworkBuilder()
+        dynModel = CANGlobal.getInstance().getDynamicModel()
+        signalViewWin = SignalViewerWindow(self, networkBuilder, dynModel)
+        subWindow = self.mdiArea.addSubWindow(signalViewWin)
+        subWindow.resize(700, 500)
+        subWindow.updateGeometry()
+        subWindow.show()

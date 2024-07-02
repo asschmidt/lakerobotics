@@ -138,7 +138,7 @@ class CANGlobal:
         for node in self._networkBuilder.getNodeList():
             # Get the main Network ID of the Node
             nodeNetworkID = node.getMainNetworkID()
-            # If there is a valid main network ID we add the parameter for this 
+            # If there is a valid main network ID we add the parameter for this
             # network ID to the dynamic data model
             if nodeNetworkID is not None:
                 # Iterate over all parameter of the node
@@ -209,7 +209,7 @@ class CANGlobal:
 
         Remark: There is no timeout for waiting to finish the CAN thread. If this blocks, the system might hang
         '''
-        print("Stopping CAN Thread")
+        defaultLog("Stopping CAN Thread")
         self._canThread.stop()
         self._canThread.join()
 

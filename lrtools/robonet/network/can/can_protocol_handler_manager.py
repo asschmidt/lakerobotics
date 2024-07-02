@@ -49,4 +49,5 @@ class CANProtocolHandlerManager:
 
         if messageHandled == False:
             # Print some log information that there was no handler
+            #defaultLog("No CAN Protocol Handler for Message {0}".format(hex(canMessage.mid)))
             pass

@@ -1,6 +1,10 @@
+import sys
+
+from PyQt6.QtWidgets import QApplication, QMainWindow
+
 from util.logger_global import *
 
-from ui.frames.main_frame import *
+from ui.mainwindow import MainWindow
 
 
 if __name__ == "__main__":
@@ -8,10 +12,10 @@ if __name__ == "__main__":
     initializeDefaultLogger(consoleOutput=True)
 
     # Create the UI object
-    app = wx.App(0)
-    ui = MainFrame()
-
-    app.MainLoop()
+    app = QApplication(sys.argv)
+    w = MainWindow()
+    w.show()
+    app.exec()
 
     ## Stop the Console Logger Output
     finalizeDefaultLogger()

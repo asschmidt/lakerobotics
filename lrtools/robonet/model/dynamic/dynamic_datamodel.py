@@ -66,7 +66,7 @@ class DataModelEntry:
         Sets the actual data value/object of the data entry. It also sets the timestaps
         accordingly and handles the previous data value and also the change flag.
 
-        The functions returns true, if the data has changed since the last call of 
+        The functions returns true, if the data has changed since the last call of
         setData otherwise false
         '''
         # timestamp calculation for this data entry
@@ -161,6 +161,7 @@ class DynamicDataModel:
         if dataEntry != None:
             dataChanged = dataEntry.setData(data)
             if dataChanged == True:
+                #print("Updating Data Model {0} with Value {1}".format(dataID, dataEntry.getData()))
                 self.notifySubscriber(dataEntry)
 
             updateResult = True
@@ -169,7 +170,7 @@ class DynamicDataModel:
 
     def getDataModelEntryIterator(self):
         '''
-        Returns a data model iterator/generator to iterate over the value of the 
+        Returns a data model iterator/generator to iterate over the value of the
         internal data dictionary
         '''
         for entry in self._dataDict.values():

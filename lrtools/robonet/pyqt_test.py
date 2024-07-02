@@ -1,9 +1,6 @@
-#!/usr/bin/env python3
-
-
 #############################################################################
 ##
-## Copyright (C) 2014 Riverbank Computing Limited.
+## Copyright (C) 2021 Riverbank Computing Limited.
 ## Copyright (C) 2014 Digia Plc
 ## All rights reserved.
 ## For any questions to Digia, please use contact form at http://qt.digia.com
@@ -23,12 +20,12 @@
 
 import math
 
-from PyQt5.QtCore import pyqtSignal, QObject, QSize, Qt
-from PyQt5.QtDataVisualization import (Q3DCamera, Q3DTheme, Q3DScatter,
+from PyQt6.QtCore import pyqtSignal, QObject, QSize, Qt
+from PyQt6.QtDataVisualization import (Q3DCamera, Q3DTheme, Q3DScatter,
         QAbstract3DGraph, QAbstract3DSeries, QScatter3DSeries,
         QScatterDataItem, QScatterDataProxy)
-from PyQt5.QtGui import QFont, QVector3D
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QFontComboBox,
+from PyQt6.QtGui import QFont, QVector3D
+from PyQt6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFontComboBox,
         QHBoxLayout, QLabel, QPushButton, QSizePolicy, QVBoxLayout, QWidget)
 
 
@@ -45,22 +42,24 @@ class ScatterDataModifier(QObject):
     fontChanged = pyqtSignal(QFont)
 
     def __init__(self, scatter):
-        super(ScatterDataModifier, self).__init__()
+        super().__init__()
 
         self.m_graph = scatter
         self.m_fontSize = 40.0
-        self.m_style = QAbstract3DSeries.MeshSphere
+        self.m_style = QAbstract3DSeries.Mesh.MeshSphere
         self.m_smooth = True
         self.m_itemCount = self.lowerNumberOfItems
         self.m_curveDivider = self.lowerCurveDivider
+        self.m_preset = Q3DCamera.CameraPreset.CameraPresetFrontLow
 
-        self.m_graph.activeTheme().setType(Q3DTheme.ThemeEbony)
+        self.m_graph.activeTheme().setType(Q3DTheme.Theme.ThemeEbony)
         font = self.m_graph.activeTheme().font()
-        font.setPointSize(self.m_fontSize)
+        font.setPointSizeF(self.m_fontSize)
         self.m_graph.activeTheme().setFont(font)
-        self.m_graph.setShadowQuality(QAbstract3DGraph.ShadowQualitySoftLow)
+        self.m_graph.setShadowQuality(
+                QAbstract3DGraph.ShadowQuality.ShadowQualitySoftLow)
         self.m_graph.scene().activeCamera().setCameraPreset(
-                Q3DCamera.CameraPresetFront)
+                Q3DCamera.CameraPreset.CameraPresetFront)
 
         proxy = QScatterDataProxy()
         series = QScatter3DSeries(proxy)
@@ -112,16 +111,15 @@ class ScatterDataModifier(QObject):
         self.gridEnabledChanged.emit(currentTheme.isGridEnabled())
         self.fontChanged.emit(currentTheme.font())
 
-    preset = int(Q3DCamera.CameraPresetFrontLow)
-
     def changePresetCamera(self):
-        self.m_graph.scene().activeCamera().setCameraPreset(
-                Q3DCamera.CameraPreset(self.preset))
+        self.m_graph.scene().activeCamera().setCameraPreset(self.m_preset)
 
-        self.preset += 1
+        preset = self.m_preset.value + 1
 
-        if self.preset > Q3DCamera.CameraPresetDirectlyBelow:
-            self.preset = int(Q3DCamera.CameraPresetFrontLow)
+        if preset > Q3DCamera.CameraPreset.CameraPresetDirectlyBelow.value:
+            preset = Q3DCamera.CameraPreset.CameraPresetFrontLow.value
+
+        self.m_preset = Q3DCamera.CameraPreset(preset)
 
     def changeLabelStyle(self):
         self.m_graph.activeTheme().setLabelBackgroundEnabled(
@@ -167,10 +165,11 @@ if __name__ == '__main__':
 
     screenSize = graph.screen().size()
     container.setMinimumSize(
-            QSize(screenSize.width() / 2, screenSize.height() / 1.5))
+            QSize(int(screenSize.width() / 2), int(screenSize.height() / 1.5)))
     container.setMaximumSize(screenSize)
-    container.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-    container.setFocusPolicy(Qt.StrongFocus)
+    container.setSizePolicy(QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding)
+    container.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
     widget = QWidget()
     hLayout = QHBoxLayout(widget)
@@ -196,10 +195,10 @@ if __name__ == '__main__':
     smoothCheckBox = QCheckBox("Smooth dots", checked=True)
 
     itemStyleList = QComboBox()
-    itemStyleList.addItem("Sphere", QAbstract3DSeries.MeshSphere)
-    itemStyleList.addItem("Cube", QAbstract3DSeries.MeshCube)
-    itemStyleList.addItem("Minimal", QAbstract3DSeries.MeshMinimal)
-    itemStyleList.addItem("Point", QAbstract3DSeries.MeshPoint)
+    itemStyleList.addItem("Sphere", QAbstract3DSeries.Mesh.MeshSphere)
+    itemStyleList.addItem("Cube", QAbstract3DSeries.Mesh.MeshCube)
+    itemStyleList.addItem("Minimal", QAbstract3DSeries.Mesh.MeshMinimal)
+    itemStyleList.addItem("Point", QAbstract3DSeries.Mesh.MeshPoint)
     itemStyleList.setCurrentIndex(0)
 
     cameraButton = QPushButton("Change camera preset")
@@ -223,12 +222,12 @@ if __name__ == '__main__':
     fontList = QFontComboBox()
     fontList.setCurrentFont(QFont('Arial'))
 
-    vLayout.addWidget(labelButton, 0, Qt.AlignTop)
-    vLayout.addWidget(cameraButton, 0, Qt.AlignTop)
-    vLayout.addWidget(itemCountButton, 0, Qt.AlignTop)
+    vLayout.addWidget(labelButton, 0, Qt.AlignmentFlag.AlignTop)
+    vLayout.addWidget(cameraButton, 0, Qt.AlignmentFlag.AlignTop)
+    vLayout.addWidget(itemCountButton, 0, Qt.AlignmentFlag.AlignTop)
     vLayout.addWidget(backgroundCheckBox)
     vLayout.addWidget(gridCheckBox)
-    vLayout.addWidget(smoothCheckBox, 0, Qt.AlignTop)
+    vLayout.addWidget(smoothCheckBox, 0, Qt.AlignmentFlag.AlignTop)
     vLayout.addWidget(QLabel("Change dot style"))
     vLayout.addWidget(itemStyleList)
     vLayout.addWidget(QLabel("Change theme"))
@@ -236,7 +235,7 @@ if __name__ == '__main__':
     vLayout.addWidget(QLabel("Adjust shadow quality"))
     vLayout.addWidget(shadowQuality)
     vLayout.addWidget(QLabel("Change font"))
-    vLayout.addWidget(fontList, 1, Qt.AlignTop)
+    vLayout.addWidget(fontList, 1, Qt.AlignmentFlag.AlignTop)
 
     modifier = ScatterDataModifier(graph)
 
@@ -264,4 +263,4 @@ if __name__ == '__main__':
     modifier.fontChanged.connect(fontList.setCurrentFont)
 
     widget.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

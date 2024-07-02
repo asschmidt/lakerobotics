@@ -11,7 +11,7 @@ class CANDataConnector(CANBaseConnector):
     As soon as a CAN message is received by the CAN Interface thread, the CAN Message
     is decoded and added to the dynamic data model. For this, the CAN-ID is used as
     search key to find the definition of the CAN Message structure
-    This class is also responsible for connecting so called protocol handler to a 
+    This class is also responsible for connecting so called protocol handler to a
     CAN-ID.
     '''
 
@@ -77,9 +77,10 @@ class CANDataConnector(CANBaseConnector):
 
             # Iterate over all signals in the message
             for signalRef in msgObj.Signals:
+                #print("Updating Signal {0} with Value {1}".format(signalRef.Signal.Name, dataArray))
                 self._dataModel.updateDataModelEntry(signalRef.Signal.ID, dataArray)
         else:
-            # If the CAN-ID is not associated with a message, check for 
+            # If the CAN-ID is not associated with a message, check for
             # special CAN-IDs used for prototcols
             if self._protocolHandlerManager is not None:
                 self._protocolHandlerManager.handleCANMessage(self, canMessage)

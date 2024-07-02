@@ -20,7 +20,7 @@ from network.can.can_data_definition import *
 from network.can.can_data_extract import *
 from network.can.can_usbtin_interface import *
 
-from ui.wx_ui_model_connector import *
+#from ui.wx_ui_model_connector import *
 
 from data_interpreter_ui import *
 
@@ -100,7 +100,7 @@ for msg in networkBuilder.getMessages().values():
         dynamicModel.addDataModelEntry(dataEntry)
 
 canInterface = CANUSBtinInterface()
-canInterface.setInterfaceParameter("COM4", 500000)
+canInterface.setInterfaceParameter("/dev/ttyACM1", 500000)
 
 dataConnect = CANDataConnector(dynamicModel)
 canThread = CANInterfaceThread(canInterface, dataConnect)
@@ -133,7 +133,7 @@ while True:
         #sendSetSpeedMid(networkBuilder, canThread, int(currentTargetSpeed))
         sendSetSpeedRear(networkBuilder, canThread, int(currentTargetSpeed))
 
-        logString = str(dynamicModel.getDataModelEntry("Wheel_Speed_R_L").getData())
+        logString = str(dynamicModel.getDataModelEntry("Power_Supply_Electronic_Voltage").getData())
         print(logString)
 
         #logFile.write(logString + "\n")
